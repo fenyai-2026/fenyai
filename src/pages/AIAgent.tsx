@@ -482,9 +482,9 @@ export default function AIAgent() {
   return (
     <>
       <SEOHelmet
-        title="有机云AI智能体_企业级智能客服全场景解决方案"
-        description="有机云AI智能体——基于大语言模型的企业级智能客服系统。支持知识库训练、多轮对话、工作流自动化，7x24小时在线，降低60%客服人力成本。免费试用→"
-        keywords="AI智能体,智能客服,AI客服机器人,企业知识库,工作流自动化,大模型客服,AI客服系统"
+        title="企微AI智能客服_有机云AI智能体_知识库训练·7×24自动回复"
+        description="有机云AI智能体为企业微信提供智能客服：知识库训练、多轮对话、意图识别，7×24小时自动回复替代80%人工，复杂问题一键转人工。免费试用→"
+        keywords="企微AI智能客服,AI智能体,智能客服,AI客服机器人,企业知识库,工作流自动化,大模型客服,AI客服系统"
         canonical="/ai-agent"
         extraSchema={aiAgentSchema}
       />

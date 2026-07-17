@@ -110,12 +110,12 @@ export default function Scrm() {
   return (
     <>
       <Helmet>
-        <title>有机云SCRM_企业微信私域管理系统_活码引流·客户管理·超级群发</title>
-        <meta name="description" content="有机云企微SCRM是企业微信官方合作伙伴，提供企微活码引流、客户管理系统、超级群发、AI智能体、会话聚合转接等全链路私域运营工具，已服务10万+企业。免费试用→" />
-        <meta name="keywords" content="企微SCRM,企业微信SCRM,私域管理系统,企微活码,客户管理系统,超级群发,SCRM工具" />
+        <title>企微SCRM系统_企业微信私域运营工具_有机云｜活码·群发·AI智能体</title>
+        <meta name="description" content="有机云企业微信SCRM系统，专注私域流量运营：企微活码拓客、客户分层、超级群发、AI智能体、会话存档全链路打通，已服务10万+企业，免费试用→" />
+        <meta name="keywords" content="企微SCRM,企业微信SCRM,私域运营,私域管理系统,企微活码,客户管理系统,超级群发,SCRM工具" />
         <link rel="canonical" href="https://www.fenyai.com/scrm" />
-        <meta property="og:title" content="企微SCRM_企业微信私域管理系统_活码引流·客户管理·超级群发" />
-        <meta property="og:description" content="有机云企微SCRM提供企微活码引流、客户管理系统、超级群发、AI智能体等全链路私域运营工具" />
+        <meta property="og:title" content="企微SCRM系统_企业微信私域运营工具_有机云｜活码·群发·AI智能体" />
+        <meta property="og:description" content="有机云企业微信SCRM系统，专注私域流量运营：企微活码拓客、客户分层、超级群发、AI智能体、会话存档全链路打通" />
         <meta property="og:url" content="https://www.fenyai.com/scrm" />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
         <script type="application/ld+json">{JSON.stringify(breadcrumbLd)}</script>

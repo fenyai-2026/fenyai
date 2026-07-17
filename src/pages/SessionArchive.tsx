@@ -90,8 +90,8 @@ export default function SessionArchive() {
   return (
     <>
       <SEOHelmet
-        title="企业微信会话存档怎么开通"
-        description="企业微信会话存档怎么开通？有机云提供合规会话存档方案，支持文字/图片/语音全类型存档、敏感词监控、离职继承与 API 对接，满足金融等行业合规要求。免费咨询→"
+        title="企业微信会话存档系统_有机云SCRM合规存档·敏感词监控·API对接"
+        description="有机云企业微信会话存档系统：文字/图片/语音/文件全类型合规留存，敏感词实时监控，离职继承不流失，支持 API 对接与私有化部署，已服务10万+企业。免费试用→"
         keywords="企业微信会话存档,会话存档怎么开通,企微会话存档,聊天记录存档,敏感词监控,合规存档"
         canonical="https://www.fenyai.com/session-archive"
         extraSchema={jsonLd}

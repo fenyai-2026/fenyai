@@ -106,12 +106,12 @@ export default function Growth() {
   return (
     <>
       <Helmet>
-        <title>有机云裂变拓客_企业微信裂变工具_任务宝·海报裂变·红包裂变·群裂变</title>
-        <meta name="description" content="有机云裂变拓客系统，企业微信裂变工具，支持任务宝、海报裂变、红包裂变、群裂变，实现私域流量快速增长，降低获客成本。免费试用→" />
-        <meta name="keywords" content="裂变拓客,企业微信裂变,私域裂变,任务宝,海报裂变,红包裂变,群裂变,裂变工具" />
+        <title>企微好友裂变怎么玩_企业微信裂变工具_有机云任务宝·红包裂变</title>
+        <meta name="description" content="有机云企微好友裂变工具：任务宝、红包裂变、海报裂变一键发起，老客户带新客户，裂变系数可达1:5，获客成本降低60%。免费试用→" />
+        <meta name="keywords" content="企微好友裂变,企业微信裂变,私域裂变,任务宝,海报裂变,红包裂变,群裂变,裂变工具" />
         <link rel="canonical" href="https://www.fenyai.com/growth" />
-        <meta property="og:title" content="裂变拓客_企业微信裂变工具_任务宝·海报裂变·红包裂变·群裂变" />
-        <meta property="og:description" content="有机云裂变拓客系统，支持任务宝、海报裂变、红包裂变、群裂变，实现私域流量快速增长" />
+        <meta property="og:title" content="企微好友裂变怎么玩_企业微信裂变工具_有机云任务宝·红包裂变" />
+        <meta property="og:description" content="有机云企微好友裂变工具：任务宝、红包裂变、海报裂变一键发起，老客户带新客户，裂变系数可达1:5，获客成本降低60%" />
         <meta property="og:url" content="https://www.fenyai.com/growth" />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
         <script type="application/ld+json">{JSON.stringify(breadcrumbLd)}</script>

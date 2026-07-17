@@ -90,9 +90,9 @@ export default function JuheChat() {
   return (
     <>
       <SEOHelmet
-        title="企业微信聚合聊天_多账号统一管理"
-        description="有机云企业微信聚合聊天——多账号统一收件箱，客服在一个后台接待多个企微号客户，支持快捷回复、会话转接、服务质检，提升客服效率。免费试用→"
-        keywords="企业微信聚合聊天,多账号统一管理,聚合客服,会话聚合,客服工作台,企业微信多开"
+        title="微信聚合聊天工具_企业微信多账号统一接待_有机云"
+        description="有机云企业微信聚合聊天工具：多账号统一收件箱，一个后台接待全量企微客户，快捷回复、会话转接、服务质检全覆盖，客服效率提升3倍。免费试用→"
+        keywords="微信聚合聊天工具,企业微信聚合聊天,多账号统一管理,聚合客服,会话聚合,客服工作台,企业微信多开"
         canonical="https://www.fenyai.com/juhe-chat"
         extraSchema={jsonLd}
       />
