@@ -32,7 +32,7 @@ const DEFAULT_OG_IMAGE = 'https://www.fenyai.com/og-image.png';
 const routes = require('./ssg-routes');
 
 // 通用词静态词页数据源（平行静态内容层）
-const topicPages = require('./topic-pages');
+const topicPages = require('./topic-pages').concat(require('./topic-pages-extra'));
 // slug -> page，供词页内链（同簇互链）查标题
 const TOPIC_BY_SLUG = new Map(topicPages.map(p => [p.slug, p]));
 
@@ -617,6 +617,11 @@ function generateTopicHTML(page) {
     '/#/sop': '企业微信SOP',
     '/#/ai-agent': 'AI智能体',
     '/#/juhe-chat': '聚合聊天',
+    '/#/scrm': 'SCRM系统',
+    '/#/pricing': '价格方案',
+    '/#/compare': 'SCRM对比',
+    '/#/open-platform': '开放平台',
+    '/#/growth': '裂变拓客',
     '/about': '关于我们'
   };
   const homeLink = 'https://www.fenyai.com/';

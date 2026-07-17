@@ -328,6 +328,40 @@ export default function Home() {
             }]
           })}
         </script>
+        {/* FAQPage 结构化数据：争夺百度 Featured Snippet，提升 CTR */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "有机云是什么？",
+                "acceptedAnswer": { "@type": "Answer", "text": "有机云是广州有机云计算有限责任公司旗下的企业微信SCRM私域运营工具，专注企业微信活码拓客、AI智能体、会话存档、超级群发、聚合聊天与消息通道API等全链路能力，已服务10万+企业。" }
+              },
+              {
+                "@type": "Question",
+                "name": "有机云提供哪些企业微信SCRM功能？",
+                "acceptedAnswer": { "@type": "Answer", "text": "有机云覆盖私域运营全场景：渠道活码与员工活码引流、AI智能体自动接待、会话内容存档与质检、超级群发与防封触达、聚合聊天统一接待、消息通道API对接，以及SOP自动化编排。" }
+              },
+              {
+                "@type": "Question",
+                "name": "有机云企业微信SCRM适合哪些行业？",
+                "acceptedAnswer": { "@type": "Answer", "text": "有机云广泛应用于金融、连锁零售、社群电商、在线教培、医疗健康等对客户运营与合规有较高要求的行业，并支持私有化部署满足数据主权需求。" }
+              },
+              {
+                "@type": "Question",
+                "name": "有机云会话存档合规吗？",
+                "acceptedAnswer": { "@type": "Answer", "text": "有机云会话内容存档基于企业微信官方会话存档能力，遵循员工与客户双向告知的合规要求，支持本地、专有云、混合三种私有化部署，满足金融、医疗等行业的审计与等保要求。" }
+              },
+              {
+                "@type": "Question",
+                "name": "有机云可以免费试用吗？",
+                "acceptedAnswer": { "@type": "Answer", "text": "可以。有机云提供免费试用，企业可在官网申请体验活码、AI智能体、会话存档、超级群发等真实功能，并有专属顾问提供行业落地方案咨询。" }
+              }
+            ]
+          })}
+        </script>
       </Helmet>
     <main className="bg-white">
       {/* Hero Section */}
