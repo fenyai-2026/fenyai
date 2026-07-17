@@ -1,0 +1,22 @@
+/sitemap.xml /functions/sitemap 200
+/robots.txt /functions/robots 200
+
+# 静态数据与资源直接返回，避免被 SPA fallback 拦截
+/articles.json /articles.json 200
+/images/* /images/:splat 200
+/assets/* /assets/:splat 200
+/favicon.png /favicon.png 200
+/favicon.ico /favicon.ico 200
+/logo.png /logo.png 200
+/og-image.png /og-image.png 200
+/wechat-qr.png /wechat-qr.png 200
+
+# SSG 生成的静态页面
+/articles /articles/index.html 200
+/article/* /article/:splat/index.html 200
+
+# /index.html → / 301 跳转（消除 SPA 空白页 + SEO 去重）
+/index.html / 301
+
+# SPA Fallback - 所有未匹配的路径都返回 index.html
+/* /index.html 200

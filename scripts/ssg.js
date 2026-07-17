@@ -1,0 +1,1341 @@
+const fs = require('fs');
+const path = require('path');
+
+// 文章 SSG：构建时从 Supabase 拉取已发布文章，生成静态快照（让 CMS 正文被搜索引擎收录，GEO 长期短板）
+let createClient = null;
+try {
+  ({ createClient } = require('@supabase/supabase-js'));
+} catch (e) {
+  console.warn('⚠️ 未安装 @supabase/supabase-js，将跳过文章 SSG 化');
+}
+const SUPABASE_URL = 'https://nzvgai6r8knh.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNzc2NTA2NTM0LCJleHAiOjEzMjg3MTQ2NTM0fQ.ifqqV_uNL2xJOZ34kOgu5Ss2RqUyImjPjfEqD0wvTbo';
+
+// HTML 转义（标题/描述进 <title>/<meta>，防止注入破坏结构）
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+// 默认 OG 图片
+const DEFAULT_OG_IMAGE = 'https://www.fenyai.com/og-image.png';
+
+// 完整路由配置 - 与 App.tsx 保持一致。
+// 已从 ssg.js 抽取到 ssg-routes.js（纯数据、无副作用），供 ssg.js 与
+// gen-legacy-redirects.js 共享 require，避免 gen 脚本 require 本文件触发整构建。
+// 新增 content 字段用于 SSG 预渲染内容，ogImage 用于社交分享预览图。
+const routes = require('./ssg-routes');
+
+// 通用词静态词页数据源（平行静态内容层）
+const topicPages = require('./topic-pages');
+// slug -> page，供词页内链（同簇互链）查标题
+const TOPIC_BY_SLUG = new Map(topicPages.map(p => [p.slug, p]));
+
+// 增强版品牌实体结构化数据（MD 1.3：告诉搜索引擎「有机云 = fenyai.com」）
+const ORGANIZATION_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "有机云",
+  "legalName": "广州有机云计算有限责任公司",
+  "alternateName": "有机云SCRM",
+  "url": "https://www.fenyai.com/",
+  "logo": "https://www.fenyai.com/logo.png",
+  "image": "https://www.fenyai.com/og-image.png",
+  "description": "有机云是广州有机云计算有限责任公司旗下的企业微信SCRM私域运营工具，覆盖活码拓客、AI智能体、会话存档、超级群发等全链路场景，已服务10万+企业。",
+  "sameAs": ["https://aiqicha.baidu.com/company_basic_18714988634245", "https://www.qcc.com/firm/5a6e2c8eb6edbb8466d997a9e1c3bfaf.html", "https://pitchhub.36kr.com/project/1894981971746048"],
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "番禺区大学城青蓝街28号创智大厦3栋6楼",
+    "addressLocality": "广州市",
+    "addressRegion": "广东省",
+    "postalCode": "511400",
+    "addressCountry": "CN"
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+86-133-1616-9107",
+    "contactType": "sales",
+    "email": "374183167@qq.com",
+    "areaServed": "CN",
+    "availableLanguage": ["zh-CN"]
+  },
+  "brand": { "@type": "Brand", "name": "有机云" }
+};
+
+// 本地商户实体（GEO/EEAT：强化「广州有机云计算有限责任公司」真实主体信号）
+const LOCAL_BUSINESS_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "@id": "https://www.fenyai.com/#localbusiness",
+  "name": "广州有机云计算有限责任公司",
+  "image": "https://www.fenyai.com/og-image.png",
+  "logo": "https://www.fenyai.com/logo.png",
+  "url": "https://www.fenyai.com/",
+  "telephone": "+86-133-1616-9107",
+  "email": "374183167@qq.com",
+  "priceRange": "¥¥",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "番禺区大学城青蓝街28号创智大厦3栋6楼",
+    "addressLocality": "广州市",
+    "addressRegion": "广东省",
+    "postalCode": "511400",
+    "addressCountry": "CN"
+  },
+  "areaServed": "CN"
+};
+
+const WEBSITE_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "有机云",
+  "url": "https://www.fenyai.com/",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://www.fenyai.com/search?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+};
+
+// 生成 JSON-LD 结构化数据（页面级）
+function generateSchema(route) {
+  const canonical = `https://www.fenyai.com${route.path}`;
+  
+  if (route.schemaType === 'Organization') {
+    return ORGANIZATION_SCHEMA;
+  } else if (route.schemaType === 'SoftwareApplication') {
+    return {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": route.title.split('_')[0],
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "description": route.description,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "CNY"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "ratingCount": "10000"
+      }
+    };
+  } else if (route.schemaType === 'FAQPage') {
+    return {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "企业微信活码怎么生成？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "登录有机云SCRM后台，进入「企微活码」，选择渠道活码、员工活码或群活码，设置分流规则后保存即可生成二维码，支持智能分流与数据统计。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "会话存档怎么开通？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "需企业微信管理员在企微后台开通「会话内容存档」权限并购买席位，再在有机云SCRM绑定，即可对文字、图片、语音、文件全类型合规存档并进行敏感词监控。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "AI智能体怎么用？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "在有机云SCRM「AI智能体」中上传企业资料训练知识库，配置多轮对话与意图识别，即可7×24小时自动回复客户，复杂问题自动转人工。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "如何开始使用有机云？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "注册账号后绑定企业微信，即可开始使用所有功能。我们提供1对1指导和培训支持，帮助你快速上手。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "是否提供免费试用？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "是的，我们提供14天全功能免费试用，无需绑定信用卡，试用结束不自动扣费。"
+          }
+        }
+      ]
+    };
+  } else {
+    // 默认 WebPage
+    return {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": route.title,
+      "description": route.description,
+      "url": canonical
+    };
+  }
+}
+
+// 面包屑分段标签（自动推导 BreadcrumbList 用，单一数据源）
+const SEGMENT_LABELS = {
+  'products': '产品功能',
+  'qimo': '企微魔方',
+  'yinliu': '引流宝',
+  'jinqun': '进群宝',
+  'task': '任务宝',
+  'data': '私域数据中台',
+  'solutions': '解决方案',
+  'finance': '金融私域运营',
+  'retail': '连锁门店私域运营',
+  'ecommerce': '社群电商私域运营',
+  'education': '在线教培私域运营',
+  'active-outreach': '主动拓客',
+  'sop': '营销SOP',
+  'crack': '裂变任务私域运营',
+  'archive': '会话存档',
+  'distribution': '智慧分销',
+  'ai-agent-integration': 'AI Agent集成',
+  'scrm': 'SCRM系统',
+  'live-code': '活码引流',
+  'growth': '裂变拓客',
+  'ai-call': 'AI外呼',
+  'ai-agent': 'AI智能体',
+  'open-platform': '开放平台',
+  'message-channel': '消息通道API',
+  'docs': 'API文档',
+  'message-api': '消息通道API',
+  'resources': '资源中心',
+  'pricing': '价格方案',
+  'contact': '联系我们',
+  'articles': '文章资讯',
+  'demo-showcase': '产品演示',
+  'whitepaper': '白皮书',
+  'compare': 'SCRM对比',
+  'faq': '常见问题',
+  'weimo': '企微魔方',
+  'sop': '营销SOP',
+  'robot': '企微机器人',
+  'cloud-phone': '云手机',
+  'trial': '免费试用',
+  'about': '关于我们',
+};
+
+// 由路径自动推导 BreadcrumbList 结构化数据
+function buildBreadcrumbSchema(path) {
+  const itemListElement = [
+    { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://www.fenyai.com/" }
+  ];
+  if (path && path !== '/') {
+    const segments = path.split('/').filter(Boolean);
+    let acc = '';
+    segments.forEach((seg, i) => {
+      acc += '/' + seg;
+      itemListElement.push({
+        "@type": "ListItem",
+        "position": i + 2,
+        "name": SEGMENT_LABELS[seg] || seg,
+        "item": "https://www.fenyai.com" + acc
+      });
+    });
+  }
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": itemListElement
+  };
+}
+
+// FAQ 问答内容（GEO 核心：直接命中用户问句检索与 AI 引用）
+// 单一数据源，新增/调整问答只需改这里
+const FAQ_MAP = {
+  '/scrm': [
+    { q: '有机云SCRM 适合什么规模的企业？', a: '有机云SCRM 覆盖从中小微到大型集团的全场景，按坐席灵活计费，已服务 10 万+ 企业，既支持免费试用也支持私有化部署。' },
+    { q: '有机云SCRM 和企业微信原生功能有什么区别？', a: '企业微信原生侧重沟通与基础客户联系，有机云在其之上提供活码引流、超级群发、客户标签、会话存档、AI 智能体与数据报表等全链路运营能力。' },
+    { q: '有机云SCRM 的数据安全吗？', a: '数据传输与存储加密，支持细粒度权限管控与操作审计，会话存档符合金融、医疗等行业的合规要求。' }
+  ],
+  '/live-code': [
+    { q: '企业微信活码怎么生成？', a: '登录有机云后台进入「企微活码」，选择渠道/员工/群活码，设置分流规则后保存即可生成二维码，支持智能分流与数据统计。' },
+    { q: '活码会过期吗？', a: '群活码支持群满自动换群、永不过期；渠道/员工活码长期有效，可随时在后台调整分流策略。' },
+    { q: '活码能统计各渠道效果吗？', a: '可以，每个渠道活码独立追踪扫码量、添加量与转化，帮助优化投放 ROI。' }
+  ],
+  '/growth': [
+    { q: '裂变拓客有哪些玩法？', a: '支持任务裂变、红包裂变、拼团裂变、海报裂变与抽奖裂变，覆盖拉新、激活与转化全链路。' },
+    { q: '裂变获客成本能降低多少？', a: '据有机云客户实践，合理设计的裂变活动平均获客成本可降低约 60%，裂变系数可达 1:5 以上。' },
+    { q: '裂变活动会被封号吗？', a: '有机云遵循企业微信规则设计合规裂变流程，提供频控与风控建议，降低违规风险。' }
+  ],
+  '/ai-call': [
+    { q: 'AI 外呼能替代人工吗？', a: 'AI 外呼可自动完成批量外呼、意向初筛与留言，日均外呼量可达人工的 10 倍，高意向客户自动转人工跟进。' },
+    { q: 'AI 外呼通话会被录音吗？', a: '会，通话全程录音并支持转写与质检，便于复盘话术与合规留痕。' },
+    { q: '有机云AI外呼支持哪些场景？', a: '适用于会员激活、活动通知、问卷回访、意向筛选等规模化外呼场景。' }
+  ],
+  '/ai-agent': [
+    { q: '有机云AI智能体是什么？', a: '是基于大语言模型的企业级智能客服，支持知识库训练、多轮对话、意图识别与工作流自动化，7×24 小时在线。' },
+    { q: 'AI智能体如何训练？', a: '在后台上传企业资料即可自动构建知识库，配置多轮对话与意图路由，复杂问题自动转人工。' },
+    { q: 'AI智能体能替代多少人工客服？', a: '可承担约 80% 的常见咨询，显著降低客服人力成本。' }
+  ],
+  '/message-channel': [
+    { q: '消息通道API 是什么？', a: '是有机云提供的企业微信消息发送底层基础设施，3 行代码即可为 AI Agent 或业务系统接入企微消息能力。' },
+    { q: '消息通道API 支持哪些平台集成？', a: '支持 Dify、Coze、百度千帆、阿里百炼等主流 AI 平台，以及自有系统的 REST 调用。' },
+    { q: '消息送达率如何？', a: '支持万级并发，消息送达率达 99.9%，覆盖文本、图片、链接、小程序、文件等全类型。' }
+  ],
+  '/products': [
+    { q: '有机云有哪些产品？', a: '包括企微魔方（SCRM 客户管理）、引流宝（活码裂变）、进群宝（社群管理）、任务宝（裂变营销）、私域数据中台，以及 AI 外呼、AI 智能体、会话聚合等。' },
+    { q: '产品如何收费？', a: '按坐席计费，提供免费试用，企业版及以上支持私有化部署与定制开发。' },
+    { q: '产品之间可以打通吗？', a: '可以，全产品基于统一客户资产与开放平台 API 打通，形成获客—运营—转化闭环。' }
+  ],
+  '/products/qimo': [
+    { q: '企微魔方主要做什么？', a: '提供客户管理、标签分组、智能跟进、会话存档与数据分析，实现客户全生命周期管理。' },
+    { q: '企微魔方能对接其他系统吗？', a: '可通过开放平台 API 与 CRM、工单、ERP 等系统打通数据。' }
+  ],
+  '/products/yinliu': [
+    { q: '引流宝支持哪些活码？', a: '支持渠道活码、员工活码、群活码与裂变活码，并支持智能分流。' },
+    { q: '引流宝能追踪渠道效果吗？', a: '每个渠道活码独立统计扫码与添加数据，便于评估投放效果。' }
+  ],
+  '/products/jinqun': [
+    { q: '进群宝能自动建群吗？', a: '支持一键批量建群、口令入群、群满自动换群，降低社群运营人力。' },
+    { q: '进群宝支持群数据统计吗？', a: '提供群活跃度、成员增长等统计，辅助运营决策。' }
+  ],
+  '/products/task': [
+    { q: '任务宝有哪些裂变玩法？', a: '支持任务裂变、红包裂变、拼团裂变与海报裂变，激励用户自发传播。' },
+    { q: '任务宝适合什么活动？', a: '适合拉新促活、新品推广与节日营销等需要爆发式传播的场合。' }
+  ],
+  '/products/data': [
+    { q: '私域数据中台能做什么？', a: '打通企微、公众号、小程序等多渠道数据，提供客户画像、转化漏斗与自定义报表。' },
+    { q: '数据报表能导出吗？', a: '支持按需生成并导出数据报表，便于汇报与分享。' }
+  ],
+  '/solutions': [
+    { q: '有机云提供哪些行业解决方案？', a: '覆盖泛金融、社群电商、连锁零售、在线教培、智慧分销、主动拓客、营销 SOP、裂变、会话存档等行业与场景。' },
+    { q: '解决方案包含哪些内容？', a: '包含行业私域运营方法论、功能配置与落地陪跑，帮助快速搭建私域体系。' }
+  ],
+  '/solutions/finance': [
+    { q: '金融行业做私域合规吗？', a: '有机云提供会话合规存档、敏感词监控与权限管控，满足金融等行业的监管要求。' },
+    { q: '有机云金融方案能做什么？', a: '提供客户分层运营、智能外呼、数据安全加密与风控预警，服务银行、保险、证券等机构。' }
+  ],
+  '/solutions/retail': [
+    { q: '连锁零售如何用有机云做私域？', a: '通过门店活码获客、多门店统一管理、会员通与导购赋能，实现线上线下融合。' },
+    { q: '有机云零售方案支持库存同步吗？', a: '支持线上线下库存实时同步，避免超卖。' }
+  ],
+  '/solutions/ecommerce': [
+    { q: '社群电商如何用有机云增长？', a: '通过裂变拉新、智能群发、订单同步与社群自动化提升私域变现效率。' },
+    { q: '有机云支持直播引流吗？', a: '支持直播间引导加企微，沉淀私域流量。' }
+  ],
+  '/solutions/education': [
+    { q: '教培机构如何用有机云？', a: '用于课程引流、社群运营、学员管理与续费提醒，提升招生转化与续费率。' },
+    { q: '有机云支持家校沟通吗？', a: '支持家长群运营与学员服务，提升满意度。' }
+  ],
+  '/solutions/active-outreach': [
+    { q: '主动拓客用什么功能？', a: '提供超级群发、AI 外呼、定时发送与效果追踪，主动触达并筛选意向客户。' },
+    { q: '群发会被限制吗？', a: '有机云提供合规群发策略与频控建议，降低触达风险。' }
+  ],
+  '/solutions/sop': [
+    { q: '什么是营销SOP？', a: '是把客户运营流程标准化、自动化，通过自动欢迎、定期回访与执行监控提升运营效率。' },
+    { q: 'SOP 能提升多少效率？', a: '标准化流程可减少重复人工，执行监控确保落地，帮助运营效率提升数倍。' }
+  ],
+  '/solutions/crack': [
+    { q: '裂变任务有哪些玩法？', a: '提供任务裂变、红包裂变、拼团裂变与分销裂变，让每个用户成为传播节点。' },
+    { q: '裂变效果怎么衡量？', a: '提供全链路数据追踪，ROI 清晰可见。' }
+  ],
+  '/solutions/archive': [
+    { q: '会话存档有什么用？', a: '对企微聊天记录合规存档，支持敏感词监控、质检与审计追溯。' },
+    { q: '会话存档支持哪些类型？', a: '支持文字、图片、语音、文件等全类型存档。' }
+  ],
+  '/solutions/distribution': [
+    { q: '智慧分销能做什么？', a: '搭建多级分销体系，管理分销商、追踪业绩并结算佣金。' },
+    { q: '有机云分销支持素材库吗？', a: '提供统一推广素材库，降低分销门槛。' }
+  ],
+  '/solutions/ai-agent-integration': [
+    { q: 'AI Agent 如何集成到现有系统？', a: '通过开放平台 API 将 AI 智能体接入 CRM、工单等系统，实现客服自动化。' },
+    { q: '集成需要多久？', a: '提供标准接口与 SDK，常规场景可按天级完成对接。' }
+  ],
+  '/open-platform': [
+    { q: '有机云开放平台提供哪些 API？', a: '提供客户管理、消息发送、活码管理、会话存档与数据分析等 RESTful API。' },
+    { q: '开放平台支持私有化吗？', a: '企业版及以上支持私有化部署与定制接口。' }
+  ],
+  '/open-platform/docs': [
+    { q: '开放平台 API 有文档吗？', a: '提供完整的接口文档、认证说明与多语言 SDK（Python/Java/Node.js）。' },
+    { q: '如何快速开始？', a: '文档含接入指南、认证方式与基础示例，可快速完成第一次调用。' }
+  ],
+  '/open-platform/message-api': [
+    { q: '消息通道API 支持哪些消息？', a: '支持单聊、群发、群聊、朋友圈与模板消息，覆盖文本、图片、链接、小程序、文件等类型。' },
+    { q: '如何接入消息通道API？', a: '3 行代码即可接入，支持 Dify/Coze/千帆/百炼等 AI 平台。' }
+  ],
+  '/weimo': [
+    { q: '企微魔方是什么？', a: '有机云企微魔方是一站式企业微信私域营销云，把活码拓客、超级群发、客户SOP、聚合聊天、会话存档、AI智能体等模块统一装进一个后台，跑通获客—运营—转化全链路。' },
+    { q: '企微魔方包含哪些模块？', a: '包含活码拓客、超级群发、客户SOP、聚合聊天、会话存档、AI智能体六大核心模块，模块间数据打通，形成运营闭环。' },
+    { q: '企微魔方和其他SCRM有什么区别？', a: '多数SCRM只解决单点能力，有机云企微魔方强调模块打通：活码引流自动打标签、标签触发SOP、SOP过程AI应答、关键节点人工接管，全程数据回流统一看板。' },
+    { q: '企微魔方怎么开通？', a: '注册有机云账号并绑定企业微信，按业务需要开通对应模块，设置活码、标签与SOP，1个工作日内即可上线，支持免费试用。' }
+  ],
+  '/sop': [
+    { q: '企微SOP是什么？', a: '企微SOP是把客户运营动作标准化的能力，系统按预设时间轴自动发送欢迎语、推送内容、触发回访，把跟进流程固化下来，不依赖个人经验。' },
+    { q: '企微SOP和群发有什么区别？', a: '群发是一次性把消息发给一批人；SOP是按客户所处阶段在正确时间发正确内容，基于标签与行为触发，千人千面，更适合培育转化。' },
+    { q: '企微SOP有哪些典型场景？', a: '新客欢迎、社群培育、复购唤醒、流失召回等，把从引流到转化的全流程沉淀为标准动作自动执行。' },
+    { q: '企微SOP怎么配置？', a: '梳理客户关键节点、编写各阶段话术、设置标签/时间/行为触发规则，上线后查看执行率与转化持续迭代，有机云提供行业模板开箱即用。' }
+  ],
+  '/robot': [
+    { q: '企微机器人能做什么？', a: '基于规则与AI自动应答客户消息，识别关键词或意图自动回复标准答案，复杂场景一键转人工，7×24小时值守不漏商机。' },
+    { q: '企微机器人支持关键词自动回复吗？', a: '支持，命中关键词即触发对应话术秒级响应；同时结合AI智能体做意图识别，不只是死板匹配。' },
+    { q: '企微机器人能代替人工吗？', a: '可承担大部分重复咨询，高意向或复杂问题自动转人工并带上全文上下文，让人力聚焦高价值会话。' },
+    { q: '企微机器人和AI智能体有什么区别？', a: '机器人偏规则与关键词自动回复，AI智能体偏多轮语义对话与知识库训练，两者可搭配升级为智能客服。' }
+  ],
+  '/cloud-phone': [
+    { q: '云手机是什么？', a: '云手机是云端运行的虚拟设备，把多个企业微信账号运行在隔离的云端环境中，实现安全群控与批量管理，降低设备关联封号风险。' },
+    { q: '云手机群控会封号吗？', a: '每个账号独立云端环境实现设备隔离，配合合规操作与频控建议，可显著降低关联封号风险。' },
+    { q: '云手机适合什么场景？', a: '适合需要同时运营大量企微号的中大型团队、多品牌矩阵运营、以及新号养号维护等私域规模化场景。' },
+    { q: '云手机和聚合聊天怎么配合？', a: '云手机负责云端多账号群控与养号，聚合聊天负责统一接待客户会话，两者结合形成"云端群控+统一接待"闭环。' }
+  ]
+};
+
+// 渲染 FAQ 可读区块（复用 .ssg-content 样式）
+function renderFaq(faq) {
+  if (!faq || !faq.length) return '';
+  const items = faq.map(f => `
+      <div class="faq-item">
+        <h3>${f.q}</h3>
+        <p>${f.a}</p>
+      </div>`).join('');
+  return `
+    <h2>常见问题</h2>
+    <div class="faq-list">${items}
+    </div>`;
+}
+
+// 生成完整的 HTML 模板 - 包含 BrowserRouter 支持
+function generateHTML(route, articles) {
+  const canonical = `https://www.fenyai.com${route.path}`;
+  const ogImage = route.ogImage || DEFAULT_OG_IMAGE;
+  const pageSchema = generateSchema(route);
+  // 全站注入 Organization 品牌实体；首页额外注入 WebSite（MD 1.3）
+  const schemas = [pageSchema];
+  if (route.path !== '/') schemas.push(ORGANIZATION_SCHEMA);
+  if (route.path === '/') { schemas.push(WEBSITE_SCHEMA); schemas.push(LOCAL_BUSINESS_SCHEMA); }
+  // 全站注入 BreadcrumbList（GEO 强信号，由路径自动推导）
+  schemas.push(buildBreadcrumbSchema(route.path));
+  // 高价值页注入 FAQPage（GEO 问答式内容，提升被 AI 引用概率）
+  const faq = (route.faq && route.faq.length) ? route.faq : (FAQ_MAP[route.path] || []);
+  if (faq.length) {
+    schemas.push({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faq.map(f => ({
+        "@type": "Question",
+        "name": f.q,
+        "acceptedAnswer": { "@type": "Answer", "text": f.a }
+      }))
+    });
+  }
+  const schemaScripts = schemas.map(s => '  <script type="application/ld+json">\n  ' + JSON.stringify(s) + '\n  </script>').join('\n');
+
+  // 词页 → 文章 延伸阅读（keyword -> article 内链，闭合权重网络）
+  const relatedModule = (articles && articles.length && ROUTE_RELATED_KEYWORDS[route.path])
+    ? renderRelatedArticlesHtml(articles, ROUTE_RELATED_KEYWORDS[route.path], 3)
+    : '';
+
+  return `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- Search Engine Verification -->
+  <meta name="baidu-site-verification" content="codeva-DHMjhEQXnT" />
+  <meta name="360-site-verification" content="368c63a6fb9755135cc510b8367d28c5" />
+  <meta name="msvalidate.01" content="78DF27E53F72550D089DB668B4449793" />
+  <meta name="sogou_site_verification" content="PSUcgYbLcF" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${route.title}</title>
+  <meta name="description" content="${route.description}">
+  <meta name="keywords" content="企业微信SCRM,私域运营工具,客户管理系统,企业微信营销,私域流量">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="${canonical}">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="${canonical}">
+  <meta property="og:title" content="${route.title}">
+  <meta property="og:description" content="${route.description}">
+  <meta property="og:image" content="${ogImage}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:site_name" content="有机云">
+  <meta property="og:locale" content="zh_CN">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="${canonical}">
+  <meta name="twitter:title" content="${route.title}">
+  <meta name="twitter:description" content="${route.description}">
+  <meta name="twitter:image" content="${ogImage}">
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <style>
+    html, body { margin: 0; padding: 0; width: 100%; height: 100%; }
+    #root { min-height: 100vh; }
+    /* 预渲染内容样式 */
+    .ssg-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      color: #1a1a1a;
+      line-height: 1.6;
+    }
+    .ssg-content h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #0C4A6E;
+      margin-bottom: 1rem;
+    }
+    .ssg-content h2 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: #0C4A6E;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+    }
+    .ssg-content h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #0C4A6E;
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+    .ssg-content p {
+      font-size: 1.125rem;
+      color: #4b5563;
+      margin-bottom: 1.5rem;
+    }
+    .ssg-content ul {
+      margin-bottom: 1.5rem;
+      padding-left: 1.5rem;
+    }
+    .ssg-content li {
+      margin-bottom: 0.5rem;
+      color: #4b5563;
+    }
+    .ssg-content strong {
+      color: #0C4A6E;
+    }
+    .ssg-content .faq-item {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .ssg-content .faq-item:last-child {
+      border-bottom: none;
+    }
+    .ssg-content .faq-item h3 {
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+    }
+    .ssg-loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 20vh;
+      margin-top: 2rem;
+    }
+    .ssg-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid #e5e7eb;
+      border-top-color: #0EA5E9;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+  <!-- JSON-LD Structured Data -->
+${schemaScripts}
+</head>
+<body>
+  <div id="root">
+    <!-- SSG预渲染内容 - 用于SEO和首屏展示 -->
+    <article class="ssg-content">
+      <h1>${route.h1 || route.title.split('_')[0]}</h1>
+      <p>${route.description}</p>
+      ${route.content || ''}${renderFaq(faq)}${relatedModule}
+      <div class="ssg-loading">
+        <div class="ssg-spinner"></div>
+        <span style="margin-left: 10px; color: #6b7280;">加载中...</span>
+      </div>
+    </article>
+  </div>
+  <!-- 主应用脚本 -->
+  <script defer src="/bundle.js"></script>
+
+  <!-- 主题切换（防 flash） -->
+  <script>
+    (function() {
+      const html = document.documentElement;
+      function applyTheme(theme) {
+        html.classList.remove('light', 'dark');
+        html.classList.add(theme);
+        html.setAttribute('data-theme', theme);
+      }
+      applyTheme('light');
+    })();
+  </script>
+
+  <!-- Baidu Auto Submit - 自动收录JS代码 -->
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if(curProtocol === 'https'){
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      } else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+</body>
+</html>`;
+}
+
+// 通用词静态词页 HTML 模板（平行静态内容层）
+// 每页 = 独立静态 HTML，自带 canonical 自指、OG article、BreadcrumbList+Article+WebPage @graph，
+// 以及「首页 + SPA 功能页 + 同簇词页」三类内链。仅 @id 引用既有 Organization/WebSite，不重复定义。
+function generateTopicHTML(page) {
+  const url = `https://www.fenyai.com/topic/${page.slug}.html`;
+  const ogImage = DEFAULT_OG_IMAGE;
+  const h1 = page.title.replace(' | 有机云', '');
+
+  // 内链：① 首页 ② SPA 功能页(hash) ③ 同簇词页(真实 .html)
+  const SPA_LABEL = {
+    '/#/message-channel': '消息通道',
+    '/#/mass-send': '超级群发',
+    '/#/session-archive': '会话存档',
+    '/#/faq': '常见问题',
+    '/#/sop': '企业微信SOP',
+    '/#/ai-agent': 'AI智能体',
+    '/#/juhe-chat': '聚合聊天',
+    '/about': '关于我们'
+  };
+  const homeLink = 'https://www.fenyai.com/';
+  const spaLink = `https://www.fenyai.com${page.spaPage}`;
+  const spaLabel = SPA_LABEL[page.spaPage] || (page.spaPage.replace('/#/', '').replace('/', '') || '功能');
+  const clusterLinks = (page.cluster || [])
+    .map(slug => {
+      const t = TOPIC_BY_SLUG.get(slug);
+      if (!t) return '';
+      return `          <li><a href="https://www.fenyai.com/topic/${slug}.html">${escapeHtml(t.title.replace(' | 有机云', ''))}</a></li>`;
+    })
+    .filter(Boolean)
+    .join('\n');
+
+  const schema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "@id": url + "#breadcrumb",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "有机云首页", "item": "https://www.fenyai.com/" },
+          { "@type": "ListItem", "position": 2, "name": page.category, "item": "https://www.fenyai.com/topic/" },
+          { "@type": "ListItem", "position": 3, "name": page.keyword, "item": url }
+        ]
+      },
+      {
+        "@type": "Article",
+        "@id": url + "#article",
+        "isPartOf": { "@id": url + "#webpage" },
+        "mainEntityOfPage": { "@id": url + "#webpage" },
+        "headline": page.title,
+        "description": page.description,
+        "inLanguage": "zh-CN",
+        "datePublished": "2026-07-15",
+        "dateModified": "2026-07-15",
+        "author": { "@id": "https://www.fenyai.com/#organization" },
+        "publisher": { "@id": "https://www.fenyai.com/#organization" },
+        "articleSection": page.category
+      },
+      {
+        "@type": "WebPage",
+        "@id": url + "#webpage",
+        "url": url,
+        "name": page.title,
+        "description": page.description,
+        "isPartOf": { "@id": "https://www.fenyai.com/#website" },
+        "breadcrumb": { "@id": url + "#breadcrumb" },
+        "primaryImageOfPage": { "@id": "https://www.fenyai.com/og-image.png#image" }
+      }
+    ]
+  };
+  const schemaScript = '  <script type="application/ld+json">\n  ' + JSON.stringify(schema) + '\n  </script>';
+
+  const keywords = [page.keyword, '企业微信', '私域运营', '有机云'].join(',');
+
+  return `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- Search Engine Verification -->
+  <meta name="baidu-site-verification" content="codeva-DHMjhEQXnT" />
+  <meta name="360-site-verification" content="368c63a6fb9755135cc510b8367d28c5" />
+  <meta name="msvalidate.01" content="78DF27E53F72550D089DB668B4449793" />
+  <meta name="sogou_site_verification" content="PSUcgYbLcF" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${escapeHtml(page.title)}</title>
+  <meta name="description" content="${escapeHtml(page.description)}">
+  <meta name="keywords" content="${escapeHtml(keywords)}">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="${url}">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="${url}">
+  <meta property="og:title" content="${escapeHtml(page.title)}">
+  <meta property="og:description" content="${escapeHtml(page.description)}">
+  <meta property="og:image" content="${ogImage}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:site_name" content="有机云">
+  <meta property="og:locale" content="zh_CN">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="${url}">
+  <meta name="twitter:title" content="${escapeHtml(page.title)}">
+  <meta name="twitter:description" content="${escapeHtml(page.description)}">
+  <meta name="twitter:image" content="${ogImage}">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <style>
+    html, body { margin: 0; padding: 0; width: 100%; height: 100%; }
+    #root { min-height: 100vh; }
+    .ssg-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      color: #1a1a1a;
+      line-height: 1.6;
+    }
+    .ssg-content h1 { font-size: 2.5rem; font-weight: 700; color: #0C4A6E; margin-bottom: 1rem; }
+    .ssg-content h2 { font-size: 1.75rem; font-weight: 600; color: #0C4A6E; margin-top: 2rem; margin-bottom: 1rem; }
+    .ssg-content h3 { font-size: 1.25rem; font-weight: 600; color: #0C4A6E; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+    .ssg-content p { font-size: 1.125rem; color: #4b5563; margin-bottom: 1.5rem; }
+    .ssg-content ul { margin-bottom: 1.5rem; padding-left: 1.5rem; }
+    .ssg-content li { margin-bottom: 0.5rem; color: #4b5563; }
+    .ssg-content a { color: #0EA5E9; text-decoration: none; }
+    .ssg-content a:hover { text-decoration: underline; }
+    .ssg-content strong { color: #0C4A6E; }
+    .ssg-inlinks { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid #e5e7eb; }
+    .ssg-inlinks h2 { margin-top: 0; }
+    .ssg-inlinks ul { list-style: none; padding-left: 0; }
+    .ssg-inlinks li { margin-bottom: 0.6rem; }
+  </style>
+  <!-- JSON-LD Structured Data -->
+${schemaScript}
+</head>
+<body>
+  <div id="root">
+    <!-- SSG预渲染内容 - 用于SEO和首屏展示 -->
+    <article class="ssg-content">
+      <h1>${escapeHtml(h1)}</h1>
+      <p>${escapeHtml(page.description)}</p>
+      ${page.content || ''}
+      <div class="ssg-inlinks">
+        <h2>相关页面</h2>
+        <ul>
+          <li><a href="${homeLink}">有机云首页</a></li>
+          <li><a href="${spaLink}">了解「${escapeHtml(spaLabel)}」功能</a></li>
+${clusterLinks}
+        </ul>
+      </div>
+    </article>
+  </div>
+  <!-- 主应用脚本 -->
+  <script defer src="/bundle.js"></script>
+
+  <!-- 主题切换（防 flash） -->
+  <script>
+    (function() {
+      const html = document.documentElement;
+      function applyTheme(theme) {
+        html.classList.remove('light', 'dark');
+        html.classList.add(theme);
+        html.setAttribute('data-theme', theme);
+      }
+      applyTheme('light');
+    })();
+  </script>
+
+  <!-- Baidu Auto Submit - 自动收录JS代码 -->
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if(curProtocol === 'https'){
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      } else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+</body>
+</html>`;
+}
+
+// sitemap 元数据：以 routes 为单一数据源，补充 priority / changefreq
+// 新增路由时只需在 routes 数组加项，sitemap 自动覆盖，避免再脱节
+const SITEMAP_META = {
+  '/': { priority: '1.0', changefreq: 'daily' },
+  '/products': { priority: '0.9', changefreq: 'weekly' },
+  '/products/jinqun': { priority: '0.8', changefreq: 'monthly' },
+  '/products/qimo': { priority: '0.8', changefreq: 'monthly' },
+  '/products/task': { priority: '0.8', changefreq: 'monthly' },
+  '/products/yinliu': { priority: '0.8', changefreq: 'monthly' },
+  '/products/data': { priority: '0.8', changefreq: 'monthly' },
+  '/ai-agent': { priority: '0.9', changefreq: 'weekly' },
+  '/scrm': { priority: '0.9', changefreq: 'weekly' },
+  '/live-code': { priority: '0.9', changefreq: 'weekly' },
+  '/mass-send': { priority: '0.9', changefreq: 'weekly' },
+  '/juhe-chat': { priority: '0.9', changefreq: 'weekly' },
+  '/session-archive': { priority: '0.9', changefreq: 'weekly' },
+  '/weimo': { priority: '0.9', changefreq: 'weekly' },
+  '/sop': { priority: '0.9', changefreq: 'weekly' },
+  '/robot': { priority: '0.8', changefreq: 'weekly' },
+  '/cloud-phone': { priority: '0.8', changefreq: 'weekly' },
+  '/growth': { priority: '0.9', changefreq: 'weekly' },
+  '/ai-call': { priority: '0.9', changefreq: 'weekly' },
+  '/solutions': { priority: '0.9', changefreq: 'weekly' },
+  '/solutions/finance': { priority: '0.8', changefreq: 'weekly' },
+  '/solutions/retail': { priority: '0.8', changefreq: 'weekly' },
+  '/solutions/ecommerce': { priority: '0.8', changefreq: 'weekly' },
+  '/solutions/education': { priority: '0.8', changefreq: 'weekly' },
+  '/solutions/active-outreach': { priority: '0.8', changefreq: 'weekly' },
+  '/solutions/sop': { priority: '0.8', changefreq: 'weekly' },
+  '/solutions/crack': { priority: '0.8', changefreq: 'weekly' },
+  '/solutions/archive': { priority: '0.8', changefreq: 'weekly' },
+  '/solutions/distribution': { priority: '0.8', changefreq: 'weekly' },
+  '/solutions/ai-agent-integration': { priority: '0.8', changefreq: 'weekly' },
+  '/open-platform': { priority: '0.8', changefreq: 'monthly' },
+  '/open-platform/docs': { priority: '0.7', changefreq: 'monthly' },
+  '/open-platform/message-api': { priority: '0.8', changefreq: 'monthly' },
+  '/message-channel': { priority: '0.9', changefreq: 'weekly' },
+  '/articles': { priority: '0.8', changefreq: 'daily' },
+  '/whitepaper': { priority: '0.7', changefreq: 'monthly' },
+  '/resources': { priority: '0.7', changefreq: 'weekly' },
+  '/pricing': { priority: '0.8', changefreq: 'monthly' },
+  '/contact': { priority: '0.7', changefreq: 'monthly' },
+  '/faq': { priority: '0.7', changefreq: 'weekly' },
+  '/compare': { priority: '0.7', changefreq: 'monthly' },
+  '/demo-showcase': { priority: '0.6', changefreq: 'monthly' },
+  '/trial': { priority: '0.7', changefreq: 'monthly' },
+  '/about': { priority: '0.8', changefreq: 'monthly' },
+};
+
+// 由 routes 自动生成 sitemap.xml，并追加已发布文章 URL，写 dist 并同步 public
+function generateSitemap(articles = []) {
+  const distDir = path.join(__dirname, '..', 'dist');
+  if (!fs.existsSync(distDir)) {
+    fs.mkdirSync(distDir, { recursive: true });
+  }
+  const lastmod = new Date().toISOString().slice(0, 10);
+  const routesUrls = routes.map(route => {
+    const meta = SITEMAP_META[route.path] || { priority: '0.7', changefreq: 'weekly' };
+    return `  <url>
+    <loc>https://www.fenyai.com${route.path}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>${meta.changefreq}</changefreq>
+    <priority>${meta.priority}</priority>
+  </url>`;
+  }).join('\n');
+
+  const articleUrls = articles.map(a => {
+    const am = (a.published_at || a.created_at || lastmod).slice(0, 10);
+    return `  <url>
+    <loc>https://www.fenyai.com/${articleUrl(a)}</loc>
+    <lastmod>${am}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>`;
+  }).join('\n');
+
+  const urls = articleUrls ? routesUrls + '\n' + articleUrls : routesUrls;
+
+  const topicUrls = topicPages.map(p => `  <url>
+    <loc>https://www.fenyai.com/topic/${p.slug}.html</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>`).join('\n');
+
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls}
+${topicUrls}
+</urlset>`;
+
+  fs.writeFileSync(path.join(distDir, 'sitemap.xml'), xml);
+  fs.writeFileSync(path.join(__dirname, '..', 'public', 'sitemap.xml'), xml);
+  console.log(`✓ 生成 sitemap.xml（${routes.length} 个页面 + ${articles.length} 篇文章 + ${topicPages.length} 个词页，lastmod=${lastmod}）`);
+}
+
+// 生成静态页面
+async function generateStaticPages() {
+  const distDir = path.join(__dirname, '..', 'dist');
+  
+  if (!fs.existsSync(distDir)) {
+    fs.mkdirSync(distDir, { recursive: true });
+  }
+
+  let articles = [];
+  console.log('开始生成 SSG 静态页面...\n');
+
+  // 先拉取已发布文章：供词页「延伸阅读」模块与文章 slug 路径使用
+  articles = (typeof articles !== 'undefined' && articles.length) ? articles : [];
+  try {
+    articles = (articles && articles.length) ? articles : await fetchPublishedArticles();
+  } catch (e) {
+    console.warn('文章 SSG 跳过：', e.message);
+  }
+
+  for (const route of routes) {
+    const html = generateHTML(route, articles);
+    const filePath = route.path === '/' 
+      ? path.join(distDir, 'index.html')
+      : path.join(distDir, route.path, 'index.html');
+
+    fs.mkdirSync(path.dirname(filePath), { recursive: true });
+    fs.writeFileSync(filePath, html);
+    console.log(`✓ 生成: ${route.path} -> ${filePath}`);
+  }
+
+  // 通用词静态词页（平行静态内容层）：生成真实 .html 到 dist/topic/
+  // 这些文件是真实存在的源文件，EdgeOne 静态服务优先于 catch-all 返回，故 canonical 自指、含真实正文。
+  const topicDir = path.join(distDir, 'topic');
+  fs.mkdirSync(topicDir, { recursive: true });
+  for (const page of topicPages) {
+    const html = generateTopicHTML(page);
+    const filePath = path.join(topicDir, page.slug + '.html');
+    fs.writeFileSync(filePath, html);
+    console.log(`✓ 生成词页: /topic/${page.slug}.html`);
+  }
+
+  // 文章详情页 SSG 化：拉取已发布文章生成静态快照，让 CMS 正文被收录（GEO 长期短板）
+  articles = (typeof articles !== 'undefined' && articles.length) ? articles : [];
+  try {
+    articles = (articles && articles.length) ? articles : await fetchPublishedArticles();
+  } catch (e) {
+    console.warn('⚠️ 文章 SSG 跳过：', e.message);
+  }
+  for (const article of articles) {
+    try {
+      const html = generateArticleHTML(article);
+      const filePath = path.join(distDir, articleUrl(article), 'index.html');
+      // Windows 长路径（中文 slug 编码后可能超 260）用 \\?\ 扩展前缀写入
+      let writePath = filePath;
+      if (process.platform === 'win32' && writePath.charAt(1) === ':') {
+        writePath = '\\\\?\\' + path.resolve(writePath);
+      }
+      fs.mkdirSync(path.dirname(writePath), { recursive: true });
+      fs.writeFileSync(writePath, html);
+      console.log(`✓ 生成文章: /article/${article.slug || article.id}`);
+    } catch (e) {
+      console.warn(`⚠️ 文章 ${article.id} 生成失败，跳过：`, e.message);
+    }
+  }
+
+  // 客户端兜底：同时输出一份可公开访问的 JSON，当 supabase.co 在国内不可达时，CSR 页面仍可展示文章
+  if (articles.length) {
+    try {
+      const articlesJsonPath = path.join(distDir, 'articles.json');
+      // 字段与 Articles.tsx / ArticleDetail.tsx 保持一致，避免运行时缺字段
+      fs.writeFileSync(articlesJsonPath, JSON.stringify(articles, null, 2));
+      console.log(`✓ 生成客户端兜底数据: /articles.json (${articles.length} 篇)`);
+    } catch (e) {
+      console.warn('⚠️ 生成 articles.json 失败：', e.message);
+    }
+  }
+
+  console.log(`\n✅ SSG 静态页面生成完成！共 ${routes.length} 个页面 + ${articles.length} 篇文章`);
+  console.log('\n生成的页面列表:');
+  routes.forEach(route => {
+    console.log(`  - https://www.fenyai.com${route.path}`);
+  });
+
+  // 生成 _redirects：旧 UUID -> slug 的 301（避免已收录文章 404 / 重复内容）
+  try {
+    writeRedirects(articles);
+  } catch (e) {
+    console.warn('_redirects 生成失败：', e.message);
+  }
+
+  // 生成历史死链静态跳转文件（EdgeOne 不认 _redirects / 中间件，故落地为静态 HTML）
+  try {
+    require('./gen-legacy-redirects').generateLegacyRedirects(articles, routes);
+  } catch (e) {
+    console.warn('历史死链跳转生成失败：', e.message);
+  }
+
+  return articles;
+}
+
+Promise.resolve(generateStaticPages())
+  .then((articles) => generateSitemap(articles))
+  .catch(console.error);
+
+// ============ 文章详情页 SSG 化 ============
+// 构建时从 Supabase 拉取已发布文章，生成静态快照，让 CMS 正文被搜索引擎收录（GEO 长期短板）
+const ARTICLE_BASE_STYLE = `
+    html, body { margin: 0; padding: 0; width: 100%; height: 100%; }
+    #root { min-height: 100vh; }
+    .ssg-content { max-width: 860px; margin: 0 auto; padding: 40px 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; color: #1a1a1a; line-height: 1.8; }
+    .ssg-content h1 { font-size: 2.25rem; font-weight: 700; color: #0C4A6E; margin-bottom: 0.75rem; line-height: 1.3; }
+    .ssg-content h2 { font-size: 1.6rem; font-weight: 600; color: #0C4A6E; margin-top: 2rem; margin-bottom: 1rem; }
+    .ssg-content h3 { font-size: 1.25rem; font-weight: 600; color: #0C4A6E; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+    .ssg-content h4 { font-size: 1.1rem; font-weight: 600; color: #0C4A6E; margin-top: 1.25rem; margin-bottom: 0.5rem; }
+    .ssg-content p { font-size: 1.05rem; color: #374151; margin-bottom: 1.25rem; }
+    .ssg-content ul, .ssg-content ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+    .ssg-content li { margin-bottom: 0.5rem; color: #374151; }
+    .ssg-content a { color: #0EA5E9; text-decoration: none; }
+    .ssg-content a:hover { text-decoration: underline; }
+    .ssg-content strong { color: #0C4A6E; }
+    .ssg-content img { max-width: 100%; height: auto; border-radius: 12px; margin: 1.5rem 0; }
+    .ssg-content figure { margin: 1.5rem 0; }
+    .ssg-content blockquote { margin: 1.5rem 0; padding: 1rem 1.5rem; border-left: 4px solid #0EA5E9; background: #F0F9FF; color: #4b5563; border-radius: 0 8px 8px 0; }
+    .ssg-content pre { background: #0f172a; color: #e2e8f0; padding: 1rem 1.25rem; border-radius: 12px; overflow-x: auto; font-size: 0.95rem; }
+    .ssg-content code { background: #F1F5F9; color: #0C4A6E; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.9em; }
+    .ssg-content pre code { background: transparent; color: inherit; padding: 0; }
+    .ssg-content table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 1rem; }
+    .ssg-content th, .ssg-content td { border: 1px solid #e5e7eb; padding: 0.6rem 0.9rem; text-align: left; }
+    .ssg-content th { background: #F0F9FF; color: #0C4A6E; }
+    .ssg-content .article-meta { display: flex; flex-wrap: wrap; gap: 1.25rem; font-size: 0.95rem; color: #64748b; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #e5e7eb; }
+    .ssg-content .article-meta a { color: #0EA5E9; }
+    .ssg-loading { display: flex; align-items: center; justify-content: center; min-height: 20vh; margin-top: 2rem; }
+    .ssg-spinner { width: 40px; height: 40px; border: 3px solid #e5e7eb; border-top-color: #0EA5E9; border-radius: 50%; animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  `;
+
+// 构建时拉取已发布文章（超时保护，失败优雅降级）
+// 上次成功拉取的文章缓存路径（网络抖动时兜底，避免 sitemap 丢失已收录文章）
+const ARTICLE_CACHE_PATH = path.join(__dirname, '.article_cache.json');
+
+// 用户手动导出的文章数据（离线构建用）：
+// 1. public/articles.json（C 方案：纯静态站点，构建时由 scripts/convert-articles.js 生成）
+// 2. scripts/articles.local.json（历史兼容：手动放置的本地备份）
+const ARTICLE_LOCAL_PATH = path.join(__dirname, 'articles.local.json');
+const ARTICLE_PUBLIC_PATH = path.join(__dirname, '..', 'public', 'articles.json');
+
+// 离线模式：读取本地文章数据，不再请求 Supabase
+function readLocalArticles() {
+  try {
+    // 优先使用 public/articles.json（与前端共享）
+    if (fs.existsSync(ARTICLE_PUBLIC_PATH)) {
+      const data = JSON.parse(fs.readFileSync(ARTICLE_PUBLIC_PATH, 'utf8'));
+      const arr = Array.isArray(data) ? data : (data && data.articles) || [];
+      if (Array.isArray(arr) && arr.length) {
+        console.log(`ℹ️ 使用 public/articles.json 中的 ${arr.length} 篇文章（纯静态模式）`);
+        return arr;
+      }
+    }
+    // 兼容历史手动备份文件
+    if (fs.existsSync(ARTICLE_LOCAL_PATH)) {
+      const data = JSON.parse(fs.readFileSync(ARTICLE_LOCAL_PATH, 'utf8'));
+      const arr = Array.isArray(data) ? data : (data && data.articles) || [];
+      if (Array.isArray(arr) && arr.length) {
+        console.log(`ℹ️ 使用本地导出文件中的 ${arr.length} 篇文章（scripts/articles.local.json）`);
+        return arr;
+      }
+    }
+  } catch (e) { /* ignore */ }
+  return [];
+}
+
+// 实时拉取失败/无网时的兜底顺序：本地导出文件 → 上次成功缓存 → 空
+function getFallbackArticles() {
+  const local = readLocalArticles();
+  if (local.length) return local;
+  return readArticleCache();
+}
+
+async function fetchPublishedArticles() {
+  // C 方案：纯静态站点，完全从本地 articles.json 读取，不再请求 Supabase
+  const local = readLocalArticles();
+  if (local.length) return local;
+  // 无本地数据时，才尝试实时拉取（兼容旧模式）
+  if (!createClient) return [];
+
+  try {
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: { persistSession: false, autoRefreshToken: false },
+    });
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 20000);
+    const { data, error } = await supabase
+      .from('articles')
+      .select('id, title, content, summary, cover_image, source_type, source_url, published_at, created_at, view_count, category, tags, seo_title, seo_description')
+      .eq('status', 'published')
+      .order('published_at', { ascending: false })
+      .abortSignal(controller.signal);
+    clearTimeout(timer);
+    if (error) {
+      console.warn('⚠️ 拉取文章失败，尝试使用兜底数据：', error.message, error.cause ? '| cause=' + (error.cause.message || error.cause) : '');
+      return getFallbackArticles();
+    }
+    const articles = data || [];
+    // 写入缓存（仅成功时），供后续失败兜底
+    try { fs.writeFileSync(ARTICLE_CACHE_PATH, JSON.stringify(articles)); } catch (e) { /* 缓存写入失败不影响主流程 */ }
+    return articles;
+  } catch (e) {
+    const cause = (e && e.cause && (e.cause.message || e.cause.code || e.cause)) || 'n/a';
+    console.warn('⚠️ 拉取文章异常，尝试使用兜底数据：', e.message, '| cause:', cause, '| url:', SUPABASE_URL);
+    return getFallbackArticles();
+  }
+}
+
+// 读取上次成功拉取的缓存；无缓存则返回空（首次构建且网络不通时优雅降级）
+function readArticleCache() {
+  try {
+    if (fs.existsSync(ARTICLE_CACHE_PATH)) {
+      const cached = JSON.parse(fs.readFileSync(ARTICLE_CACHE_PATH, 'utf8'));
+      if (Array.isArray(cached) && cached.length) {
+        console.log(`ℹ️ 使用缓存中的 ${cached.length} 篇文章（本次实时拉取失败）`);
+        return cached;
+      }
+    }
+  } catch (e) { /* ignore */ }
+  return [];
+}
+
+// 文章面包屑（首页 > 文章资讯 > 标题）
+function buildArticleBreadcrumb(article) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://www.fenyai.com/" },
+      { "@type": "ListItem", "position": 2, "name": "文章资讯", "item": "https://www.fenyai.com/articles" },
+      { "@type": "ListItem", "position": 3, "name": article.title, "item": `https://www.fenyai.com/${articleUrl(article)}` }
+    ]
+  };
+}
+
+// =========== 文章↔词页 内链辅助（SEO：闭合孤岛，让 80+ 篇文章不再 0 承接） ===========
+const KEYWORD_LINKS = [
+  { keywords: ['活码', '引流', '渠道活码', '加粉', '企微活码'], url: '/live-code', title: '企业微信活码怎么生成', anchor: '有机云活码工具' },
+  { keywords: ['群发', '超级群发', '批量群发', '群发助手'], url: '/mass-send', title: '企业微信群发助手', anchor: '有机云超级群发' },
+  { keywords: ['聚合聊天', '聚合', '统一接待'], url: '/juhe-chat', title: '聚合聊天', anchor: '有机云聚合聊天' },
+  { keywords: ['会话存档', '存档', '合规', '会话合规'], url: '/session-archive', title: '企业微信会话存档', anchor: '有机云会话存档' },
+  { keywords: ['AI智能体', '智能体', 'AI客服', '知识库', 'AI'], url: '/ai-agent', title: '企业微信AI智能体', anchor: '有机云AI智能体' },
+  { keywords: ['企微魔方', '魔方'], url: '/weimo', title: '企微魔方', anchor: '有机云企微魔方' },
+  { keywords: ['SOP', '营销自动化', '客户SOP', 'sop'], url: '/sop', title: '企微SOP', anchor: '有机云企微SOP' },
+  { keywords: ['机器人', '自动回复', '关键词回复', '企微机器人'], url: '/robot', title: '企微机器人', anchor: '有机云企微机器人' },
+  { keywords: ['云手机', '群控'], url: '/cloud-phone', title: '云手机群控', anchor: '有机云云手机' },
+  { keywords: ['SCRM哪家好', 'SCRM选型', '选型', '哪家好', 'SCRM'], url: '/compare', title: 'SCRM哪家好', anchor: '有机云SCRM对比' },
+  { keywords: ['企微SCRM', 'SCRM', '私域'], url: '/scrm', title: '企业微信SCRM', anchor: '有机云企微SCRM' },
+  { keywords: ['私域', '私域运营', '解决方案'], url: '/solutions', title: '私域运营解决方案', anchor: '有机云私域方案' },
+];
+
+// EdgeOne Pages 静态上传禁止非 ASCII 文件名，故对语义 slug 做 percent-encode：
+// 浏览器/百度仍按中文关键词收录（URL 编码后自动解码），同时磁盘路径保持 ASCII 可部署。
+// 截断到安全字节数：Linux 文件名上限 255 字节，且 Windows 本地需 \\?\ 长路径前缀。
+function articleUrl(article) {
+  const raw = article.slug || article.id;
+  let enc = encodeURIComponent(raw);
+  const MAX = 235;
+  if (enc.length > MAX) {
+    let cut = enc.lastIndexOf('%', MAX);
+    if (cut < 0) cut = MAX;
+    enc = enc.slice(0, cut) + '-' + String(article.id).slice(-4);
+  }
+  return 'article/' + enc;
+}
+
+// 文章正文底部：相关词页推荐（article -> keyword 内链，锚文本含「有机云+功能词」）
+function renderKeywordLinksHtml(signals) {
+  const hay = (signals || []).filter(Boolean).join(' ');
+  const links = KEYWORD_LINKS.filter((l) => l.keywords.some((k) => hay.includes(k))).slice(0, 5);
+  if (!links.length) return '';
+  const items = links.map((l) =>
+    `<li><a href="https://www.fenyai.com${l.url}" rel="bookmark">${escapeHtml(l.anchor)}</a> —— <span>${escapeHtml(l.title)}</span></li>`
+  ).join('');
+  return `<h2>相关产品与解决方案</h2>\n<ul class="kw-links">${items}\n</ul>`;
+}
+
+// 词页正文底部：延伸阅读文章（keyword -> article 内链，闭合权重网络）
+const ROUTE_RELATED_KEYWORDS = {
+  '/live-code': ['活码', '引流', '渠道活码', '加粉'],
+  '/mass-send': ['群发', '超级群发', '批量群发'],
+  '/juhe-chat': ['聚合聊天', '聚合', '统一接待'],
+  '/session-archive': ['会话存档', '存档', '合规'],
+  '/ai-agent': ['AI智能体', '智能体', 'AI客服', '知识库'],
+  '/weimo': ['企微魔方', '魔方'],
+  '/sop': ['SOP', '营销自动化', '客户SOP'],
+  '/robot': ['机器人', '自动回复', '关键词回复'],
+  '/cloud-phone': ['云手机', '群控'],
+  '/compare': ['SCRM哪家好', 'SCRM选型', '选型', '哪家好', 'SCRM'],
+  '/scrm': ['企微SCRM', 'SCRM'],
+  '/solutions/sop': ['SOP', '营销自动化', '客户SOP'],
+  '/solutions/archive': ['会话存档', '存档', '合规'],
+  '/solutions/active-outreach': ['群发', '超级群发', '主动拓客'],
+};
+
+function articleHay(a) {
+  return [a.category, a.title, a.summary, a.content, ...(a.tags || [])].filter(Boolean).join(' ');
+}
+
+function renderRelatedArticlesHtml(articles, terms, maxCount) {
+  if (!articles || !articles.length || !terms || !terms.length) return '';
+  const matched = articles.filter((a) => {
+    const hay = articleHay(a);
+    return terms.some((t) => hay.includes(t));
+  }).slice(0, maxCount || 3);
+  if (!matched.length) return '';
+  const items = matched.map((a) =>
+    `<li><a href="https://www.fenyai.com/${articleUrl(a)}">${escapeHtml(a.title)}</a></li>`
+  ).join('');
+  return `<h2>延伸阅读</h2>\n<ul class="rel-articles">${items}\n</ul>`;
+}
+
+// 生成 dist/_redirects：在 /article/* 静态规则之前插入 旧 UUID -> slug 的 301，避免已收录 UUID 页 404 / 重复内容
+function writeRedirects(articles) {
+  const distDir = path.join(__dirname, '..', 'dist');
+  const pubPath = path.join(__dirname, '..', 'public', '_redirects');
+  let base = '';
+  if (fs.existsSync(pubPath)) base = fs.readFileSync(pubPath, 'utf8');
+  const lines = base.split('\n').filter((l) => l.trim() !== '');
+  const redirectLines = (articles || [])
+    .filter((a) => a.slug && a.id !== a.slug)
+    .map((a) => `/article/${a.id} /${articleUrl(a)} 301`);
+  let insertAt = lines.findIndex((l) => l.trim().startsWith('/article/*'));
+  if (insertAt < 0) insertAt = lines.findIndex((l) => l.trim().startsWith('/* /index.html'));
+  if (insertAt < 0) insertAt = lines.length;
+  const out = [...lines.slice(0, insertAt), ...redirectLines, ...lines.slice(insertAt)].join('\n') + '\n';
+  fs.writeFileSync(path.join(distDir, '_redirects'), out);
+  console.log(`✓ 生成 _redirects（含 ${redirectLines.length} 条文章 UUID→slug 301）`);
+}
+
+// 生成单篇文章静态 HTML（BlogPosting 结构化数据 + 预渲染正文）
+function generateArticleHTML(article) {
+  const id = article.id;
+  const idOrSlug = article.slug || article.id;
+  const canonical = `https://www.fenyai.com/${articleUrl(article)}`;
+  const ogImage = DEFAULT_OG_IMAGE;
+  const title = article.seo_title || article.title;
+  const description = (article.seo_description || article.summary || (article.content || '').replace(/<[^>]+>/g, '').trim().substring(0, 150) || '有机云私域运营干货').trim();
+  const keywords = [...new Set([...(article.tags && Array.isArray(article.tags) ? article.tags : []), '私域运营', '企业微信SCRM', '有机云'])].join(',');
+
+  const schemas = [{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": article.title,
+    "description": description,
+    "image": [DEFAULT_OG_IMAGE],
+    "articleSection": article.category || "私域运营",
+    "keywords": keywords,
+    "inLanguage": "zh-CN",
+    "datePublished": article.published_at || article.created_at,
+    "dateModified": article.created_at || article.published_at,
+    "author": { "@type": "Organization", "name": "有机云", "url": "https://www.fenyai.com" },
+    "publisher": {
+      "@type": "Organization",
+      "name": "有机云",
+      "logo": { "@type": "ImageObject", "url": "https://www.fenyai.com/logo.png" }
+    },
+    "speakable": { "@type": "SpeakableSpecification", "cssSelector": ["h1", ".article-meta", "article"] },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": canonical }
+  }, ORGANIZATION_SCHEMA, buildArticleBreadcrumb(article)];
+
+  const schemaScripts = schemas.map(s => '  <script type="application/ld+json">\n  ' + JSON.stringify(s) + '\n  </script>').join('\n');
+
+  const meta = [];
+  const datePublished = (article.published_at || article.created_at || '').split('T')[0];
+  if (datePublished) meta.push('<span>📅 ' + datePublished + '</span>');
+  if (article.category) meta.push('<span>📂 ' + escapeHtml(article.category) + '</span>');
+  if (article.view_count) meta.push('<span>👁 ' + article.view_count + ' 阅读</span>');
+  if (article.source_type === 'imported' && article.source_url) {
+    meta.push('<a href="' + escapeHtml(article.source_url) + '" target="_blank" rel="noopener noreferrer">原文链接</a>');
+  }
+  const metaHtml = meta.length ? '<div class="article-meta">' + meta.join('') + '</div>' : '';
+
+  const kwModule = renderKeywordLinksHtml([article.category, article.title, article.summary, ...(article.tags || []), article.content]);
+  const prerenderedHTML = '      <h1>' + escapeHtml(article.title) + '</h1>\n' + metaHtml + '\n' + (article.content || '') + (kwModule ? '\n' + kwModule : '');
+
+  return renderArticleShell({ canonical, title, description, keywords, ogImage, schemaScripts, prerenderedHTML });
+}
+
+// 文章页 HTML 外壳（复用验证 meta、主题切换、百度自动收录）
+function renderArticleShell({ canonical, title, description, keywords, ogImage, schemaScripts, prerenderedHTML }) {
+  const og = ogImage || DEFAULT_OG_IMAGE;
+  return `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta name="baidu-site-verification" content="codeva-DHMjhEQXnT" />
+  <meta name="360-site-verification" content="368c63a6fb9755135cc510b8367d28c5" />
+  <meta name="msvalidate.01" content="78DF27E53F72550D089DB668B4449793" />
+  <meta name="sogou_site_verification" content="PSUcgYbLcF" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${escapeHtml(title)}_有机云私域运营干货</title>
+  <meta name="description" content="${escapeHtml(description)}">
+  <meta name="keywords" content="${escapeHtml(keywords)}">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="${canonical}">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="${canonical}">
+  <meta property="og:title" content="${escapeHtml(title)}">
+  <meta property="og:description" content="${escapeHtml(description)}">
+  <meta property="og:image" content="${og}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:site_name" content="有机云">
+  <meta property="og:locale" content="zh_CN">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="${canonical}">
+  <meta name="twitter:title" content="${escapeHtml(title)}">
+  <meta name="twitter:description" content="${escapeHtml(description)}">
+  <meta name="twitter:image" content="${og}">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <style>${ARTICLE_BASE_STYLE}
+  </style>
+  <!-- JSON-LD Structured Data -->
+${schemaScripts}
+</head>
+<body>
+  <div id="root">
+    <!-- SSG预渲染内容 - 用于SEO和首屏展示 -->
+    <article class="ssg-content">
+${prerenderedHTML}
+    </article>
+  </div>
+  <!-- 主应用脚本 -->
+  <script defer src="/bundle.js"></script>
+
+  <!-- 主题切换（防 flash） -->
+  <script>
+    (function() {
+      const html = document.documentElement;
+      function applyTheme(theme) {
+        html.classList.remove('light', 'dark');
+        html.classList.add(theme);
+        html.setAttribute('data-theme', theme);
+      }
+      applyTheme('light');
+    })();
+  </script>
+
+  <!-- Baidu Auto Submit - 自动收录JS代码 -->
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if(curProtocol === 'https'){
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      } else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+</body>
+</html>`;
+}

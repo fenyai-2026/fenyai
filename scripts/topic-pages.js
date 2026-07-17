@@ -1,0 +1,506 @@
+// 通用词静态词页数据源（「平行静态内容层」）
+// 纯数据、无副作用，仅由 scripts/ssg.js require 使用。
+// 每条词页生成独立静态 HTML 到 dist/topic/{slug}.html，canonical 自指，
+// 与同簇词页、SPA 功能页互链形成词簇，提升百度整簇权重。
+//
+// 字段说明：
+//   slug        -> 文件命：/topic/{slug}.html
+//   title       -> <title>（关键词前置 + 品牌后缀）
+//   description -> <meta name=description>
+//   category    -> JSON-LD 分类 / 面包屑二级
+//   keyword     -> JSON-LD 关键词
+//   spaPage     -> 回对应 SPA 功能页的 hash 路由（不含域名）
+//   cluster     -> 同簇其他词页 slug 数组（真实 .html 内链）
+//   content     -> 真实中文 H2/H3 正文（已含内链锚点占位由 ssg.js 统一注入）
+
+module.exports = [
+  {
+    slug: 'wecom-message-channel',
+    title: '企业微信消息通道：对接与私有化部署 | 有机云',
+    description: '企业微信消息通道怎么选、怎么对接与私有化部署？有机云详解消息底层通道架构、稳定性方案与私有化落地。',
+    category: '消息通道',
+    keyword: '企业微信消息通道',
+    spaPage: '/#/message-channel',
+    cluster: ['wecom-message-push-api', 'wecom-anti-block-mass-send', 'wecom-mass-send-no-churn', 'wecom-mass-send-api', 'session-archive-private-deploy'],
+    content: `
+      <h2>什么是企业微信消息通道（与「消息推送」概念边界）</h2>
+      <p>企业微信消息通道，指的是企业与客户、员工之间在企业微信体系内收发消息的底层通路，既包括官方提供的「消息推送」接口，也包括建立在接口之上的稳定性、重试、私有化能力。很多团队把「消息推送 API」直接等同于「消息通道」，实际上推送只是通道的一个出口，真正的通道能力还涵盖送达回执、频控、失败补偿与数据归属。理解这一边界，是做好后续对接与选型的前提。</p>
+      <h2>官方文档 vs 实际落地：企业最易踩的 3 个坑</h2>
+      <ul>
+        <li><strong>限流</strong>：官方接口有分钟/小时级调用阈值，业务高峰期直接触顶被限流，导致通知延迟或丢失。</li>
+        <li><strong>回执缺失</strong>：默认接口不保证送达回执，营销与触达场景无法确认客户是否真正收到，难以度量效果。</li>
+        <li><strong>私有化</strong>：官方 SaaS 模式数据存于第三方，强合规行业（金融、医疗）需要数据自持，文档往往语焉不详。</li>
+      </ul>
+      <h2>消息通道底层架构（稳定性 / 重试 / 不掉粉的技术要点）</h2>
+      <p>稳定的消息通道通常由「接入层—调度层—通道层」三段构成：接入层统一鉴权与限流；调度层做失败退避重试与优先级队列；通道层负责真正触达。通过多通道隔离、发送节奏控制与回执校验，可以把退粉率压到最低。有机云在通道层做了发送质量评分与 A/B 分流，让高价值客户走更稳的链路。</p>
+      <h2>私有化部署方案（数据归属、合规、部署形态）</h2>
+      <p>对于有数据主权诉求的企业，消息通道可下沉到专有云或本地机房部署，消息日志与联系人数据全程不出企业边界，满足审计与等保要求。部署形态上支持容器化交付，运维对接现有 K8s 体系，灰度上线不中断业务。</p>
+      <h2>选型 checklist（给技术决策者的 7 条）</h2>
+      <ul>
+        <li>是否支持私有化数据自持？</li>
+        <li>限流阈值与扩容方式是否透明？</li>
+        <li>是否提供送达回执与失败补偿？</li>
+        <li>能否与 SOP / 群发 / 标签系统打通？</li>
+        <li>多账号通道是否隔离、防关联？</li>
+        <li>接入成本（代码量、文档、SDK）？</li>
+        <li>合规资质与售后响应时效？</li>
+      </ul>
+      <h2>有机云消息通道能力说明</h2>
+      <p>有机云提供企业微信消息通道底层能力，3 行代码即可为 AI 智能体或业务系统接入企微消息，支持万级并发、99.9% 送达率与私有化部署。结合会话存档与 SOP 自动化，可直接构建「感知—决策—触达」的私域闭环。前往功能页了解接入示例，或申请免费试用体验真实通道质量。</p>
+    `
+  },
+  {
+    slug: 'wecom-message-push-api',
+    title: '企业微信消息推送API：实战、限流与避坑 | 有机云',
+    description: '企业微信消息推送API怎么用在业务里？限流如何处理、失败如何重试、私有化怎样对接，有机云给出实战方案。',
+    category: '消息通道',
+    keyword: '企业微信消息推送API',
+    spaPage: '/#/message-channel',
+    cluster: ['wecom-message-channel', 'wecom-mass-send-api', 'session-archive-private-deploy'],
+    content: `
+      <h2>消息推送 API 能力边界（文本 / 卡片 / 应用消息）</h2>
+      <p>企业微信消息推送 API 覆盖文本、图片、链接、小程序、卡片等多种消息类型，既可以向单个客户发送「客户联系消息」，也可以向成员推送「应用消息」。理解不同类型的能力边界，才能把通知、营销、服务消息分通道编排，避免把营销内容塞进服务通知导致触达受阻。</p>
+      <h2>限流机制与重试策略</h2>
+      <p>官方对消息接口设有严格的频率上限，常规业务在促销期极易触顶。实战中推荐在业务侧做令牌桶限流 + 指数退避重试：第一次失败等待 1s、第二次 2s、第四次 8s，并对 45009（频率限制）与 40001（鉴权失败）分类处理。有机云在调度层内置了退避算法与失败队列，开发者无需手写重试。</p>
+      <h2>典型业务场景</h2>
+      <ul>
+        <li><strong>订单通知</strong>：下单、发货、签收实时触达客户。</li>
+        <li><strong>主动触达</strong>：活动预热、权益提醒按标签圈选人群。</li>
+        <li><strong>SOP 触发</strong>：客户进入特定阶段自动推送对应内容。</li>
+      </ul>
+      <h2>私有化对接流程（凭证、回调、安全）</h2>
+      <p>私有化环境下，推送 API 通过企业自建应用凭证调用，消息日志落在企业自有存储。回调地址需做双向校验与签名验签，敏感字段加密落库，确保合规可追溯。有机云提供容器化交付，对接现有网关与密钥管理体系。</p>
+      <h2>常见报错对照表</h2>
+      <ul>
+        <li>40014 / 41001：access_token 失效，需刷新重发。</li>
+        <li>45009：接口频率超限，进入退避队列。</li>
+        <li>48002：API 接口未被授权，检查应用可见范围。</li>
+        <li>9001002：主动推送频率过高，需降速。</li>
+      </ul>
+      <h2>有机云推送 API 实战封装</h2>
+      <p>有机云把鉴权、限流、重试、回执统一封装，开发者拿到的是「一定能送达」的语义接口，无需关心限流细节。配合消息通道底层，可一键切换公有云 / 私有化部署。申请试用即可获取接入示例与 SDK。</p>
+    `
+  },
+  {
+    slug: 'wecom-anti-block-mass-send',
+    title: '企业微信防封群发：底层通道稳定性方案 | 有机云',
+    description: '企业微信防封群发怎么做？不止用官方接口，有机云从消息底层通道稳定性讲清如何降低风控触发与掉粉。',
+    category: '群发',
+    keyword: '企业微信防封群发',
+    spaPage: '/#/mass-send',
+    cluster: ['wecom-message-channel', 'wecom-mass-send-no-churn', 'wecom-mass-send-api', 'wecom-sop-automation'],
+    content: `
+      <h2>「合规群发」为什么还会被封</h2>
+      <p>很多企业误以为「走官方接口 = 不会被封」，实际上官方接口只是降低了违规风险，并不代表零风控。风控系统同时监控发送频率、账号关系链、内容相似度等信号，单纯合规接口在高频、同质化群发下同样会触发限制。真正防封的核心是「发送质量」而非「是否官方接口」。</p>
+      <h2>风控触发的底层信号</h2>
+      <ul>
+        <li><strong>频率</strong>：单位时间发送量突增、短时密集触达。</li>
+        <li><strong>关系链</strong>：新加好友立刻群发、单向关系过多。</li>
+        <li><strong>内容相似度</strong>：大批量完全一致文案被识别为营销轰炸。</li>
+      </ul>
+      <h2>通道稳定性方案（发送节奏、通道隔离、回执校验）</h2>
+      <p>有机云从消息底层通道入手：通过多账号通道隔离降低关联风险，用发送节奏控制把触达打散到更自然的曲线，并以回执校验确认每次发送真实到达。相比单纯「用官方接口」，这套方案把退粉与封号概率双双压低。</p>
+      <h2>与 SOP 自动化的联动（错峰触发）</h2>
+      <p>把群发交给 SOP 自动化按客户阶段错峰触发，既能保证内容「千人千面」，又能天然打散发送频率。例如新客欢迎在第 1 天、权益提醒在第 3 天、复购在第 14 天分层触达，风控信号显著弱于一次性群发。</p>
+      <h2>防封 checklist</h2>
+      <ul>
+        <li>发送节奏是否打散、错峰？</li>
+        <li>内容是否按标签差异化、去重？</li>
+        <li>通道是否隔离、账号关系是否健康？</li>
+        <li>是否监控回执与退粉率并实时调优？</li>
+      </ul>
+      <h2>有机云群发底层能力</h2>
+      <p>有机云超级群发基于消息通道底层构建，提供频控、通道隔离、回执校验与 SOP 错峰联动，从工程层面降低风控触发。前往功能页申请试用，亲测真实发送质量。</p>
+    `
+  },
+  {
+    slug: 'wecom-mass-send-no-churn',
+    title: '企微群发不掉粉：消息通道质量技术解析 | 有机云',
+    description: '企微群发不掉粉的关键在发送质量。有机云从消息通道底层解析如何降低退粉率、提升触达有效性。',
+    category: '群发',
+    keyword: '企微群发不掉粉',
+    spaPage: '/#/mass-send',
+    cluster: ['wecom-message-channel', 'wecom-anti-block-mass-send', 'wecom-mass-send-api'],
+    content: `
+      <h2>掉粉的底层归因（通道质量、内容匹配、时机）</h2>
+      <p>群发掉粉往往不是「发了消息」本身，而是发送质量出了问题：通道不稳定导致消息延迟甚至丢失、内容与客户当前需求不匹配、时机选在客户休息时段。三者叠加，退粉率会急剧上升。要降低掉粉，先把「发送」当成系统工程而非一次性动作。</p>
+      <h2>发送质量指标体系</h2>
+      <ul>
+        <li><strong>到达率</strong>：消息是否真实送达（需回执校验）。</li>
+        <li><strong>阅读率</strong>：客户是否点开，反映内容相关度。</li>
+        <li><strong>退粉率</strong>：发送后 24h / 72h 取关比例，核心结果指标。</li>
+      </ul>
+      <h2>通道层如何降退粉（个性化、频控、A/B）</h2>
+      <p>通过消息通道底层的个性化变量（称呼、权益、文案变体）与频控，让每条消息都「像真人发的」；用 A/B 分流小流量测试不同文案，把高退粉版本及时止损。有机云在通道层内置发送质量评分，自动降权劣质链路。</p>
+      <h2>内容匹配与标签联动</h2>
+      <p>掉粉的很大原因是「群发给了不对的人」。把群发与<a href="https://www.fenyai.com/topic/wecom-customer-profile-tags.html">客户画像标签</a>联动，按兴趣、阶段、价值分层触达，显著提升内容相关度，从根本上降低退粉。这正是「先打标签、再群发」优于「无差别轰炸」的原因。</p>
+      <h2>有机云不掉粉实践</h2>
+      <p>有机云群发基于消息通道底层，提供回执校验、频控、A/B 与标签联动的完整能力，帮助企业在规模化触达的同时把退粉率控制在低位。申请试用即可对比真实效果。</p>
+    `
+  },
+  {
+    slug: 'wecom-mass-send-api',
+    title: '企业微信群发API接口：限流重试与私有化 | 有机云',
+    description: '企业微信群发API接口怎么用？限流怎么处理、失败如何重试、能否私有化部署，有机云给出技术向实操。',
+    category: '群发',
+    keyword: '企业微信群发API接口',
+    spaPage: '/#/mass-send',
+    cluster: ['wecom-message-channel', 'wecom-message-push-api', 'wecom-anti-block-mass-send', 'wecom-mass-send-no-churn'],
+    content: `
+      <h2>群发 API 接口类型（应用消息 / 客户联系消息）</h2>
+      <p>企业微信群发 API 主要分两类：面向内部成员的「应用消息」群发，与面向客户的「客户联系消息」群发。后者受更严格的频控与合规约束，但触达的是真实客户资产，是私域运营的主战场。选型时先明确群发对象，再决定调用哪套接口。</p>
+      <h2>限流与重试的工程实现</h2>
+      <p>工程上推荐「客户端令牌桶 + 服务端退避」双层限流：先按官方阈值在业务侧削峰，遇到 45009 等频率错误进入指数退避队列，必要时把超大批量拆成多批次错峰发送。有机云在群发 API 封装层内置了这套机制，开发者无需手写重试逻辑。</p>
+      <h2>私有化部署下的群发架构</h2>
+      <p>私有化场景下，群发调度服务部署在企业自有环境，联系人数据与发送日志不出域，满足金融、医疗等强合规行业要求。架构上采用「调度节点 + 通道节点」分离，通道节点可水平扩展以应对大促峰值。</p>
+      <h2>与 SOP / 标签系统的接口联动</h2>
+      <p>群发 API 不应孤立调用，而是作为<a href="https://www.fenyai.com/topic/wecom-sop-automation.html">SOP 自动化</a>的执行出口、作为<a href="https://www.fenyai.com/topic/wecom-customer-profile-tags.html">客户画像标签</a>的触达动作。基于标签圈选人群、基于 SOP 触发时机，群发 API 才能发挥最大价值。</p>
+      <h2>有机云群发 API 封装</h2>
+      <p>有机云把鉴权、限流、重试、私有化与标签/SOP 联动统一封装，提供开箱即用的群发 API。申请试用即可获取接口文档与 SDK，快速接入现有业务系统。</p>
+    `
+  },
+  {
+    slug: 'session-archive-private-deploy',
+    title: '会话存档私有化部署：方案与选型 | 有机云',
+    description: '会话存档私有化部署怎么落地？数据存储归属、合规要求、部署形态怎么选，有机云给出完整方案与选型建议。',
+    category: '会话存档',
+    keyword: '会话存档私有化部署',
+    spaPage: '/#/session-archive',
+    cluster: ['scrm-private-deploy', 'session-archive-price', 'wecom-session-qc', 'wecom-session-qc-system'],
+    content: `
+      <h2>为什么需要会话存档私有化（数据归属 / 合规 / 审计）</h2>
+      <p>会话存档是强合规场景，金融、保险、医疗等行业监管要求聊天记录可追溯、可审计。公有云 SaaS 模式下数据存于服务商，难以满足「数据不出企业」的硬要求。私有化部署把存档数据落到企业自有存储，数据归属清晰、审计链路完整。</p>
+      <h2>私有化部署三种形态</h2>
+      <ul>
+        <li><strong>本地机房</strong>：数据完全自持，安全等级最高，运维成本也最高。</li>
+        <li><strong>专有云</strong>：在云厂商独享资源上部署，兼顾弹性与安全。</li>
+        <li><strong>混合部署</strong>：敏感存档本地、计算与前端上云，平衡成本与合规。</li>
+      </ul>
+      <h2>合规要点（员工告知、数据存储周期）</h2>
+      <p>无论哪种形态，都需在企业微信后台完成「员工与客户的双向告知」并保留告知记录；存储周期按行业监管要求设定，到期自动归档或销毁。有机云在私有化方案中内置合规告知模板与生命周期管理。</p>
+      <h2>与质检系统的联动</h2>
+      <p>存档只是第一步，真正的价值在<a href="https://www.fenyai.com/topic/wecom-session-qc.html">会话质检</a>。私有化存档与质检系统同域部署，质检可直接读取原始会话，做话术合规、敏感词与风险预警，数据不出企业边界。</p>
+      <h2>选型 checklist</h2>
+      <ul>
+        <li>数据归属是否满足监管？</li>
+        <li>部署形态与现有 IT 体系是否兼容？</li>
+        <li>是否内置合规告知与生命周期？</li>
+        <li>能否与质检、私有化 SCRM 打通？</li>
+      </ul>
+      <h2>有机云会话存档私有化能力</h2>
+      <p>有机云会话存档支持本地 / 专有云 / 混合三种私有化形态，提供合规告知、加密存储、生命周期管理与质检联动。前往功能页了解方案，或咨询获取行业落地参考。</p>
+    `
+  },
+  {
+    slug: 'scrm-private-deploy',
+    title: '企微SCRM私有化部署：消息底层+数据安全 | 有机云',
+    description: '企微SCRM私有化部署如何兼顾消息底层能力与数据安全？有机云从架构到合规给出技术决策者方案。',
+    category: '私有化',
+    keyword: '企微SCRM私有化部署',
+    spaPage: '/about',
+    cluster: ['session-archive-private-deploy', 'wecom-message-channel'],
+    content: `
+      <h2>SCRM 私有化的核心诉求（数据主权、合规）</h2>
+      <p>选择 SCRM 私有化的企业，核心诉求通常是「客户数据主权归我」与「满足行业合规」。客户资料、标签、会话记录是企业的核心资产，私有化让这些资产全程留在企业自有环境，避免被第三方平台锁定或泄露。</p>
+      <h2>消息底层能力在私有化中的保留</h2>
+      <p>私有化不等于能力缩水。以<a href="https://www.fenyai.com/topic/wecom-message-channel.html">企业微信消息通道</a>为代表的底层能力，在私有化架构中同样可用，群发、SOP、质检等上层模块直接复用通道，保证「自持数据」与「稳定触达」兼得。</p>
+      <h2>部署架构与安全边界</h2>
+      <p>典型架构为「前端 + 应用服务 + 数据存储」三层，均落在企业网络边界内；对外仅暴露必要的企业微信回调入口并做签名验签与双向 TLS。敏感字段加密落库，操作全程审计日志可追溯。</p>
+      <h2>与公有云的体验差异</h2>
+      <p>私有化在运维上需要企业自担基础设施，但在数据安全、定制深度与合规弹性上明显优于公有云。有机云通过容器化交付把部署与升级标准化，把体验落差降到最低。</p>
+      <h2>有机云私有化交付</h2>
+      <p>有机云提供企微 SCRM 私有化整体方案，覆盖消息底层、会话存档、质检与 SOP 全模块，支持本地 / 专有云交付与合规咨询。点击「关于我们」了解企业资质，或直接咨询私有化落地路径。</p>
+    `
+  },
+  {
+    slug: 'wecom-session-qc',
+    title: '企业微信会话质检：系统方案与自动化 | 有机云',
+    description: '企业微信会话质检怎么做？从话术合规到风险预警，有机云给出质检系统方案与自动化能力说明。',
+    category: '会话质检',
+    keyword: '企业微信会话质检',
+    spaPage: '/#/session-archive',
+    cluster: ['wecom-session-qc-system', 'session-archive-private-deploy', 'private-domain-automation', 'wecom-aggregate-chat'],
+    content: `
+      <h2>会话质检的业务价值（合规、服务质量、风险）</h2>
+      <p>会话质检是把「看不见的服务过程」变成「可度量、可管理」的手段。对强合规行业，它是监管刚需；对普通企业，它是服务质量与销售转化的放大器。没有质检，再好的话术标准也只能停留在培训 PPT 里。</p>
+      <h2>质检维度（话术、敏感词、响应时效）</h2>
+      <ul>
+        <li><strong>话术合规</strong>：是否按标准 SOP 介绍、有无违规承诺。</li>
+        <li><strong>敏感词</strong>：飞单、竞品、脏话、转账等风险词实时拦截。</li>
+        <li><strong>响应时效</strong>：首响时长、超时未跟进自动预警。</li>
+      </ul>
+      <h2>自动化质检流程（从存档到预警）</h2>
+      <p>质检依赖<a href="https://www.fenyai.com/topic/session-archive-private-deploy.html">会话存档</a>作为数据源：实时拉取会话 → 规则引擎匹配 → 命中风险自动生成预警工单 → 主管复核。全程自动化，把人工抽检从 1% 提升到 100% 覆盖。</p>
+      <h2>AI 在质检中的应用</h2>
+      <p>规则引擎之外，AI 智能体可理解语义、识别隐晦违规与情绪波动，把「关键词命中」升级为「意图识别」。结合<a href="https://www.fenyai.com/topic/private-domain-automation.html">私域流量自动化运营</a>框架，质检结果还能反向驱动话术优化与服务培训。</p>
+      <h2>有机云会话质检能力</h2>
+      <p>有机云会话质检基于会话存档构建，提供话术合规、敏感词、响应时效多维度质检与 AI 自动预警，并可与聚合聊天打通提升复核效率。前往功能页申请试用，体验真实质检流水线。</p>
+    `
+  },
+  {
+    slug: 'wecom-session-qc-system',
+    title: '企微会话质检系统：话术合规与质检自动化 | 有机云',
+    description: '企微会话质检系统怎么搭建？话术合规检查、风险预警、质检自动化，有机云详解系统能力与落地路径。',
+    category: '会话质检',
+    keyword: '企微会话质检系统',
+    spaPage: '/#/session-archive',
+    cluster: ['wecom-session-qc', 'session-archive-private-deploy'],
+    content: `
+      <h2>质检系统的组成（采集、规则引擎、报表）</h2>
+      <p>一套完整的会话质检系统由三层构成：<strong>采集层</strong>对接会话存档实时获取聊天；<strong>规则引擎层</strong>执行话术、敏感词、时效等策略；<strong>报表层</strong>输出质检覆盖率、风险分布与员工排行，为管理决策提供依据。</p>
+      <h2>话术合规与敏感词策略</h2>
+      <p>话术合规把「标准答案」做成可校验的规则，例如是否发送了合规告知、是否出现违规承诺；敏感词策略覆盖飞单、私加、竞品等风险词，命中即拦截或预警。策略可按部门、客户类型差异化配置。</p>
+      <h2>质检自动化与人工复核闭环</h2>
+      <p>自动化负责 100% 覆盖初筛，把低风险会话直接放行、高风险会话生成复核工单；人工只聚焦争议与高风险片段，形成「机器初筛 + 人工终审」的闭环，质检效率与准确性同步提升。</p>
+      <h2>与存档 / 私有化的依赖</h2>
+      <p>质检系统强依赖<a href="https://www.fenyai.com/topic/session-archive-private-deploy.html">会话存档私有化部署</a>提供的原始数据，私有化保证数据不出域；与<a href="https://www.fenyai.com/topic/wecom-session-qc.html">会话质检</a>能力互补，前者偏「系统搭建」、后者偏「质检场景」。</p>
+      <h2>有机云质检系统能力</h2>
+      <p>有机云质检系统提供采集、规则引擎、AI 预警与复核报表一体化能力，支持私有化部署与行业合规模板。前往功能页申请试用，快速搭建属于你团队的质检体系。</p>
+    `
+  },
+  {
+    slug: 'session-archive-price',
+    title: '企业微信会话内容存档价格：2026对比选型 | 有机云',
+    description: '企业微信会话内容存档价格怎么算？官方定价、服务商版本怎么选、私有化成本对比，有机云给出2026选型参考。',
+    category: '会话存档',
+    keyword: '企业微信会话内容存档价格',
+    spaPage: '/#/session-archive',
+    cluster: ['session-archive-private-deploy', 'wecom-session-archive-setup', 'wecom-session-qc'],
+    content: `
+      <h2>官方会话存档定价结构解读</h2>
+      <p>企业微信官方会话内容存档按「席位」收费，分为办公版与服务版，服务版覆盖语音、文件等更全类型。官方只卖「存档能力」，不含质检、敏感词、私有化等上层能力，这些需由 SCRM 服务商补齐。</p>
+      <h2>服务商版本差异（含私有化报价逻辑）</h2>
+      <p>SCRM 服务商在官方席位费之上，按功能模块（质检、私有化、聚合聊天等）与坐席数定价。私有化版本因涉及部署、运维与合规咨询，通常是「席位费 + 一次性部署 + 年服务费」结构，单价高于纯 SaaS 但长期数据成本更可控。</p>
+      <h2>选型三问（人数 / 合规 / 质检需求）</h2>
+      <ul>
+        <li><strong>人数</strong>：存档席位规模直接决定官方费用基数。</li>
+        <li><strong>合规</strong>：是否必须数据自持？决定要不要私有化。</li>
+        <li><strong>质检</strong>：是否需要话术合规与风险预警？决定要不要质检模块。</li>
+      </ul>
+      <h2>隐藏成本提示（接口调用、存储）</h2>
+      <p>除席位费外，需关注：接口调用量是否超额计费、存档数据长期存储的带宽与磁盘成本、私有化后的运维人力。把「显性席位费」与「隐性存储/运维费」合并评估才客观。</p>
+      <h2>有机云存档方案与报价咨询</h2>
+      <p>有机云会话存档提供 SaaS 与私有化双形态，打包质检、敏感词与合规告知，报价透明无隐藏项。结合<a href="https://www.fenyai.com/topic/session-archive-private-deploy.html">私有化部署</a>与<a href="https://www.fenyai.com/topic/wecom-session-qc.html">会话质检</a>方案，给出 2026 年可落地的选型参考。点击咨询获取专属报价。</p>
+    `
+  },
+  {
+    slug: 'wecom-live-code-guide',
+    title: '企业微信活码怎么生成：活码+自动打标 | 有机云',
+    description: '企业微信活码怎么生成？不止基础步骤，有机云讲活码+消息通道自动打标+不掉粉的组合打法。',
+    category: '活码',
+    keyword: '企业微信活码怎么生成',
+    spaPage: '/#/faq',
+    cluster: ['wecom-channel-code-guide', 'wecom-anti-block-mass-send'],
+    content: `
+      <h2>活码生成基础步骤（官方入口）</h2>
+      <p>登录企业微信管理后台，进入「客户联系—加入客户—联系我」，即可创建员工活码或渠道活码，保存后生成二维码。基础步骤人人都会，但「生成」只是引流的起点，真正的差异在后端的打标与分发。</p>
+      <h2>活码 + 自动打标（渠道来源识别）</h2>
+      <p>用渠道活码，每个投放渠道对应独立码，客户扫码后系统自动打上「来源渠道」标签。结合<a href="https://www.fenyai.com/topic/wecom-customer-profile-tags.html">客户画像标签</a>，后续群发与 SOP 可精准区分「抖音来的」与「线下门店来的」，触达效率显著提升。</p>
+      <h2>活码与群发 / 不掉粉联动</h2>
+      <p>扫码即打标，意味着后续<a href="https://www.fenyai.com/topic/wecom-anti-block-mass-send.html">防封群发</a>可以基于来源分层，避免对刚加的好友立刻轰炸导致掉粉。活码 + 打标 + 错峰群发，构成健康的引流—承接链路。</p>
+      <h2>多场景活码矩阵（门店 / 活动 / 客服）</h2>
+      <p>建议按「门店码、活动码、客服码、渠道码」搭建活码矩阵，每个码独立统计扫码量与添加量，清晰评估各渠道 ROI，把预算投向真正高效的来源。</p>
+      <h2>有机云活码能力</h2>
+      <p>有机云活码支持渠道活码、员工活码、群活码与自动打标，群满自动换群、永不过期，并天然打通标签与群发。前往功能页申请试用，体验「活码即打标」的组合打法。</p>
+    `
+  },
+  {
+    slug: 'wecom-channel-code-guide',
+    title: '企业微信渠道活码怎么做：数据归属私有化 | 有机云',
+    description: '企业微信渠道活码怎么做？渠道来源追踪、客户数据归属私有化，有机云给出与竞品的差异化打法。',
+    category: '活码',
+    keyword: '企业微信渠道活码怎么做',
+    spaPage: '/#/faq',
+    cluster: ['wecom-live-code-guide', 'session-archive-private-deploy', 'scrm-private-deploy'],
+    content: `
+      <h2>渠道活码的价值（来源归因、ROI）</h2>
+      <p>渠道活码的核心不是「生成二维码」，而是「把每一次添加归因到具体投放」。不同广告、不同门店、不同客服各持一码，后台即可看到每个渠道的扫码量、添加量与后续转化，让市场预算从「凭感觉」变成「看数据」。</p>
+      <h2>数据归属与私有化</h2>
+      <p>渠道活码沉淀的客户来源、标签与画像，属于企业核心资产。通过<a href="https://www.fenyai.com/topic/session-archive-private-deploy.html">会话存档私有化部署</a>与<a href="https://www.fenyai.com/topic/scrm-private-deploy.html">企微 SCRM 私有化</a>，这些数据全程留在企业自有环境，避免被第三方平台锁定，符合数据主权诉求。</p>
+      <h2>多渠道矩阵搭建</h2>
+      <p>按投放结构搭建「总部码 + 区域码 + 活动码 + 客服码」矩阵，上级码可下钻看下级渠道表现。配合自动打标，新客一进企微就带上完整来源链路，后续运营无需再追问「你从哪来」。</p>
+      <h2>与画像标签联动</h2>
+      <p>渠道活码打上的「来源标签」是<a href="https://www.fenyai.com/topic/wecom-customer-profile-tags.html">客户画像标签</a>体系的第一环。来源 + 行为 + 阶段，三层标签共同支撑精准分层运营，这正是有机云区别于纯活码工具的关键。</p>
+      <h2>有机云渠道活码能力</h2>
+      <p>有机云渠道活码提供来源归因、自动打标与私有化数据归属，并打通画像与群发。前往功能页申请试用，体验数据自持的渠道矩阵打法。</p>
+    `
+  },
+  {
+    slug: 'wecom-auto-group-guide',
+    title: '企业微信自动拉群怎么设置：一客一群方案 | 有机云',
+    description: '企业微信自动拉群怎么设置？一客一群、入群欢迎、消息通道触发，有机云给出可快速落地的配置方案。',
+    category: '社群',
+    keyword: '企业微信自动拉群怎么设置',
+    spaPage: '/#/sop',
+    cluster: ['wecom-sop-automation', 'wecom-live-code-guide', 'wecom-channel-code-guide', 'wecom-anti-block-mass-send'],
+    content: `
+      <h2>自动拉群的触发条件配置</h2>
+      <p>自动拉群可在「客户添加好友」「扫码入活码」「完成指定动作」等节点触发。常见配置：客户通过渠道活码添加后，自动邀请进入对应社群，无需人工逐个拉人，把运营人力从重复操作中解放出来。</p>
+      <h2>一客一群 / 按标签分群策略</h2>
+      <p>高客单价或强服务场景适合「一客一群」——每个客户配专属服务群；规模化引流则适合「按标签分群」，把同来源、同兴趣的客户聚到同一群做统一培育。策略由标签驱动，分群更精准。</p>
+      <h2>入群欢迎与 SOP 衔接</h2>
+      <p>客户进群后，自动发送欢迎语并触发<a href="https://www.fenyai.com/topic/wecom-sop-automation.html">SOP 自动化</a>：第 1 天发权益、第 3 天发案例、第 7 天发活动，把社群从「建而不活」变成「按剧本培育」。</p>
+      <h2>消息通道驱动的群运营</h2>
+      <p>群内触达同样依赖<a href="https://www.fenyai.com/topic/wecom-message-channel.html">企业微信消息通道</a>底层能力，保证群发通知稳定到达、不被风控。结合<a href="https://www.fenyai.com/topic/wecom-anti-block-mass-send.html">防封群发</a>策略，社群规模化运营才可持续。</p>
+      <h2>有机云自动拉群能力</h2>
+      <p>有机云自动拉群支持多触发条件、一客一群与按标签分群，并打通 SOP 与消息通道。前往功能页申请试用，快速搭建可落地的社群自动化方案。</p>
+    `
+  },
+  {
+    slug: 'wecom-sop-automation',
+    title: '企业微信SOP自动化：消息触发与流程编排 | 有机云',
+    description: '企业微信SOP自动化怎么落地？消息触发、流程编排、与群发/拉群联动，有机云给出 SOP 自动化实操方案。',
+    category: 'SOP',
+    keyword: '企业微信SOP自动化',
+    spaPage: '/#/sop',
+    cluster: ['wecom-auto-group-guide', 'wecom-anti-block-mass-send', 'wecom-customer-profile-tags'],
+    content: `
+      <h2>SOP 自动化的业务场景（新客、促活、挽回）</h2>
+      <p>SOP（标准操作流程）把客户运营动作固化成自动剧本：新客欢迎、社群培育、复购唤醒、流失召回，每个阶段在正确时间发正确内容，不再依赖个人经验与手速，规模化的同时保证服务质量一致。</p>
+      <h2>触发器设计（事件 / 时间 / 标签）</h2>
+      <ul>
+        <li><strong>事件触发</strong>：添加好友、扫码、下单等行为即时触发。</li>
+        <li><strong>时间触发</strong>：加好友第 1/3/7 天自动跟进。</li>
+        <li><strong>标签触发</strong>：打上某标签即进入对应培育流。</li>
+      </ul>
+      <h2>与群发、拉群、画像的编排</h2>
+      <p>SOP 是「大脑」，群发是「手脚」：SOP 决策后调用<a href="https://www.fenyai.com/topic/wecom-anti-block-mass-send.html">防封群发</a>触达、调用<a href="https://www.fenyai.com/topic/wecom-auto-group-guide.html">自动拉群</a>建群，并基于<a href="https://www.fenyai.com/topic/wecom-customer-profile-tags.html">客户画像标签</a>选择内容与人群，形成「感知—决策—执行」闭环。</p>
+      <h2>效果度量</h2>
+      <p>通过执行率、触达率、转化漏斗等指标持续迭代 SOP。哪一步掉链子一目了然，比「凭感觉发消息」可控得多。</p>
+      <h2>有机云 SOP 能力</h2>
+      <p>有机云 SOP 自动化提供事件/时间/标签多触发器，与群发、拉群、画像深度编排，并内置行业模板开箱即用。前往功能页申请试用，把运营流程沉淀为标准动作。</p>
+    `
+  },
+  {
+    slug: 'wecom-session-archive-setup',
+    title: '企业微信会话存档怎么开通：开通+私有化 | 有机云',
+    description: '企业微信会话存档怎么开通？开通步骤、员工告知合规、私有化部署与质检联动，有机云给出组合落地路径。',
+    category: '会话存档',
+    keyword: '企业微信会话存档怎么开通',
+    spaPage: '/#/session-archive',
+    cluster: ['session-archive-private-deploy', 'session-archive-price', 'wecom-session-qc'],
+    content: `
+      <h2>开通前置条件与步骤</h2>
+      <p>开通会话内容存档需企业微信管理员在后台「管理工具—会话内容存档」提交申请并购买席位，完成企业认证后，绑定 SCRM 服务商（如有机云）即可拉取会话。注意存档分办公版与服务版，按需选择消息类型覆盖。</p>
+      <h2>员工告知与合规要点</h2>
+      <p>存档前必须向员工与客户进行双向告知并取得确认，告知文案需留存备查。这是金融、保险等行业的监管硬性要求，也是避免法律风险的底线。有机云提供合规告知模板，一键对接存档开启流程。</p>
+      <h2>开通后接私有化</h2>
+      <p>若企业有数据主权诉求，开通后可直接切换到<a href="https://www.fenyai.com/topic/session-archive-private-deploy.html">会话存档私有化部署</a>，把存档数据落到自有存储，满足「数据不出企业」要求。</p>
+      <h2>开通后接质检</h2>
+      <p>存档只是数据底座，真正的价值在<a href="https://www.fenyai.com/topic/wecom-session-qc.html">会话质检</a>：开通后即可对全量会话做话术合规、敏感词与风险预警，把合规从「能存」升级为「能管」。</p>
+      <h2>有机云开通协助</h2>
+      <p>有机云提供会话存档开通全流程协助，涵盖账号认证、合规告知、私有化与质检联动一站式落地。点击咨询，获取行业专属开通与选型建议。</p>
+    `
+  },
+  {
+    slug: 'private-domain-automation',
+    title: '私域流量自动化运营：AI智能体+消息驱动 | 有机云',
+    description: '私域流量自动化运营怎么做？AI 智能体驱动、消息通道触发、SOP 编排，有机云给出技术向自动化运营框架。',
+    category: '私域',
+    keyword: '私域流量自动化运营',
+    spaPage: '/#/ai-agent',
+    cluster: ['wecom-aggregate-chat', 'wecom-sop-automation', 'wecom-message-channel'],
+    content: `
+      <h2>私域自动化的三层架构（触达 / 决策 / 执行）</h2>
+      <p>成熟的私域自动化由三层构成：<strong>触达层</strong>即消息通道，负责把内容送到客户；<strong>决策层</strong>由 AI 智能体与标签体系构成，判断「对谁、发什么」；<strong>执行层</strong>即 SOP，把决策变成按时按序的动作。三层解耦，各自可独立升级。</p>
+      <h2>AI 智能体在私域的角色</h2>
+      <p><a href="https://www.fenyai.com/topic/wecom-aggregate-chat.html">AI 智能体</a>承担 7×24 小时接待、多轮语义对话与意图识别，把常见咨询自动化；复杂或高意向场景自动转人工并带上全文上下文，让人力聚焦高价值会话。</p>
+      <h2>消息通道驱动的自动化</h2>
+      <p>所有自动化最终都要落到「发消息」，因此稳定的<a href="https://www.fenyai.com/topic/wecom-message-channel.html">企业微信消息通道</a>是底座。通道不稳，再聪明的决策也送不到客户手里。有机云把通道能力做成自动化可直接调用的标准接口。</p>
+      <h2>SOP 编排落地</h2>
+      <p>用<a href="https://www.fenyai.com/topic/wecom-sop-automation.html">SOP 自动化</a>把「决策结果」编排成时间轴动作：欢迎、培育、转化、挽回逐阶段推进，AI 与人工在流程中按节点接力，形成可持续的私域增长引擎。</p>
+      <h2>有机云私域自动化能力</h2>
+      <p>有机云提供「AI 智能体 + 消息通道 + SOP」一体化私域自动化框架，覆盖触达、决策、执行全链路。前往功能页申请试用，体验技术向的自动化运营能力。</p>
+    `
+  },
+  {
+    slug: 'wecom-community-tool',
+    title: '企业微信社群运营工具：聚合聊天+群管 | 有机云',
+    description: '企业微信社群运营工具有哪些？聚合聊天、群管、消息通道一体化，有机云给出社群运营工具能力集与选型。',
+    category: '社群',
+    keyword: '企业微信社群运营工具',
+    spaPage: '/#/juhe-chat',
+    cluster: ['wecom-aggregate-chat', 'wecom-auto-group-guide', 'wecom-anti-block-mass-send'],
+    content: `
+      <h2>社群运营核心痛点（多群管理、响应）</h2>
+      <p>当企业同时运营成百上千个社群，最大的痛点是「消息散、人难找、响应慢」：客户咨询淹没在群聊里，客服在多群间反复切换，重要消息无人跟进。社群运营工具的目标，就是把分散的群聊收口成可控的运营单元。</p>
+      <h2>聚合聊天与群管能力</h2>
+      <p><a href="https://www.fenyai.com/topic/wecom-aggregate-chat.html">聚合聊天</a>把多个企微号的群聊与客户会话统一收口到一个工作台，配合群管能力（入群欢迎、防骚扰、关键词自动回复、群发通知），让少量运营人员即可管理海量社群。</p>
+      <h2>与消息通道 / 群发联动</h2>
+      <p>社群通知依赖<a href="https://www.fenyai.com/topic/wecom-message-channel.html">消息通道</a>底层稳定触达，结合<a href="https://www.fenyai.com/topic/wecom-anti-block-mass-send.html">防封群发</a>策略，群发活动、权益提醒不再担心被风控。消息通道 + 群管，构成社群规模化的技术底座。</p>
+      <h2>工具选型维度</h2>
+      <ul>
+        <li>能否多号多群统一收口？</li>
+        <li>群管规则是否灵活（关键词、防骚扰）？</li>
+        <li>是否与标签、SOP、质检打通？</li>
+        <li>是否支持私有化与合规？</li>
+      </ul>
+      <h2>有机云社群工具能力</h2>
+      <p>有机云社群运营工具集聚合聊天、群管、消息通道与群发于一体，并打通标签与质检。前往功能页申请试用，体验一体化社群管理能力。</p>
+    `
+  },
+  {
+    slug: 'wecom-customer-profile-tags',
+    title: '企业微信客户画像标签：会话数据自动生成 | 有机云',
+    description: '企业微信客户画像标签怎么做？从会话存档数据自动生成画像与标签，有机云给出差异化自动化打标方案。',
+    category: '画像',
+    keyword: '企业微信客户画像标签',
+    spaPage: '/#/ai-agent',
+    cluster: ['wecom-session-qc', 'wecom-sop-automation', 'wecom-live-code-guide', 'wecom-channel-code-guide'],
+    content: `
+      <h2>画像标签的业务价值</h2>
+      <p>客户画像标签是私域精准运营的前提：有了标签，群发才知道发给谁、SOP 才知道推什么、客服才知道对方是谁。没有标签的私域，本质是把所有客户当成一个人对待，转化必然低效。</p>
+      <h2>从会话存档自动生成标签</h2>
+      <p>有机云的差异化在于：基于<a href="https://www.fenyai.com/topic/session-archive-private-deploy.html">会话存档</a>与<a href="https://www.fenyai.com/topic/wecom-session-qc.html">会话质检</a>数据，用 AI 解析客户聊天内容，自动提炼兴趣、需求、阶段、风险等标签，无需运营手动打标，标签覆盖率与时效性远超人工。</p>
+      <h2>标签与 SOP / 群发联动</h2>
+      <p>自动生成的标签直接喂给<a href="https://www.fenyai.com/topic/wecom-sop-automation.html">SOP 自动化</a>与<a href="https://www.fenyai.com/topic/wecom-anti-block-mass-send.html">群发</a>：高意向客户进转化流、沉睡客户进召回流、同来源客户进同主题群，实现真正的「千人千面」。</p>
+      <h2>标签体系搭建方法</h2>
+      <ul>
+        <li>来源层：渠道活码自动打「来自哪」。</li>
+        <li>行为层：浏览、下单、互动生成行为标签。</li>
+        <li>价值层：消费力、生命周期阶段分层。</li>
+        <li>风险层：投诉、敏感词触发风险标签。</li>
+      </ul>
+      <h2>有机云画像标签能力</h2>
+      <p>有机云客户画像标签基于会话数据 AI 自动生成，并与 SOP、群发、质检深度打通。前往功能页申请试用，体验「存档即打标」的自动化能力。</p>
+    `
+  },
+  {
+    slug: 'wecom-tag-precision',
+    title: '企业微信标签精细化运营：画像驱动精准触达 | 有机云',
+    description: '企业微信标签精细化运营怎么做？以客户画像驱动精准触达与分层运营，有机云给出标签精细化落地方法。',
+    category: '画像',
+    keyword: '企业微信标签精细化运营',
+    spaPage: '/#/ai-agent',
+    cluster: ['wecom-customer-profile-tags', 'wecom-sop-automation'],
+    content: `
+      <h2>标签精细化的分层逻辑</h2>
+      <p>标签精细化，是指从「粗粒度分组」升级到「多维度交叉分层」：一个客户同时拥有来源、兴趣、阶段、价值、风险多个标签，运营可以组合筛选（如「抖音来源 + 高价值 + 沉睡」），触达精度远超单一分组。</p>
+      <h2>画像驱动的精准触达</h2>
+      <p>基于<a href="https://www.fenyai.com/topic/wecom-customer-profile-tags.html">客户画像标签</a>，精准触达不再是「全量群发」，而是「对的人发对的内容」：新客发信任、老客发权益、流失客发召回，每条消息都命中客户当下需求，退粉率与转化同步优化。</p>
+      <h2>与 SOP / 群发组合</h2>
+      <p>精细标签是<a href="https://www.fenyai.com/topic/wecom-sop-automation.html">SOP 自动化</a>的燃料：不同标签组合进入不同培育剧本，配合<a href="https://www.fenyai.com/topic/wecom-mass-send-api.html">群发 API</a>错峰触达，把「精细化」从概念落成可执行的运营动作。</p>
+      <h2>有机云标签运营能力</h2>
+      <p>有机云标签精细化运营以画像驱动，提供自动打标、交叉分层与 SOP/群发联动。前往功能页申请试用，体验数据驱动的精准触达。</p>
+    `
+  },
+  {
+    slug: 'wecom-aggregate-chat',
+    title: '企业微信聚合聊天：多号统一管理方案 | 有机云',
+    description: '企业微信聚合聊天怎么实现？多账号统一收口、会话分配、与群管联动，有机云给出聚合聊天管理方案。',
+    category: '聚合聊天',
+    keyword: '企业微信聚合聊天',
+    spaPage: '/#/juhe-chat',
+    cluster: ['wecom-community-tool', 'wecom-session-qc'],
+    content: `
+      <h2>聚合聊天的核心能力（多号收口、分配）</h2>
+      <p>企业微信聚合聊天，指把多个企微账号的客户会话统一收口到一个工作台，解决「客服在十几个号之间反复切换」的混乱。核心能力包括多号统一收口、会话智能分配（按技能、负载、来源）、客户卡片随身跟随，让一个客服就能服务多账号的客户。</p>
+      <h2>与群管 / 社群联动</h2>
+      <p>聚合聊天不止管单聊，也覆盖群聊，与<a href="https://www.fenyai.com/topic/wecom-community-tool.html">社群运营工具</a>联动：群内关键词自动回复、入群欢迎、群发通知在同一工作台完成，社群与单聊运营不再割裂。</p>
+      <h2>与质检的数据打通</h2>
+      <p>聚合工作台沉淀的全量会话，直接成为<a href="https://www.fenyai.com/topic/wecom-session-qc.html">会话质检</a>的数据源：质检系统读取聚合会话做合规与风险预警，客服绩效与服务质量可视化，管理闭环更完整。</p>
+      <h2>有机云聚合聊天能力</h2>
+      <p>有机云聚合聊天支持多企微号统一收口、智能分配与群管联动，并打通质检与画像。前往功能页申请试用，体验一体化客户接待方案。</p>
+    `
+  }
+];

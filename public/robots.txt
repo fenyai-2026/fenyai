@@ -1,0 +1,49 @@
+# 有机云 robots.txt — 全站开放收录，屏蔽后台与接口
+User-agent: *
+Allow: /
+Allow: /topic/
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_/
+
+# 搜索引擎爬虫
+User-agent: Baiduspider
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: 360Spider
+Allow: /
+
+User-agent: Sogou web spider
+Allow: /
+
+# 生成式 AI 引擎爬虫（GEO：允许被 AI 引用，提升品牌曝光）
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+# 站点地图
+Sitemap: https://www.fenyai.com/sitemap.xml
+Host: https://www.fenyai.com
