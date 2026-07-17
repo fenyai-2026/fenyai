@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { ShoppingCart, Users, TrendingUp, Gift, ArrowRight, CheckCircle, BarChart3, Zap, Download } from 'lucide-react';
+import { ShoppingCart, Users, TrendingUp, Gift, ArrowRight, CheckCircle, BarChart3, Zap } from 'lucide-react';
 import { injectJSONLD } from '../utils/jsonld';
 import { Breadcrumb } from '../components/Breadcrumb';
 import ProductCrossLinks from '../components/ProductCrossLinks';
+import DemoForm from '../components/DemoForm';
 
 const painPoints = [
   {
@@ -123,50 +124,6 @@ export default function SolutionsEcommerce() {
       serviceType: '社群电商私域运营解决方案',
     }, 'solution-ecommerce');
   }, []);
-
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    name: '',
-    company: '',
-    email: '',
-    phone: ''
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    try {
-      const { error } = await supabase.from('leads').insert({
-        name: formData.name,
-        company: formData.company,
-        phone: formData.phone,
-        requirement: `电商行业白皮书下载 - 邮箱: ${formData.email}`,
-        status: 'pending',
-      });
-
-      if (error) {
-        console.error('Lead save error:', error);
-        alert('提交失败，请稍后重试');
-        setIsSubmitting(false);
-        return;
-      }
-
-      setIsSubmitting(false);
-      setIsSuccess(true);
-
-      // 3秒后跳转到试用页面
-      setTimeout(() => {
-        navigate('/trial');
-      }, 3000);
-    } catch (err) {
-      console.error('Submit error:', err);
-      alert('提交失败，请稍后重试');
-      setIsSubmitting(false);
-    }
-  };
 
   return (
     <>
@@ -324,104 +281,14 @@ export default function SolutionsEcommerce() {
           </div>
         </section>
 
-        {/* 白皮书下载留资 */}
-        <section className="py-16 bg-white">
+        {/* 咨询入口：扫码添加企业微信 */}
+        <section className="py-16 bg-gradient-to-br from-sky-50 to-cyan-50">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="bg-gradient-to-br from-sky-500 to-cyan-500 rounded-3xl p-8 md:p-12 text-white"
-            >
-              <div className="text-center mb-8">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/20 mb-4">
-                  <Download className="w-8 h-8 text-white" />
-                </div>
-                <h2 className="text-3xl font-bold mb-3">获取《电商行业私域运营白皮书》</h2>
-                <p className="text-white/90">深入了解电商行业私域运营最佳实践，包含云集微店、完美日记等头部案例拆解</p>
-              </div>
-
-              {isSuccess ? (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="text-center py-8"
-                >
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/20 mb-4">
-                    <CheckCircle className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="text-2xl font-bold mb-2">提交成功！</h3>
-                  <p className="text-white/90 mb-4">白皮书将发送至您的邮箱，请查收</p>
-                  <p className="text-white/70 text-sm">3秒后自动跳转到试用页面...</p>
-                </motion.div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <input
-                      type="text"
-                      placeholder="您的姓名"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50"
-                      required
-                      disabled={isSubmitting}
-                    />
-                    <input
-                      type="text"
-                      placeholder="公司名称"
-                      value={formData.company}
-                      onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50"
-                      required
-                      disabled={isSubmitting}
-                    />
-                  </div>
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <input
-                      type="email"
-                      placeholder="工作邮箱"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50"
-                      required
-                      disabled={isSubmitting}
-                    />
-                    <input
-                      type="tel"
-                      placeholder="手机号码"
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50"
-                      required
-                      disabled={isSubmitting}
-                    />
-                  </div>
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full py-4 bg-white text-sky-600 font-semibold rounded-xl hover:bg-sky-50 transition-all shadow-lg flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <div className="w-5 h-5 border-2 border-sky-600 border-t-transparent rounded-full animate-spin" />
-                        提交中...
-                      </>
-                    ) : (
-                      <>
-                        <Download className="w-5 h-5" />
-                        立即下载
-                      </>
-                    )}
-                  </button>
-                </form>
-              )}
-
-              {!isSuccess && (
-                <p className="text-center text-white/70 text-sm mt-4">
-                  提交后我们将把白皮书发送至您的邮箱
-                </p>
-              )}
-            </motion.div>
+            <div className="text-center mb-10">
+              <h2 className="text-3xl font-bold text-sky-900 mb-4">获取专属私域运营方案</h2>
+              <p className="text-sky-600">添加企业微信，资深顾问 1 对 1 为您定制电商私域增长方案</p>
+            </div>
+            <DemoForm />
           </div>
         </section>
 

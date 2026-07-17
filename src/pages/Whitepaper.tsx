@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { FileText, Download, BookOpen, Mail, User, Building, Phone, ArrowRight, CheckCircle, Star, Award } from 'lucide-react';
+import DemoForm from '../components/DemoForm';
 
 const resources = [
   {
@@ -41,15 +42,7 @@ const testimonials = [
 ];
 
 export default function Whitepaper() {
-  const [formData, setFormData] = useState({ name: '', company: '', position: '', phone: '', email: '', interest: '' });
-  const [submitted, setSubmitted] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitted(true);
-  };
-
-  return (
+  return(
     <>
       <Helmet>
         <title>有机云私域运营白皮书_免费下载_行业报告_案例集</title>
@@ -79,48 +72,7 @@ export default function Whitepaper() {
               </motion.div>
 
               <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 0.2 }} className="bg-white rounded-2xl p-8 shadow-xl">
-                {!submitted ? (
-                  <form onSubmit={handleSubmit}>
-                    <h3 className="text-xl font-bold text-sky-900 mb-6">填写信息，立即获取资料</h3>
-                    <div className="space-y-4">
-                      <div className="relative">
-                        <User className="absolute left-3 top-3 w-5 h-5 text-sky-400" />
-                        <input type="text" placeholder="您的姓名" className="w-full pl-10 pr-4 py-3 rounded-lg border border-sky-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} required />
-                      </div>
-                      <div className="relative">
-                        <Building className="absolute left-3 top-3 w-5 h-5 text-sky-400" />
-                        <input type="text" placeholder="公司名称" className="w-full pl-10 pr-4 py-3 rounded-lg border border-sky-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none" value={formData.company} onChange={e => setFormData({...formData, company: e.target.value})} required />
-                      </div>
-                      <div className="relative">
-                        <Mail className="absolute left-3 top-3 w-5 h-5 text-sky-400" />
-                        <input type="email" placeholder="工作邮箱" className="w-full pl-10 pr-4 py-3 rounded-lg border border-sky-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} required />
-                      </div>
-                      <div className="relative">
-                        <Phone className="absolute left-3 top-3 w-5 h-5 text-sky-400" />
-                        <input type="tel" placeholder="手机号码" className="w-full pl-10 pr-4 py-3 rounded-lg border border-sky-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} required />
-                      </div>
-                      <select className="w-full px-4 py-3 rounded-lg border border-sky-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none text-sky-700" value={formData.interest} onChange={e => setFormData({...formData, interest: e.target.value})}>
-                        <option value="">选择感兴趣的资料</option>
-                        <option value="whitepaper">2024私域运营白皮书</option>
-                        <option value="report">电商行业私域报告</option>
-                        <option value="cases">头部企业案例集</option>
-                        <option value="guide">SCRM操作指南</option>
-                      </select>
-                    </div>
-                    <button type="submit" className="w-full mt-6 py-4 bg-gradient-to-r from-sky-500 to-cyan-500 text-white font-semibold rounded-lg hover:from-sky-600 hover:to-cyan-600 transition-all flex items-center justify-center">
-                      立即获取资料<ArrowRight className="ml-2 w-5 h-5" />
-                    </button>
-                    <p className="text-xs text-sky-500/60 text-center mt-4">提交即表示同意隐私政策，资料将发送至您的邮箱</p>
-                  </form>
-                ) : (
-                  <div className="text-center py-8">
-                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <CheckCircle className="w-8 h-8 text-green-500" />
-                    </div>
-                    <h3 className="text-xl font-bold text-sky-900 mb-2">提交成功！</h3>
-                    <p className="text-sky-700/70">资料将发送至您的邮箱，请查收</p>
-                  </div>
-                )}
+                <DemoForm />
               </motion.div>
             </div>
           </div>

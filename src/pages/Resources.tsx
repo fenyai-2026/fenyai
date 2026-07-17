@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { BookOpen, BarChart3, FileText, Download, CheckCircle, ArrowRight } from 'lucide-react';
 import SEOHelmet from '../components/SEOHelmet';
+import DemoForm from '../components/DemoForm';
 
 const resources = [
   {
@@ -36,19 +37,6 @@ const benefits = [
 ];
 
 export default function Resources() {
-  const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    company: '',
-  });
-  const [submitted, setSubmitted] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // 这里可以添加表单提交逻辑
-    setSubmitted(true);
-  };
-
   return (
     <>
       <SEOHelmet
@@ -110,80 +98,7 @@ export default function Resources() {
                 viewport={{ once: true }}
                 className="bg-white rounded-2xl shadow-xl p-8 md:p-10"
               >
-                {!submitted ? (
-                  <>
-                    <h2 className="text-2xl font-bold text-center text-gray-900 mb-2">
-                      填写信息，免费领取全部资料
-                    </h2>
-                    <p className="text-center text-gray-500 mb-8">
-                      资料将发送至您的微信/手机
-                    </p>
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">您的姓名</label>
-                        <input
-                          type="text"
-                          required
-                          value={formData.name}
-                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                          className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0EA5E9] focus:border-transparent outline-none transition-all"
-                          placeholder="请输入姓名"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">手机号 / 微信号</label>
-                        <input
-                          type="text"
-                          required
-                          value={formData.phone}
-                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                          className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0EA5E9] focus:border-transparent outline-none transition-all"
-                          placeholder="请输入手机号或微信号"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">公司名称（选填）</label>
-                        <input
-                          type="text"
-                          value={formData.company}
-                          onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                          className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0EA5E9] focus:border-transparent outline-none transition-all"
-                          placeholder="请输入公司名称"
-                        />
-                      </div>
-                      <button
-                        type="submit"
-                        className="w-full py-4 bg-gradient-to-r from-[#0EA5E9] to-[#38BDF8] text-white font-semibold rounded-xl hover:from-[#0284C7] hover:to-[#0EA5E9] transition-all duration-300 shadow-lg shadow-[#0EA5E9]/25"
-                      >
-                        免费领取 →
-                      </button>
-                    </form>
-                    <p className="text-xs text-gray-400 text-center mt-4">
-                      无需集赞，无需助力，直接领取
-                    </p>
-                  </>
-                ) : (
-                  <div className="text-center py-8">
-                    <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                      <CheckCircle className="w-10 h-10 text-emerald-500" />
-                    </div>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-2">提交成功！</h2>
-                    <p className="text-gray-600 mb-6">
-                      我们的顾问将在24小时内联系您，发送资料包
-                    </p>
-                    <div className="bg-gray-50 rounded-xl p-4 text-sm text-gray-600">
-                      <p className="mb-2">同时您可以：</p>
-                      <ul className="space-y-1 text-left">
-                        {benefits.map((benefit, i) => (
-                          <li key={i} className="flex items-start">
-                            <span className="text-emerald-500 mr-2">✓</span>
-                            {benefit}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                )}
+                <DemoForm />
               </motion.div>
             </div>
           </div>

@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { Building2, Shield, Users, TrendingUp, Award, ArrowRight, CheckCircle, BarChart3, Clock, Star, Loader2 } from 'lucide-react';
-import { supabase } from '../supabase/client';
+import { Building2, Shield, Users, TrendingUp, Award, ArrowRight, CheckCircle, BarChart3, Clock, Star } from 'lucide-react';
+import DemoForm from '../components/DemoForm';
 import { injectJSONLD } from '../utils/jsonld';
 import { Breadcrumb } from '../components/Breadcrumb';
 
@@ -124,48 +124,6 @@ export default function SolutionsFinance() {
     }, 'solution-finance');
   }, []);
 
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    name: '',
-    company: '',
-    email: '',
-    phone: ''
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    try {
-      const { error } = await supabase.from('leads').insert({
-        name: formData.name,
-        company: formData.company,
-        phone: formData.phone,
-        requirement: `金融行业白皮书下载 - 邮箱: ${formData.email}`,
-        status: 'pending',
-      });
-
-      if (error) {
-        console.error('Lead save error:', error);
-        alert('提交失败，请稍后重试');
-        setIsSubmitting(false);
-        return;
-      }
-
-      setIsSubmitting(false);
-      setIsSuccess(true);
-
-      setTimeout(() => {
-        navigate('/trial');
-      }, 3000);
-    } catch (err) {
-      console.error('Submit error:', err);
-      alert('提交失败，请稍后重试');
-      setIsSubmitting(false);
-    }
-  };
 
   return (
     <>
@@ -377,38 +335,11 @@ export default function SolutionsFinance() {
         {/* 白皮书下载 */}
         <section className="py-16 bg-white" aria-label="白皮书下载">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="bg-gradient-to-br from-sky-50 to-cyan-50 rounded-3xl p-8 md:p-12 border border-sky-100"
-            >
-              <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold text-sky-900 mb-4">获取《金融行业私域运营白皮书》</h2>
-                <p className="text-sky-700/70 max-w-xl mx-auto">深入了解金融行业私域运营最佳实践，包含平安保险、招商银行等头部案例拆解</p>
+              <div className="text-center mb-10">
+                <h2 className="text-3xl font-bold text-sky-900 mb-4">获取专属私域运营方案</h2>
+                <p className="text-sky-700/70 max-w-xl mx-auto">添加企业微信，资深顾问 1 对 1 为您定制私域增长方案</p>
               </div>
-              {isSuccess ? (
-                <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center py-8">
-                  <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
-                    <CheckCircle className="w-8 h-8 text-green-500" />
-                  </div>
-                  <h3 className="text-xl font-bold text-sky-900 mb-2">提交成功！</h3>
-                  <p className="text-sky-700/70">感谢您的关注，白皮书将发送至您的邮箱<br />正在跳转到试用页面...</p>
-                </motion.div>
-              ) : (
-                <form className="max-w-md mx-auto space-y-4" onSubmit={handleSubmit}>
-                  <input type="text" placeholder="您的姓名" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-sky-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none transition-all" required />
-                  <input type="text" placeholder="公司名称" value={formData.company} onChange={(e) => setFormData({...formData, company: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-sky-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none transition-all" required />
-                  <input type="email" placeholder="工作邮箱" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-sky-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none transition-all" required />
-                  <input type="tel" placeholder="手机号码" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-sky-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none transition-all" required />
-                  <button type="submit" disabled={isSubmitting} className="w-full py-4 bg-gradient-to-r from-sky-500 to-cyan-500 text-white font-semibold rounded-xl hover:from-sky-600 hover:to-cyan-600 transition-all duration-300 shadow-lg disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center">
-                    {isSubmitting ? (
-                      <><Loader2 className="w-5 h-5 mr-2 animate-spin" />提交中...</>
-                    ) : '立即下载'}
-                  </button>
-                </form>
-              )}
-            </motion.div>
+              <DemoForm />
           </div>
         </section>
 
@@ -448,3 +379,5 @@ export default function SolutionsFinance() {
     </>
   );
 }
+
+
