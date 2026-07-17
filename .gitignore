@@ -120,3 +120,49 @@ tmp/
 *.aab
 *.ipa
 *.xarchive
+
+# Meoo Cloud
+.meoo-cloud-snapshot.json
+.meoo-manifest.json
+meoo-cloud-snapshot.json
+meoo-manifest.json
+meoo.json
+.microcompact/
+
+# IDE / AI agent data
+.codebuddy/
+.plan/
+.todo/
+.npmrc
+
+# Build scripts & helpers
+build_ci.bat
+build_full.bat
+build_original.bat
+build_quick.bat
+ssg_check.bat
+envcheck.ps1
+inspect.ps1
+seed_helper.ps1
+prerender.js
+
+# Edge Functions (deployed separately)
+functions/
+
+# Historical / reference
+nginx-history.conf
+outputs/
+
+# Local docs & guides (not production)
+BUILD.md
+MIGRATION_GUIDE.md
+README.md
+
+# Local scripts
+scripts/fix-leads-dryrun.js
+
+# Test assets
+assets/
+
+# pnpm lock (use package-lock.json)
+pnpm-lock.yaml
