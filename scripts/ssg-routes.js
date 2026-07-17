@@ -317,6 +317,24 @@ module.exports = [
     schemaType: 'WebPage'
   },
   { 
+    path: '/solutions/healthcare', 
+    title: '有机云医疗健康私域运营_医疗机构企微SCRM解决方案_活码获客·合规管理', 
+    description: '医疗健康行业私域运营解决方案，提供企微活码获客、合规患者管理、精细化健康运营、AI智能健康咨询等功能。',
+    content: `
+      <h2>医疗健康私域运营解决方案</h2>
+      <p>帮助医疗机构、连锁诊所、互联网医院实现患者私域的高效运营与合规管理。</p>
+      <h3>核心能力</h3>
+      <ul>
+        <li><strong>企微活码获客</strong>：线上线下全渠道引流，自动分配健康顾问</li>
+        <li><strong>合规患者管理</strong>：会话存档、敏感词监控，满足医疗隐私合规</li>
+        <li><strong>精细化健康运营</strong>：患者标签、随访SOP、复诊提醒，提升复诊率</li>
+        <li><strong>AI智能健康咨询</strong>：7×24小时自动应答，高意向患者自动转人工</li>
+      </ul>
+    `,
+    ogImage: 'https://www.fenyai.com/og-image.png',
+    schemaType: 'WebPage'
+  },
+  { 
     path: '/solutions/distribution', 
     title: '有机云智慧分销私域运营方案', 
     description: '智慧分销解决方案，提供分销体系搭建、渠道管理、业绩追踪等功能。',

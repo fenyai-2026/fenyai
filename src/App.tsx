@@ -42,6 +42,7 @@ import SolutionsSOP from './pages/SolutionsSOP';
 import SolutionsCrack from './pages/SolutionsCrack';
 import SolutionsArchive from './pages/SolutionsArchive';
 import SolutionsDistribution from './pages/SolutionsDistribution';
+import SolutionsHealthcare from './pages/SolutionsHealthcare';
 import Whitepaper from './pages/Whitepaper';
 import Compare from './pages/Compare';
 import Faq from './pages/Faq';
@@ -99,6 +100,7 @@ function App() {
           <Route path="solutions/crack" element={<SolutionsCrack />} />
           <Route path="solutions/archive" element={<SolutionsArchive />} />
           <Route path="solutions/distribution" element={<SolutionsDistribution />} />
+          <Route path="solutions/healthcare" element={<SolutionsHealthcare />} />
           <Route path="whitepaper" element={<Whitepaper />} />
           <Route path="compare" element={<Compare />} />
           <Route path="faq" element={<Faq />} />

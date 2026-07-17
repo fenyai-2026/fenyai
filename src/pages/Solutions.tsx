@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import SEOHelmet from '../components/SEOHelmet';
-import { ArrowRight, Building2, ShoppingCart, Store, Network, CheckCircle2, TrendingUp, Users, GraduationCap, Target, ClipboardList, Share2, Archive } from 'lucide-react';
+import { ArrowRight, Building2, ShoppingCart, Store, Network, CheckCircle2, TrendingUp, Users, GraduationCap, Target, ClipboardList, Share2, Archive, HeartPulse } from 'lucide-react';
 import ProductCrossLinks from '../components/ProductCrossLinks';
 
 const solutions = [
@@ -118,6 +118,15 @@ const scenarioSolutions = [
     desc: '企业微信会话存档解决方案，满足金融医疗教育行业合规要求',
     color: 'from-slate-500 to-gray-400',
     link: '/solutions/archive',
+  },
+  {
+    id: 'healthcare',
+    icon: HeartPulse,
+    title: '医疗健康',
+    subtitle: '医疗机构、连锁诊所',
+    desc: '专为医疗机构打造，提供企微活码获客、合规患者管理、随访SOP、AI健康咨询',
+    color: 'from-teal-500 to-cyan-400',
+    link: '/solutions/healthcare',
   },
 ];
 

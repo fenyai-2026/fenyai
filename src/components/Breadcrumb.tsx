@@ -19,6 +19,7 @@ const PATH_NAMES: Record<string, string> = {
   '/solutions/sop': '营销SOP',
   '/solutions/crack': '裂变任务',
   '/solutions/archive': '会话存档',
+  '/solutions/healthcare': '医疗健康',
   '/ai-agent': 'AI智能体',
   '/open-platform': '开放平台',
   '/open-platform/docs': 'API文档',
