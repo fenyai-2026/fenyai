@@ -85,6 +85,7 @@ const PAGE_REDIRECTS = {
   'demo.html': '/demo-showcase',
   'drainage.html': '/growth',
   'joinus.html': '/about',
+  'solution_ec.html': '/solutions/ecommerce',
   // 老命名（无后缀），不与现有有效路由冲突
   'aboutus': '/about',
   'contactus': '/contact',
