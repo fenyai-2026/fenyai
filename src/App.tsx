@@ -58,6 +58,7 @@ import SolutionsAIAgent from './pages/SolutionsAIAgent';
 import OpenPlatformDocs from './pages/OpenPlatformDocs';
 import MessageChannel from './pages/MessageChannel';
 import About from './pages/About';
+import NotFound from './pages/NotFound';
 
 function App() {
   return (
@@ -116,6 +117,8 @@ function App() {
           {/* AI Agent 解决方案 */}
           <Route path="solutions/ai-agent-integration" element={<SolutionsAIAgent />} />
           <Route path="about" element={<About />} />
+          {/* 兜底：历史死链跳转 + 404，避免 SPA 未匹配路由渲染空白（白屏根因修复） */}
+          <Route path="*" element={<NotFound />} />
         </Route>
         {/* 百度等收录的旧 /index.html 入口：内部重定向到首页，避免 SPA 空白页 */}
         <Route path="/index.html" element={<Navigate to="/" replace />} />

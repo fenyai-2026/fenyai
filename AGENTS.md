@@ -7,7 +7,8 @@
 
 ## Architecture
 - 前端: React + Vite + Tailwind CSS + shadcn/ui
-- 路由: HashRouter (SSG 兼容)，已启用 v7_startTransition / v7_relativeSplatPath future flags
+- 路由: BrowserRouter（真实路径，非 hash），已启用 v7_startTransition / v7_relativeSplatPath future flags
+  - ⚠️ 必须保留 App.tsx 中的 catch-all `<Route path="*" element={<NotFound />} />`：EdgeOne 对无静态文件的路径会 fallback 到 SPA 空壳 index.html，缺少 catch-all 时 BrowserRouter 匹配不到路由 → #root 为空 → 白屏。NotFound 组件同时承担历史死链（如 solution_ec.html）客户端跳转 + 404 兜底，其死链映射需与 scripts/gen-legacy-redirects.js 的 PAGE_REDIRECTS 保持一致。
 - 后端: Meoo Cloud (Supabase) - PostgreSQL + RLS
 - 通知: pg_net 触发器 → Edge Function (notify-wechat) → 企业微信 Webhook（pg_net 直接发企微会中文乱码，改用 Edge Function 中转）
 
