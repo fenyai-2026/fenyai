@@ -31,6 +31,7 @@ import LiveCode from './pages/LiveCode';
 import MassSend from './pages/MassSend';
 import JuheChat from './pages/JuheChat';
 import SessionArchive from './pages/SessionArchive';
+import TopicPage from './pages/TopicPage';
 import Growth from './pages/Growth';
 import AiCall from './pages/AiCall';
 import SolutionsFinance from './pages/SolutionsFinance';
@@ -84,6 +85,8 @@ function App() {
           <Route path="mass-send" element={<MassSend />} />
           <Route path="juhe-chat" element={<JuheChat />} />
           <Route path="session-archive" element={<SessionArchive />} />
+          {/* 平行静态内容层：/topic/*.html 由 SSG 预渲染，SPA 接管后通过此路由正常渲染（带全站导航/页脚/CTA），避免白屏 */}
+          <Route path="topic/:slug" element={<TopicPage />} />
           {/* 关键词落地页：企微魔方 / 企微SOP / 企微机器人 / 云手机（抢代理商 #1 词） */}
           <Route path="weimo" element={<Weimo />} />
           <Route path="sop" element={<Sop />} />
