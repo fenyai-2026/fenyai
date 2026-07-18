@@ -51,6 +51,7 @@ const LEGACY_MAP: Record<string, string> = {
   '/drainage.html': '/growth',
   '/joinus.html': '/about',
   '/solution_ec.html': '/solutions/ecommerce',
+  '/extension.html': '/products',
   // 老命名（无后缀）
   '/aboutus': '/about',
   '/contactus': '/contact',
