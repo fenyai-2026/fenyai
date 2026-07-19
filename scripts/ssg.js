@@ -33,6 +33,8 @@ const routes = require('./ssg-routes');
 
 // 通用词静态词页数据源（平行静态内容层）
 const topicPages = require('./topic-pages').concat(require('./topic-pages-extra'));
+// GEO：统一兜底 topic 页「最后更新」日期；单页可在 topic-pages.js / topic-pages-extra.js 设 updated 覆盖
+topicPages.forEach(p => { if (!p.updated) p.updated = '2026-07-15'; });
 // slug -> page，供词页内链（同簇互链）查标题
 const TOPIC_BY_SLUG = new Map(topicPages.map(p => [p.slug, p]));
 
@@ -622,6 +624,7 @@ function generateTopicHTML(page) {
   const url = `https://www.fenyai.com/topic/${page.slug}.html`;
   const ogImage = DEFAULT_OG_IMAGE;
   const h1 = page.title.replace(' | 有机云', '');
+  const updated = page.updated || '2026-07-15';
 
   // 内链：① 首页 ② SPA 功能页(hash) ③ 同簇词页(真实 .html)
   const SPA_LABEL = {
@@ -671,8 +674,13 @@ function generateTopicHTML(page) {
         "headline": page.title,
         "description": page.description,
         "inLanguage": "zh-CN",
-        "datePublished": "2026-07-15",
-        "dateModified": "2026-07-15",
+        "datePublished": updated,
+        "dateModified": updated,
+        "citation": [
+          { "@type": "WebSite", "name": "企业微信开放文档", "url": "https://developer.work.weixin.qq.com/document/" },
+          { "@type": "WebSite", "name": "企业微信官网", "url": "https://work.weixin.qq.com/" },
+          { "@type": "WebSite", "name": "腾讯云", "url": "https://cloud.tencent.com/" }
+        ],
         "author": { "@id": "https://www.fenyai.com/#organization" },
         "publisher": { "@id": "https://www.fenyai.com/#organization" },
         "articleSection": page.category
@@ -747,6 +755,14 @@ function generateTopicHTML(page) {
     .ssg-inlinks h2 { margin-top: 0; }
     .ssg-inlinks ul { list-style: none; padding-left: 0; }
     .ssg-inlinks li { margin-bottom: 0.6rem; }
+    .byline-block{border-top:1px solid #e5e7eb;margin-top:32px;padding-top:16px;font-size:13px;color:#64748b;line-height:1.9}
+    .byline__author{margin-right:16px;font-weight:600;color:#475569}
+    .byline__date{color:#94a3b8}
+    .references{margin-top:8px}
+    .references__label{margin-right:4px}
+    .references a{color:#0EA5E9;text-decoration:none}
+    .references a:hover{text-decoration:underline}
+    .references .sep{margin:0 8px;color:#cbd5e1}
   </style>
   <!-- JSON-LD Structured Data -->
 ${schemaScript}
@@ -758,6 +774,20 @@ ${schemaScript}
       <h1>${escapeHtml(h1)}</h1>
       <p>${escapeHtml(page.description)}</p>
       ${page.content || ''}
+      <footer class="article-meta byline-block" aria-label="内容信息与参考来源">
+        <div class="byline">
+          <span class="byline__author">作者：有机云内容团队</span>
+          <span class="byline__date">最后更新：<time datetime="${updated}">${updated}</time></span>
+        </div>
+        <div class="references">
+          <span class="references__label">参考来源：</span>
+          <a href="https://developer.work.weixin.qq.com/document/" target="_blank" rel="noopener noreferrer">企业微信开放文档</a>
+          <span class="sep">·</span>
+          <a href="https://work.weixin.qq.com/" target="_blank" rel="noopener noreferrer">企业微信官网</a>
+          <span class="sep">·</span>
+          <a href="https://cloud.tencent.com/" target="_blank" rel="noopener noreferrer">腾讯云</a>
+        </div>
+      </footer>
       <div class="ssg-inlinks">
         <h2>相关页面</h2>
         <ul>
@@ -1261,6 +1291,11 @@ function generateArticleHTML(article) {
       "logo": { "@type": "ImageObject", "url": "https://www.fenyai.com/logo.png" }
     },
     "speakable": { "@type": "SpeakableSpecification", "cssSelector": ["h1", ".article-meta", "article"] },
+    "citation": [
+      { "@type": "WebSite", "name": "企业微信开放文档", "url": "https://developer.work.weixin.qq.com/document/" },
+      { "@type": "WebSite", "name": "企业微信官网", "url": "https://work.weixin.qq.com/" },
+      { "@type": "WebSite", "name": "腾讯云", "url": "https://cloud.tencent.com/" }
+    ],
     "mainEntityOfPage": { "@type": "WebPage", "@id": canonical }
   }, ORGANIZATION_SCHEMA, buildArticleBreadcrumb(article)];
 

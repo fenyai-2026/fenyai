@@ -18,7 +18,7 @@ function extractUrlsFromSitemap(sitemapPath) {
 // 从 dist 目录生成URL列表
 function generateUrlsFromDist(distDir) {
   const urls = [];
-  const baseUrl = 'https://workbuddy.fenyai.com';
+  const baseUrl = 'https://www.fenyai.com';
   
   function walkDir(dir, relativePath = '') {
     const files = fs.readdirSync(dir);
