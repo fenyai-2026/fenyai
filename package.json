@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "webpack serve",
-    "build": "webpack --mode production && npm run ssg",
+    "build": "node scripts/gen-topic-data.js && webpack --mode production && npm run ssg",
     "build:only": "webpack --mode production",
     "ssg": "node scripts/ssg.js",
     "baidu:submit": "node scripts/submit-to-baidu.js",
