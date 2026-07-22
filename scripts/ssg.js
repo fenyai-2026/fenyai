@@ -566,6 +566,12 @@ function generateHTML(route, articles) {
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
+    .ssg-home-nav { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid #e5e7eb; }
+    .ssg-home-nav h3 { margin-top: 0; }
+    .ssg-home-nav ul { list-style: none; padding-left: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px 16px; }
+    .ssg-home-nav li { margin-bottom: 0.5rem; }
+    .ssg-home-nav a { color: #0EA5E9; text-decoration: none; font-size: 1rem; }
+    .ssg-home-nav a:hover { text-decoration: underline; }
   </style>
   <!-- JSON-LD Structured Data -->
 ${schemaScripts}

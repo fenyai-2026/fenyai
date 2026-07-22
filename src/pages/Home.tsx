@@ -259,7 +259,7 @@ export default function Home() {
   return (
     <>
       <Helmet>
-        <title>有机云 - 企业微信SCRM私域运营工具｜活码/AI智能体/会话存档</title>
+        <title>有机云-企业微信SCRM私域运营系统｜活码拓客·AI智能体·会话存档(10万+企业信赖)</title>
         <meta name="description" content="有机云（www.fenyai.com）是企业微信官方合作伙伴，提供企微SCRM、活码拓客、AI智能体、超级群发、会话存档等私域运营工具，已服务10万+企业，助力私域运营效率提升10倍。免费试用→" />
         <meta name="keywords" content="企业微信SCRM,私域运营工具,客户管理系统,企业微信营销,私域流量,企微,活码裂变,超级群发,AI智能体,会话聚合,SCRM系统,私域运营,企微活码,客户管理" />
         <link rel="canonical" href="https://www.fenyai.com/" />
@@ -268,7 +268,7 @@ export default function Home() {
         <link rel="shortcut icon" type="image/png" href="/favicon.png" />
         <link rel="apple-touch-icon" href="/favicon.png" />
         {/* Open Graph 社交分享标签 */}
-        <meta property="og:title" content="有机云SCRM-企微私域运营工具|活码裂变|AI智能体|超级群发" />
+        <meta property="og:title" content="有机云-企业微信SCRM私域运营系统｜活码拓客·AI智能体·会话存档(10万+企业信赖)" />
         <meta property="og:description" content="有机云是企业微信官方合作伙伴，提供企微SCRM、活码拓客、AI智能体、超级群发等私域运营工具，已服务10万+企业，助力私域运营效率提升10倍。免费试用→" />
         <meta property="og:url" content="https://www.fenyai.com/" />
         <meta property="og:type" content="website" />
@@ -278,7 +278,7 @@ export default function Home() {
         <meta property="og:site_name" content="有机云SCRM" />
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="有机云SCRM-企微私域运营工具|活码裂变|AI智能体|超级群发" />
+        <meta name="twitter:title" content="有机云-企业微信SCRM私域运营系统｜活码拓客·AI智能体·会话存档(10万+企业信赖)" />
         <meta name="twitter:description" content="有机云是企业微信官方合作伙伴，提供企微SCRM、活码拓客、AI智能体、超级群发等私域运营工具，已服务10万+企业，助力私域运营效率提升10倍。免费试用→" />
         <meta name="twitter:image" content="https://www.fenyai.com/og-image.png" />
         {/* Schema.org 结构化数据 */}

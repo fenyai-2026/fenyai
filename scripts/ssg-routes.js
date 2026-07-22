@@ -8,9 +8,9 @@ module.exports = [
   // 首页
   {
     path: '/',
-    title: '有机云 - 企业微信SCRM私域运营工具｜活码/AI智能体/会话存档',
+    title: '有机云-企业微信SCRM私域运营系统｜活码拓客·AI智能体·会话存档(10万+企业信赖)',
     h1: '有机云SCRM｜企业微信私域运营工具',
-    description: '有机云（www.fenyai.com）是企业微信官方合作伙伴，专注企业微信SCRM私域运营，提供活码拓客、裂变引流、AI外呼、超级群发、AI智能体、会话聚合、消息通道API、客户标签与数据报表等全链路工具，已服务10万+企业，助力私域运营效率提升10倍。',
+    description: '有机云(www.fenyai.com)是企业微信官方服务商，提供活码拓客、AI智能体、超级群发、会话存档等SCRM工具，已服务10万+企业，让私域运营效率提升10倍。免费试用→',
     content: `
       <h2>为什么选择有机云？</h2>
       <p>有机云（官网 www.fenyai.com）是企业微信官方合作伙伴，旗下有机云SCRM 已服务超过10万家企业，帮助企业实现私域流量的高效运营和转化。</p>
@@ -25,6 +25,23 @@ module.exports = [
       </ul>
       <h3>适用行业</h3>
       <p>泛金融、社群电商、连锁零售、在线教育、智慧分销等多个行业解决方案。</p>
+      <nav class="ssg-home-nav" aria-label="核心功能与解决方案">
+        <h3>核心功能与解决方案</h3>
+        <ul>
+          <li><a href="/scrm">企业微信SCRM</a></li>
+          <li><a href="/live-code">活码拓客</a></li>
+          <li><a href="/message-channel">消息通道API</a></li>
+          <li><a href="/ai-call">AI智能外呼</a></li>
+          <li><a href="/growth">私域增长</a></li>
+          <li><a href="/topic/wecom-aggregate-chat.html">企业微信会话聚合</a></li>
+          <li><a href="/topic/wecom-mass-send-api.html">企业微信群发API</a></li>
+          <li><a href="/topic/wecom-ai-auto-reply.html">企业微信AI自动回复</a></li>
+          <li><a href="/solutions/finance">金融行业解决方案</a></li>
+          <li><a href="/solutions/retail">零售行业解决方案</a></li>
+          <li><a href="/compare">SCRM横评对比</a></li>
+          <li><a href="/faq">常见问题</a></li>
+        </ul>
+      </nav>
     `,
     ogImage: 'https://www.fenyai.com/og-image.png',
     schemaType: 'Organization',
