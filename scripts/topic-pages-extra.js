@@ -598,4 +598,101 @@ module.exports = [
       <p>有机云 SCRM 支持本地/专有云私有化交付，提供数据自持、加密与审计一体化能力。点击「关于我们」了解企业资质，或咨询私有化落地路径。</p>
     `
   },
+  // ===== B 组：竞品专题词页（覆盖"微伴/探马/微盛 SCRM"长尾对比词）=====
+  {
+    slug: 'weiban-scrm',
+    title: '微伴助手SCRM怎么样_功能价格与有机云对比 | 有机云',
+    description: '微伴助手SCRM怎么样？功能、价格、适用场景与有机云SCRM客观对比，帮你看清企业微信SCRM选型差异与取舍。',
+    category: '竞品对比',
+    keyword: '微伴助手SCRM',
+    spaPage: '/compare',
+    cluster: ['tanma-scrm', 'weisheng-scrm', 'wecom-message-channel', 'wecom-anti-block-mass-send'],
+    content: `
+      <h2>微伴助手 SCRM 是什么</h2>
+      <p>微伴助手是国内较早的企业微信 SCRM 服务商之一，客户基数大、功能覆盖广，主打中小型企业标准 SaaS，提供活码、客户管理、会话存档、群运营等通用能力。对预算有限、希望快速上线的团队较友好，是"微伴 SCRM 怎么样"搜索背后的主流答案之一。</p>
+      <h2>微伴 vs 有机云 核心对比</h2>
+      <table border="1" cellpadding="8" cellspacing="0" style="border-collapse:collapse;width:100%;">
+        <thead><tr><th>维度</th><th>有机云 SCRM</th><th>微伴助手</th></tr></thead>
+        <tbody>
+          <tr><td>消息通道 API</td><td>✅ 3 行代码接入 AI Agent</td><td>⚠️ 受限</td></tr>
+          <tr><td>AI 智能体</td><td>✅ 知识库+多轮+接 Dify/Coze</td><td>⚠️ 部分</td></tr>
+          <tr><td>私有化部署</td><td>✅ 容器化私有部署</td><td>⚠️ 部分</td></tr>
+          <tr><td>开放集成</td><td>✅ 开放 API + Webhook</td><td>⚠️ 受限</td></tr>
+          <tr><td>适用场景</td><td>中大型 / 开发者集成</td><td>中小型企业</td></tr>
+        </tbody>
+      </table>
+      <h2>微伴的强项与短板</h2>
+      <ul>
+        <li><strong>强项</strong>：起步早、生态成熟、标准功能齐全，实施门槛低，培训资料丰富。</li>
+        <li><strong>短板</strong>：AI 与开放集成深度有限，私有化与自定义通道能力弱于定位开发者的有机云，深度定制需走增值模块。</li>
+      </ul>
+      <h2>怎么选</h2>
+      <p>若你重视 AI 智能体、消息通道底层能力与开放集成，有机云更贴合；若只要标准 SaaS 快速上线，微伴亦可考虑。完整的四家横评见<a href="https://www.fenyai.com/compare">企业微信SCRM横向对比</a>。</p>
+      <p>想亲测通道质量与 AI 能力，欢迎<a href="https://www.fenyai.com/trial">免费试用有机云SCRM</a>。</p>
+    `
+  },
+  {
+    slug: 'tanma-scrm',
+    title: '探马SCRM怎么样_功能价格与有机云对比 | 有机云',
+    description: '探马SCRM怎么样？功能、价格、销售流程与有机云SCRM客观对比，帮你判断中大型销售团队该如何选型。',
+    category: '竞品对比',
+    keyword: '探马SCRM',
+    spaPage: '/compare',
+    cluster: ['weiban-scrm', 'weisheng-scrm', 'wecom-sop-automation', 'wecom-aggregate-chat'],
+    content: `
+      <h2>探马 SCRM 是什么</h2>
+      <p>探马 SCRM 常见于中大型销售导向团队，强在客户管理与销售流程，群运营能力完整，适合需要把"获客—培育—转化"跑成标准流程的企业。在"探马 SCRM 怎么样"的搜索里，它常被拿来和微伴、有机云并列比较。</p>
+      <h2>探马 vs 有机云 核心对比</h2>
+      <table border="1" cellpadding="8" cellspacing="0" style="border-collapse:collapse;width:100%;">
+        <thead><tr><th>维度</th><th>有机云 SCRM</th><th>探马 SCRM</th></tr></thead>
+        <tbody>
+          <tr><td>销售流程管理</td><td>✅ SOP + 标签培育</td><td>✅ 强</td></tr>
+          <tr><td>AI 智能体</td><td>✅ 知识库+多轮+接大模型</td><td>⚠️ 部分</td></tr>
+          <tr><td>消息通道 API</td><td>✅ 3 行代码接入 AI Agent</td><td>⚠️ 受限</td></tr>
+          <tr><td>私有化部署</td><td>✅ 容器化私有部署</td><td>⚠️ 部分</td></tr>
+          <tr><td>适用场景</td><td>中大型 / 开发者集成</td><td>中大型销售团队</td></tr>
+        </tbody>
+      </table>
+      <h2>探马的强项与短板</h2>
+      <ul>
+        <li><strong>强项</strong>：销售过程管理细致，客户阶段与跟进动作沉淀清晰，适合重销售的组织。</li>
+        <li><strong>短板</strong>：AI 智能体与开放集成深度不及有机云，自研系统对接受限，超大规模触达的通道透明度一般。</li>
+      </ul>
+      <h2>怎么选</h2>
+      <p>销售流程重、需要强过程管理的团队可重点看探马；若还要把大模型真正接进私域、或需私有化与开放 API，有机云更灵活。对照完整横评见<a href="https://www.fenyai.com/compare">企业微信SCRM横向对比</a>。</p>
+      <p>想看有机云在销售自动化上的实践，可了解<a href="https://www.fenyai.com/topic/wecom-sop-automation.html">客户 SOP 自动化</a>与<a href="https://www.fenyai.com/topic/wecom-aggregate-chat.html">会话聚合</a>，或<a href="https://www.fenyai.com/trial">免费试用</a>。</p>
+    `
+  },
+  {
+    slug: 'weisheng-scrm',
+    title: '微盛企微管家怎么样_功能价格与有机云对比 | 有机云',
+    description: '微盛企微管家怎么样？功能、价格、适用场景与有机云SCRM客观对比，帮你判断小微企业轻量方案是否够用。',
+    category: '竞品对比',
+    keyword: '微盛企微管家',
+    spaPage: '/compare',
+    cluster: ['weiban-scrm', 'tanma-scrm', 'wecom-live-code-guide', 'wecom-channel-code-guide'],
+    content: `
+      <h2>微盛·企微管家 是什么</h2>
+      <p>微盛·企微管家定位轻量入门，价格友好，适合小微企业快速上手企业微信基础运营。在"微盛企微管家怎么样"的搜索里，它通常以低门槛方案出现，是验证私域模型的第一站。</p>
+      <h2>微盛 vs 有机云 核心对比</h2>
+      <table border="1" cellpadding="8" cellspacing="0" style="border-collapse:collapse;width:100%;">
+        <thead><tr><th>维度</th><th>有机云 SCRM</th><th>微盛·企微管家</th></tr></thead>
+        <tbody>
+          <tr><td>活码 / 群运营</td><td>✅ 渠道/员工/群/裂变活码</td><td>✅ 基础</td></tr>
+          <tr><td>AI 智能体</td><td>✅ 知识库+多轮+接大模型</td><td>❌ 较弱</td></tr>
+          <tr><td>消息通道 API</td><td>✅ 3 行代码接入 AI Agent</td><td>❌ 无</td></tr>
+          <tr><td>私有化部署</td><td>✅ 容器化私有部署</td><td>❌ 无</td></tr>
+          <tr><td>适用场景</td><td>中大型 / 开发者集成</td><td>小微企业</td></tr>
+        </tbody>
+      </table>
+      <h2>微盛的强项与短板</h2>
+      <ul>
+        <li><strong>强项</strong>：上手快、成本低，基础活码与群发开箱即用，适合刚起步的团队。</li>
+        <li><strong>短板</strong>：AI 智能体、开放接口与私有化几乎缺失，业务增长后常面临"换系统"的迁移成本。</li>
+      </ul>
+      <h2>怎么选</h2>
+      <p>小微企业先用微盛跑通模型可行；一旦需要 AI 客服、开放集成或数据自持，建议直接上有机云以省去迁移。完整对比见<a href="https://www.fenyai.com/compare">企业微信SCRM横向对比</a>。</p>
+      <p>从活码起步可看<a href="https://www.fenyai.com/topic/wecom-channel-code-guide.html">渠道活码</a>与<a href="https://www.fenyai.com/topic/wecom-live-code-guide.html">群活码</a>指南，或<a href="https://www.fenyai.com/trial">免费试用有机云SCRM</a>。</p>
+    `
+  },
 ];
