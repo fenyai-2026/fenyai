@@ -251,6 +251,20 @@ export default function MessageChannel() {
                   </Link>
                 </div>
 
+                {/* 差异化定位 + 通道体检钩子 */}
+                <p className="mt-6 flex flex-wrap items-center gap-x-2 text-sm text-slate-500">
+                  <span>🚀 全国最快最稳的企微消息发送底层</span>
+                  <span className="hidden sm:inline text-slate-300">·</span>
+                  <span>已支撑 <strong className="text-slate-700 font-semibold">10 万+</strong> 企业日级消息</span>
+                </p>
+                <Link
+                  to="/contact"
+                  className="inline-flex items-center mt-3 text-sm font-semibold text-purple-600 hover:text-purple-700 transition-colors group"
+                >
+                  你的企微消息底层稳吗？免费做 1 次通道体检
+                  <ArrowRight className="ml-1 w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                </Link>
+
               </motion.div>
 
               <motion.div
@@ -573,8 +587,8 @@ export default function MessageChannel() {
                 transition={{ delay: 0.2 }}
               >
                 <DemoForm
-                  title="预约技术对接"
-                  subtitle="技术顾问 10 分钟内联系您，协助 API 接入"
+                  title="免费通道体检 + 白皮书下载"
+                  subtitle="技术顾问 1 对 1 通道体检，并赠送《企微消息通道选型白皮书》"
                 />
               </motion.div>
             </div>

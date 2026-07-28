@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import SEOHelmet from '../components/SEOHelmet';
 import RelatedArticlesByKeyword from '../components/RelatedArticlesByKeyword';
+import DemoForm from '../components/DemoForm';
 import { Layers, MessageSquare, Zap, Users, BarChart3, Shield, ArrowRight, Check } from 'lucide-react';
 
 const features = [
@@ -131,6 +132,11 @@ export default function JuheChat() {
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Link>
               </div>
+              <p className="mt-6 flex flex-wrap items-center justify-center gap-x-2 text-sm text-sky-700/80">
+                <span>🚀 全国最快最稳的聚合聊天</span>
+                <span className="hidden sm:inline text-sky-400">·</span>
+                <span>已支撑 <strong className="text-sky-900 font-semibold">10 万+</strong> 企业日级会话</span>
+              </p>
             </motion.div>
           </div>
         </section>
@@ -240,33 +246,54 @@ export default function JuheChat() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-24 bg-gradient-to-r from-sky-500 to-cyan-500" aria-label="立即行动">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">立即统一你的企微客服</h2>
-              <p className="text-lg text-sky-100 mb-8 max-w-2xl mx-auto">
-                免费试用 3 天，专属顾问 1 对 1 指导，把散落的客户会话管到一个工作台
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link
-                  to="/trial"
-                  className="inline-flex items-center justify-center px-8 py-4 bg-white text-sky-600 font-semibold rounded-xl hover:bg-sky-50 transition-all duration-300"
-                >
-                  立即咨询
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </Link>
-                <Link
-                  to="/scrm"
-                  className="inline-flex items-center justify-center px-8 py-4 bg-sky-400/30 text-white font-semibold rounded-xl hover:bg-sky-400/40 transition-all duration-300 border border-white/30"
-                >
-                  了解产品功能
-                </Link>
-              </div>
-            </motion.div>
+        <section className="py-24 bg-gradient-to-br from-sky-50 via-white to-cyan-50" aria-label="立即行动">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <motion.div
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+              >
+                <h2 className="text-3xl sm:text-4xl font-bold text-sky-900 mb-6">立即统一你的企微客服</h2>
+                <p className="text-lg text-sky-700/80 mb-8 leading-relaxed">
+                  免费试用 3 天，专属顾问 1 对 1 指导，把散落的客户会话管到一个工作台。已支撑 10 万+ 企业日级会话，全国最快最稳的聚合聊天底座。
+                </p>
+                <div className="space-y-3">
+                  {['免费试用，零成本验证效果', '专属顾问 1 对 1 上手指导', '多账号统一管理，客服效率提升 3 倍'].map((item, i) => (
+                    <div key={i} className="flex items-center text-sky-800">
+                      <Check className="w-5 h-5 text-sky-500 mr-3 flex-shrink-0" />
+                      <span>{item}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex flex-col sm:flex-row gap-4 mt-8">
+                  <Link
+                    to="/trial"
+                    className="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-sky-500 to-cyan-500 text-white font-semibold rounded-xl hover:from-sky-600 hover:to-cyan-600 transition-all duration-300 shadow-lg shadow-sky-500/25"
+                  >
+                    立即咨询
+                    <ArrowRight className="ml-2 w-5 h-5" />
+                  </Link>
+                  <Link
+                    to="/scrm"
+                    className="inline-flex items-center justify-center px-8 py-4 bg-white text-sky-700 font-semibold rounded-xl hover:bg-sky-50 transition-all duration-300 border border-sky-200 hover:border-sky-300"
+                  >
+                    了解产品功能
+                  </Link>
+                </div>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, x: 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+              >
+                <DemoForm
+                  title="领取《聚合聊天效率白皮书》"
+                  subtitle="顾问 1 对 1 指导接入，并赠送选型白皮书"
+                />
+              </motion.div>
+            </div>
           </div>
         </section>
         <RelatedArticlesByKeyword keyword="聚合聊天" keywords={['聚合聊天', '聚合', '统一接待', '多账号']} title="延伸阅读：聚合聊天" />

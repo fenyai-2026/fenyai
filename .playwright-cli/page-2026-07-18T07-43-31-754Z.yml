@@ -1,0 +1,195 @@
+- generic [ref=f3e3]:
+  - generic [ref=f3e4]:
+    - generic [ref=f3e7]:
+      - generic [ref=f3e8]: 最新动态
+      - generic [ref=f3e12]:
+        - link "有机云「消息通道API」正式发布，3行代码为AI Agent接入企微消息能力" [ref=f3e13] [cursor=pointer]:
+          - /url: /message-channel
+        - link "有机云服务企业突破10000家，覆盖30+行业私域运营场景":
+          - /url: /articles
+        - link "AI智能体全新升级，支持知识库训练与多轮对话，7x24小时在线":
+          - /url: /ai-agent
+        - link "企业微信官方合作伙伴认证续期，ISO27001信息安全体系保障":
+          - /url: /scrm
+    - banner [ref=f3e22]:
+      - generic [ref=f3e24]:
+        - link [ref=f3e25] [cursor=pointer]:
+          - /url: /
+          - img "有机云" [ref=f3e26]
+        - navigation [ref=f3e27]:
+          - link "首页" [ref=f3e28] [cursor=pointer]:
+            - /url: /
+          - link "产品功能" [ref=f3e29] [cursor=pointer]:
+            - /url: /products
+          - link "消息通道 API" [ref=f3e30] [cursor=pointer]:
+            - /url: /message-channel
+            - text: 消息通道
+            - generic [ref=f3e31]: API
+          - link "解决方案" [ref=f3e32] [cursor=pointer]:
+            - /url: /solutions
+          - link "AI智能体" [ref=f3e33] [cursor=pointer]:
+            - /url: /ai-agent
+          - link "开放平台" [ref=f3e34] [cursor=pointer]:
+            - /url: /open-platform
+          - link "文章资讯" [ref=f3e35] [cursor=pointer]:
+            - /url: /articles
+          - link "价格方案" [ref=f3e36] [cursor=pointer]:
+            - /url: /pricing
+          - link "联系我们" [ref=f3e37] [cursor=pointer]:
+            - /url: /contact
+        - link "免费注册" [ref=f3e39] [cursor=pointer]:
+          - /url: /trial
+  - main [ref=f3e40]:
+    - main [ref=f3e41]:
+      - generic [ref=f3e42]:
+        - generic [ref=f3e43]: "404"
+        - heading "页面走丢了" [level=1] [ref=f3e44]
+        - paragraph [ref=f3e45]: 抱歉，你访问的页面不存在或已迁移。你可以返回首页，或前往下面的常用页面。
+        - generic [ref=f3e46]:
+          - link "返回首页" [ref=f3e47] [cursor=pointer]:
+            - /url: /
+          - link "浏览文章" [ref=f3e51] [cursor=pointer]:
+            - /url: /articles
+        - generic [ref=f3e55]:
+          - link "产品功能" [ref=f3e56] [cursor=pointer]:
+            - /url: /products
+          - link "解决方案" [ref=f3e59] [cursor=pointer]:
+            - /url: /solutions
+          - link "价格方案" [ref=f3e62] [cursor=pointer]:
+            - /url: /pricing
+          - link "干货文章" [ref=f3e65] [cursor=pointer]:
+            - /url: /articles
+          - link "免费试用" [ref=f3e68] [cursor=pointer]:
+            - /url: /trial
+          - link "联系我们" [ref=f3e71] [cursor=pointer]:
+            - /url: /contact
+  - contentinfo [ref=f3e74]:
+    - generic [ref=f3e75]:
+      - generic [ref=f3e76]:
+        - generic [ref=f3e77]:
+          - img "有机云" [ref=f3e79]
+          - paragraph [ref=f3e80]: 专注企业私域流量自动化运营，是效果转化的私域营销专家，助力企业10倍提升运营效率。
+          - generic [ref=f3e81]:
+            - paragraph [ref=f3e82]: 扫码添加企业微信
+            - img "企业微信二维码" [ref=f3e83]
+        - generic [ref=f3e84]:
+          - heading "产品功能" [level=3] [ref=f3e85]
+          - list [ref=f3e86]:
+            - listitem [ref=f3e87]:
+              - link "有机云消息通道API" [ref=f3e88] [cursor=pointer]:
+                - /url: /message-channel
+            - listitem [ref=f3e89]:
+              - link "有机云SCRM" [ref=f3e90] [cursor=pointer]:
+                - /url: /scrm
+            - listitem [ref=f3e91]:
+              - link "有机云活码" [ref=f3e92] [cursor=pointer]:
+                - /url: /live-code
+            - listitem [ref=f3e93]:
+              - link "有机云裂变拓客" [ref=f3e94] [cursor=pointer]:
+                - /url: /growth
+            - listitem [ref=f3e95]:
+              - link "有机云AI外呼" [ref=f3e96] [cursor=pointer]:
+                - /url: /ai-call
+            - listitem [ref=f3e97]:
+              - link "有机云AI智能体" [ref=f3e98] [cursor=pointer]:
+                - /url: /ai-agent
+            - listitem [ref=f3e99]:
+              - link "全部产品" [ref=f3e100] [cursor=pointer]:
+                - /url: /products
+        - generic [ref=f3e101]:
+          - heading "解决方案" [level=3] [ref=f3e102]
+          - list [ref=f3e103]:
+            - listitem [ref=f3e104]:
+              - link "泛金融业" [ref=f3e105] [cursor=pointer]:
+                - /url: /solutions/finance
+            - listitem [ref=f3e106]:
+              - link "社群电商" [ref=f3e107] [cursor=pointer]:
+                - /url: /solutions/ecommerce
+            - listitem [ref=f3e108]:
+              - link "连锁零售" [ref=f3e109] [cursor=pointer]:
+                - /url: /solutions/retail
+            - listitem [ref=f3e110]:
+              - link "在线教培" [ref=f3e111] [cursor=pointer]:
+                - /url: /solutions/education
+            - listitem [ref=f3e112]:
+              - link "主动拓客" [ref=f3e113] [cursor=pointer]:
+                - /url: /solutions/active-outreach
+            - listitem [ref=f3e114]:
+              - link "营销SOP" [ref=f3e115] [cursor=pointer]:
+                - /url: /solutions/sop
+            - listitem [ref=f3e116]:
+              - link "裂变任务" [ref=f3e117] [cursor=pointer]:
+                - /url: /solutions/crack
+            - listitem [ref=f3e118]:
+              - link "有机云会话存档" [ref=f3e119] [cursor=pointer]:
+                - /url: /solutions/archive
+            - listitem [ref=f3e120]:
+              - link "有机云SCRM对比" [ref=f3e121] [cursor=pointer]:
+                - /url: /compare
+        - generic [ref=f3e122]:
+          - heading "资源中心" [level=3] [ref=f3e123]
+          - list [ref=f3e124]:
+            - listitem [ref=f3e125]:
+              - link "免费白皮书" [ref=f3e126] [cursor=pointer]:
+                - /url: /whitepaper
+            - listitem [ref=f3e127]:
+              - link "资料下载" [ref=f3e128] [cursor=pointer]:
+                - /url: /resources
+            - listitem [ref=f3e129]:
+              - link "OAuth授权" [ref=f3e130] [cursor=pointer]:
+                - /url: /open-platform
+            - listitem [ref=f3e131]:
+              - link "API接口" [ref=f3e132] [cursor=pointer]:
+                - /url: /open-platform
+            - listitem [ref=f3e133]:
+              - link "私有化部署" [ref=f3e134] [cursor=pointer]:
+                - /url: /open-platform
+        - generic [ref=f3e135]:
+          - heading "关于我们" [level=3] [ref=f3e136]
+          - list [ref=f3e137]:
+            - listitem [ref=f3e138]:
+              - link "文章资讯" [ref=f3e139] [cursor=pointer]:
+                - /url: /articles
+            - listitem [ref=f3e140]:
+              - link "常见问题" [ref=f3e141] [cursor=pointer]:
+                - /url: /faq
+            - listitem [ref=f3e142]:
+              - link "联系我们" [ref=f3e143] [cursor=pointer]:
+                - /url: /trial
+            - listitem [ref=f3e144]:
+              - generic [ref=f3e147]:
+                - generic [ref=f3e148]: 133-1616-9107
+                - generic [ref=f3e149]: 189-9836-7461
+            - listitem [ref=f3e150]:
+              - generic [ref=f3e154]: 广州市番禺区大学城青蓝街28号创智大厦3栋6楼
+      - generic [ref=f3e156]:
+        - generic [ref=f3e157]: 热门搜索：
+        - link "有机云SCRM系统" [ref=f3e158] [cursor=pointer]:
+          - /url: /products
+        - generic [ref=f3e159]: "|"
+        - link "有机云活码引流" [ref=f3e160] [cursor=pointer]:
+          - /url: /live-code
+        - generic [ref=f3e161]: "|"
+        - link "有机云超级群发" [ref=f3e162] [cursor=pointer]:
+          - /url: /growth
+        - generic [ref=f3e163]: "|"
+        - link "有机云AI智能体客服" [ref=f3e164] [cursor=pointer]:
+          - /url: /ai-agent
+        - generic [ref=f3e165]: "|"
+        - link "有机云金融私域运营" [ref=f3e166] [cursor=pointer]:
+          - /url: /solutions/finance
+        - generic [ref=f3e167]: "|"
+        - link "有机云零售私域运营" [ref=f3e168] [cursor=pointer]:
+          - /url: /solutions/retail
+        - generic [ref=f3e169]: "|"
+        - link "有机云私域运营干货" [ref=f3e170] [cursor=pointer]:
+          - /url: /articles
+        - generic [ref=f3e171]: "|"
+        - link "有机云SCRM价格" [ref=f3e172] [cursor=pointer]:
+          - /url: /pricing
+      - generic [ref=f3e173]:
+        - paragraph [ref=f3e174]: © 2026 广州有机云计算有限责任公司 · 有机云SCRM. 保留所有权利.
+        - paragraph [ref=f3e175]:
+          - text: 有机云 —— 企业微信SCRM私域运营工具 · 官网
+          - link "www.fenyai.com" [ref=f3e176] [cursor=pointer]:
+            - /url: https://www.fenyai.com/

@@ -1,0 +1,320 @@
+- generic [ref=f1e3]:
+  - generic [ref=f1e4]:
+    - generic [ref=f1e7]:
+      - generic [ref=f1e8]: 最新动态
+      - generic [ref=f1e12]:
+        - link "有机云「消息通道API」正式发布，3行代码为AI Agent接入企微消息能力" [ref=f1e13] [cursor=pointer]:
+          - /url: /message-channel
+        - link "有机云服务企业突破10000家，覆盖30+行业私域运营场景":
+          - /url: /articles
+        - link "AI智能体全新升级，支持知识库训练与多轮对话，7x24小时在线":
+          - /url: /ai-agent
+        - link "企业微信官方合作伙伴认证续期，ISO27001信息安全体系保障":
+          - /url: /scrm
+    - banner [ref=f1e22]:
+      - generic [ref=f1e24]:
+        - link [ref=f1e25] [cursor=pointer]:
+          - /url: /
+          - img "有机云" [ref=f1e26]
+        - navigation [ref=f1e27]:
+          - link "首页" [ref=f1e28] [cursor=pointer]:
+            - /url: /
+          - link "产品功能" [ref=f1e29] [cursor=pointer]:
+            - /url: /products
+          - link "消息通道 API" [ref=f1e30] [cursor=pointer]:
+            - /url: /message-channel
+            - text: 消息通道
+            - generic [ref=f1e31]: API
+          - link "解决方案" [ref=f1e32] [cursor=pointer]:
+            - /url: /solutions
+          - link "AI智能体" [ref=f1e33] [cursor=pointer]:
+            - /url: /ai-agent
+          - link "开放平台" [ref=f1e34] [cursor=pointer]:
+            - /url: /open-platform
+          - link "文章资讯" [ref=f1e35] [cursor=pointer]:
+            - /url: /articles
+          - link "价格方案" [ref=f1e36] [cursor=pointer]:
+            - /url: /pricing
+          - link "联系我们" [ref=f1e37] [cursor=pointer]:
+            - /url: /contact
+        - link "免费注册" [ref=f1e39] [cursor=pointer]:
+          - /url: /trial
+  - main [ref=f1e40]:
+    - main [ref=f1e41]:
+      - navigation "面包屑" [ref=f1e43]:
+        - list [ref=f1e44]:
+          - listitem [ref=f1e45]:
+            - link "首页" [ref=f1e46] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=f1e47]:
+            - generic [ref=f1e48]: /
+            - link "解决方案" [ref=f1e49] [cursor=pointer]:
+              - /url: /solutions
+          - listitem [ref=f1e50]:
+            - generic [ref=f1e51]: /
+            - link "社群电商" [ref=f1e52] [cursor=pointer]:
+              - /url: /solutions/ecommerce
+      - generic [ref=f1e55]:
+        - generic [ref=f1e56]: 行业解决方案
+        - heading "社群电商私域运营方案" [level=1] [ref=f1e61]
+        - paragraph [ref=f1e62]: 企微活码+裂变拉新+社群自动化+数据中台，助力电商企业实现私域增长
+        - link "免费试用" [ref=f1e63] [cursor=pointer]:
+          - /url: /trial
+      - navigation [ref=f1e67]:
+        - link "首页" [ref=f1e68] [cursor=pointer]:
+          - /url: /
+        - text: /
+        - link "解决方案" [ref=f1e69] [cursor=pointer]:
+          - /url: /solutions
+        - text: /社群电商
+      - generic [ref=f1e71]:
+        - generic [ref=f1e72]:
+          - heading "行业痛点与解决方案" [level=2] [ref=f1e73]
+          - paragraph [ref=f1e74]: 针对电商行业核心痛点，提供完整解决方案
+        - generic [ref=f1e75]:
+          - generic [ref=f1e77]:
+            - generic [ref=f1e78]: "1"
+            - generic [ref=f1e80]:
+              - heading "流量获取难" [level=3] [ref=f1e81]
+              - paragraph [ref=f1e82]: 公域流量成本越来越高，获客成本居高不下
+              - generic [ref=f1e83]: 企微活码+裂变拓客，获客成本降低70%
+          - generic [ref=f1e89]:
+            - generic [ref=f1e90]: "2"
+            - generic [ref=f1e92]:
+              - heading "复购率低" [level=3] [ref=f1e93]
+              - paragraph [ref=f1e94]: 客户购买后流失率高，难以建立长期关系
+              - generic [ref=f1e95]: 客户管理系统+运营SOP，复购率提升180%
+          - generic [ref=f1e101]:
+            - generic [ref=f1e102]: "3"
+            - generic [ref=f1e104]:
+              - heading "社群活跃度下降" [level=3] [ref=f1e105]
+              - paragraph [ref=f1e106]: 社群运营缺乏有效手段，用户参与度低
+              - generic [ref=f1e107]: 智能群管+AI互动，社群活跃度提升300%
+          - generic [ref=f1e113]:
+            - generic [ref=f1e114]: "4"
+            - generic [ref=f1e116]:
+              - heading "订单管理混乱" [level=3] [ref=f1e117]
+              - paragraph [ref=f1e118]: 多平台订单数据分散，难以统一管理
+              - generic [ref=f1e119]: 数据中台+订单同步，订单管理效率提升5倍
+      - generic [ref=f1e125]:
+        - generic [ref=f1e126]:
+          - heading "核心功能模块" [level=2] [ref=f1e127]
+          - paragraph [ref=f1e128]: 四大核心功能，打造电商私域增长引擎
+        - generic [ref=f1e129]:
+          - generic [ref=f1e130]:
+            - heading "企微活码获客" [level=3] [ref=f1e138]
+            - paragraph [ref=f1e139]: 通过企微活码实现线上线下全渠道获客，自动分配客户给专属顾问，实现精准引流。支持渠道追踪、数据统计，优化获客策略。
+            - generic [ref=f1e140]:
+              - generic [ref=f1e141]: 渠道活码
+              - generic [ref=f1e142]: 自动分配
+              - generic [ref=f1e143]: 数据统计
+              - generic [ref=f1e144]: ROI分析
+          - generic [ref=f1e145]:
+            - heading "裂变拉新" [level=3] [ref=f1e152]
+            - paragraph [ref=f1e153]: 任务裂变、红包裂变、拼团裂变等多种玩法，让每个用户都成为传播节点。低成本获取高质量新客，实现病毒式增长。
+            - generic [ref=f1e154]:
+              - generic [ref=f1e155]: 任务裂变
+              - generic [ref=f1e156]: 红包裂变
+              - generic [ref=f1e157]: 拼团裂变
+              - generic [ref=f1e158]: 病毒传播
+          - generic [ref=f1e159]:
+            - heading "社群自动化" [level=3] [ref=f1e165]
+            - paragraph [ref=f1e166]: 智能群管+AI互动+自动回复，7×24小时自动化运营。群满自动建新群，关键词自动回复，大幅提升运营效率。
+            - generic [ref=f1e167]:
+              - generic [ref=f1e168]: 智能群管
+              - generic [ref=f1e169]: AI互动
+              - generic [ref=f1e170]: 自动回复
+              - generic [ref=f1e171]: 7×24运营
+          - generic [ref=f1e172]:
+            - heading "数据中台" [level=3] [ref=f1e177]
+            - paragraph [ref=f1e178]: 多平台订单数据统一接入，客户画像精准分析。支持淘宝、京东、拼多多等电商平台数据同步，形成完整数据资产。
+            - generic [ref=f1e179]:
+              - generic [ref=f1e180]: 多平台打通
+              - generic [ref=f1e181]: 订单同步
+              - generic [ref=f1e182]: 客户关联
+              - generic [ref=f1e183]: 数据分析
+      - generic [ref=f1e185]:
+        - generic [ref=f1e186]:
+          - heading "客户成功案例" [level=2] [ref=f1e187]
+          - paragraph [ref=f1e188]: 真实客户数据，见证电商私域增长
+        - generic [ref=f1e189]:
+          - generic [ref=f1e196]:
+            - heading "云集微店" [level=3] [ref=f1e197]
+            - paragraph [ref=f1e198]: 裂变任务+超级群发+AI智能体，3个月沉淀私域客户200万+，社群GMV增长300%，获客成本降低70%，单场裂变新增4万+好友
+          - generic [ref=f1e205]:
+            - heading "完美日记" [level=3] [ref=f1e206]
+            - paragraph [ref=f1e207]: 私域数据中台+精细化运营+用户画像，私域客户LTV提升3倍，复购率提升180%，客户留存率提升200%
+      - generic [ref=f1e209]:
+        - generic [ref=f1e210]:
+          - heading "获取专属私域运营方案" [level=2] [ref=f1e211]
+          - paragraph [ref=f1e212]: 添加企业微信，资深顾问 1 对 1 为您定制电商私域增长方案
+        - generic [ref=f1e213]:
+          - generic [ref=f1e214]:
+            - heading "扫码添加微信" [level=3] [ref=f1e215]
+            - paragraph [ref=f1e216]: 专业顾问 1 对 1 为您提供专属方案
+          - generic [ref=f1e217]:
+            - img "微信二维码" [ref=f1e219]
+            - paragraph [ref=f1e220]: 微信扫一扫，立即添加咨询
+            - generic [ref=f1e221]:
+              - link "133-1616-9107" [ref=f1e222] [cursor=pointer]:
+                - /url: tel:13316169107
+              - link "189-9836-7461" [ref=f1e226] [cursor=pointer]:
+                - /url: tel:18998367461
+      - generic [ref=f1e232]:
+        - heading "支持电商私域运营的有机云产品" [level=3] [ref=f1e233]
+        - generic [ref=f1e234]:
+          - link [ref=f1e235] [cursor=pointer]:
+            - /url: /products/qimo
+            - heading "企微魔方" [level=4] [ref=f1e242]
+            - paragraph [ref=f1e243]: SCRM客户管理核心工具
+            - generic [ref=f1e244]: 了解详情
+          - link [ref=f1e247] [cursor=pointer]:
+            - /url: /products/yinliu
+            - heading "引流宝" [level=4] [ref=f1e253]
+            - paragraph [ref=f1e254]: 多渠道引流拓客神器
+            - generic [ref=f1e255]: 了解详情
+          - link [ref=f1e258] [cursor=pointer]:
+            - /url: /products/jinqun
+            - heading "进群宝" [level=4] [ref=f1e267]
+            - paragraph [ref=f1e268]: 智能群管理工具
+            - generic [ref=f1e269]: 了解详情
+          - link [ref=f1e272] [cursor=pointer]:
+            - /url: /products/task
+            - heading "任务宝" [level=4] [ref=f1e279]
+            - paragraph [ref=f1e280]: 裂变任务营销工具
+            - generic [ref=f1e281]: 了解详情
+      - generic [ref=f1e285]:
+        - heading "开启电商私域增长" [level=2] [ref=f1e286]
+        - paragraph [ref=f1e287]: 立即试用，体验完整电商私域运营功能
+        - link "免费试用" [ref=f1e288] [cursor=pointer]:
+          - /url: /trial
+  - contentinfo [ref=f1e291]:
+    - generic [ref=f1e292]:
+      - generic [ref=f1e293]:
+        - generic [ref=f1e294]:
+          - img "有机云" [ref=f1e296]
+          - paragraph [ref=f1e297]: 专注企业私域流量自动化运营，是效果转化的私域营销专家，助力企业10倍提升运营效率。
+          - generic [ref=f1e298]:
+            - paragraph [ref=f1e299]: 扫码添加企业微信
+            - img "企业微信二维码" [ref=f1e300]
+        - generic [ref=f1e301]:
+          - heading "产品功能" [level=3] [ref=f1e302]
+          - list [ref=f1e303]:
+            - listitem [ref=f1e304]:
+              - link "有机云消息通道API" [ref=f1e305] [cursor=pointer]:
+                - /url: /message-channel
+            - listitem [ref=f1e306]:
+              - link "有机云SCRM" [ref=f1e307] [cursor=pointer]:
+                - /url: /scrm
+            - listitem [ref=f1e308]:
+              - link "有机云活码" [ref=f1e309] [cursor=pointer]:
+                - /url: /live-code
+            - listitem [ref=f1e310]:
+              - link "有机云裂变拓客" [ref=f1e311] [cursor=pointer]:
+                - /url: /growth
+            - listitem [ref=f1e312]:
+              - link "有机云AI外呼" [ref=f1e313] [cursor=pointer]:
+                - /url: /ai-call
+            - listitem [ref=f1e314]:
+              - link "有机云AI智能体" [ref=f1e315] [cursor=pointer]:
+                - /url: /ai-agent
+            - listitem [ref=f1e316]:
+              - link "全部产品" [ref=f1e317] [cursor=pointer]:
+                - /url: /products
+        - generic [ref=f1e318]:
+          - heading "解决方案" [level=3] [ref=f1e319]
+          - list [ref=f1e320]:
+            - listitem [ref=f1e321]:
+              - link "泛金融业" [ref=f1e322] [cursor=pointer]:
+                - /url: /solutions/finance
+            - listitem [ref=f1e323]:
+              - link "社群电商" [ref=f1e324] [cursor=pointer]:
+                - /url: /solutions/ecommerce
+            - listitem [ref=f1e325]:
+              - link "连锁零售" [ref=f1e326] [cursor=pointer]:
+                - /url: /solutions/retail
+            - listitem [ref=f1e327]:
+              - link "在线教培" [ref=f1e328] [cursor=pointer]:
+                - /url: /solutions/education
+            - listitem [ref=f1e329]:
+              - link "主动拓客" [ref=f1e330] [cursor=pointer]:
+                - /url: /solutions/active-outreach
+            - listitem [ref=f1e331]:
+              - link "营销SOP" [ref=f1e332] [cursor=pointer]:
+                - /url: /solutions/sop
+            - listitem [ref=f1e333]:
+              - link "裂变任务" [ref=f1e334] [cursor=pointer]:
+                - /url: /solutions/crack
+            - listitem [ref=f1e335]:
+              - link "有机云会话存档" [ref=f1e336] [cursor=pointer]:
+                - /url: /solutions/archive
+            - listitem [ref=f1e337]:
+              - link "有机云SCRM对比" [ref=f1e338] [cursor=pointer]:
+                - /url: /compare
+        - generic [ref=f1e339]:
+          - heading "资源中心" [level=3] [ref=f1e340]
+          - list [ref=f1e341]:
+            - listitem [ref=f1e342]:
+              - link "免费白皮书" [ref=f1e343] [cursor=pointer]:
+                - /url: /whitepaper
+            - listitem [ref=f1e344]:
+              - link "资料下载" [ref=f1e345] [cursor=pointer]:
+                - /url: /resources
+            - listitem [ref=f1e346]:
+              - link "OAuth授权" [ref=f1e347] [cursor=pointer]:
+                - /url: /open-platform
+            - listitem [ref=f1e348]:
+              - link "API接口" [ref=f1e349] [cursor=pointer]:
+                - /url: /open-platform
+            - listitem [ref=f1e350]:
+              - link "私有化部署" [ref=f1e351] [cursor=pointer]:
+                - /url: /open-platform
+        - generic [ref=f1e352]:
+          - heading "关于我们" [level=3] [ref=f1e353]
+          - list [ref=f1e354]:
+            - listitem [ref=f1e355]:
+              - link "文章资讯" [ref=f1e356] [cursor=pointer]:
+                - /url: /articles
+            - listitem [ref=f1e357]:
+              - link "常见问题" [ref=f1e358] [cursor=pointer]:
+                - /url: /faq
+            - listitem [ref=f1e359]:
+              - link "联系我们" [ref=f1e360] [cursor=pointer]:
+                - /url: /trial
+            - listitem [ref=f1e361]:
+              - generic [ref=f1e364]:
+                - generic [ref=f1e365]: 133-1616-9107
+                - generic [ref=f1e366]: 189-9836-7461
+            - listitem [ref=f1e367]:
+              - generic [ref=f1e371]: 广州市番禺区大学城青蓝街28号创智大厦3栋6楼
+      - generic [ref=f1e373]:
+        - generic [ref=f1e374]: 热门搜索：
+        - link "有机云SCRM系统" [ref=f1e375] [cursor=pointer]:
+          - /url: /products
+        - generic [ref=f1e376]: "|"
+        - link "有机云活码引流" [ref=f1e377] [cursor=pointer]:
+          - /url: /live-code
+        - generic [ref=f1e378]: "|"
+        - link "有机云超级群发" [ref=f1e379] [cursor=pointer]:
+          - /url: /growth
+        - generic [ref=f1e380]: "|"
+        - link "有机云AI智能体客服" [ref=f1e381] [cursor=pointer]:
+          - /url: /ai-agent
+        - generic [ref=f1e382]: "|"
+        - link "有机云金融私域运营" [ref=f1e383] [cursor=pointer]:
+          - /url: /solutions/finance
+        - generic [ref=f1e384]: "|"
+        - link "有机云零售私域运营" [ref=f1e385] [cursor=pointer]:
+          - /url: /solutions/retail
+        - generic [ref=f1e386]: "|"
+        - link "有机云私域运营干货" [ref=f1e387] [cursor=pointer]:
+          - /url: /articles
+        - generic [ref=f1e388]: "|"
+        - link "有机云SCRM价格" [ref=f1e389] [cursor=pointer]:
+          - /url: /pricing
+      - generic [ref=f1e390]:
+        - paragraph [ref=f1e391]: © 2026 广州有机云计算有限责任公司 · 有机云SCRM. 保留所有权利.
+        - paragraph [ref=f1e392]:
+          - text: 有机云 —— 企业微信SCRM私域运营工具 · 官网
+          - link "www.fenyai.com" [ref=f1e393] [cursor=pointer]:
+            - /url: https://www.fenyai.com/

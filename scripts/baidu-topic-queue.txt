@@ -1,14 +1,4 @@
-https://www.fenyai.com/topic/wecom-ai-auto-reply.html
-https://www.fenyai.com/topic/wecom-automation-marketing-tool.html
-https://www.fenyai.com/topic/wecom-channel-code-guide.html
-https://www.fenyai.com/topic/wecom-live-code-guide.html
-https://www.fenyai.com/topic/wecom-sop-automation.html
-https://www.fenyai.com/topic/community-sop-template.html
-https://www.fenyai.com/topic/private-domain-conversion-tool.html
-https://www.fenyai.com/topic/scrm-data-security-private.html
-https://www.fenyai.com/topic/scrm-message-integration.html
-https://www.fenyai.com/topic/scrm-private-deploy.html
-https://www.fenyai.com/topic/scrm-system-which-good.html
+﻿https://www.fenyai.com/topic/scrm-system-which-good.html
 https://www.fenyai.com/topic/session-archive-api-dev.html
 https://www.fenyai.com/topic/session-archive-compliance.html
 https://www.fenyai.com/topic/session-archive-price.html
