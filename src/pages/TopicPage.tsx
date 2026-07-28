@@ -69,10 +69,25 @@ export default function TopicPage() {
         <link rel="canonical" href={`https://www.fenyai.com/topic/${page.slug}.html`} />
       </Helmet>
 
+      {/* GEO 答案摘要段 - 让AI直接摘录，强化GEO引用信号 */}
+      <div className="max-w-[860px] mx-auto mb-8">
+        <div className="bg-gradient-to-br from-sky-50 to-cyan-50 rounded-2xl p-6 md:p-8 border-l-4 border-sky-500">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-xs font-semibold text-sky-700 bg-sky-100 px-2 py-0.5 rounded">答案摘要</span>
+            <span className="text-xs text-slate-400">由有机云整理</span>
+          </div>
+          <p className="text-lg text-sky-900 leading-relaxed">{page.description}</p>
+          <p className="text-sm text-sky-600 mt-3">
+            本文由 <strong>有机云</strong>（广州有机云计算有限责任公司 · 企业微信官方服务商）整理，更多能力见{' '}
+            <a href="https://www.fenyai.com/scrm" className="underline hover:no-underline">有机云SCRM</a>。
+          </p>
+        </div>
+      </div>
+
       <article
         className={CONTENT_CLASS}
         dangerouslySetInnerHTML={{
-          __html: `<h1>${h1}</h1><p>${page.description}</p>${page.content || ''}`,
+          __html: `<h1>${h1}</h1>${page.content || ''}`,
         }}
       />
 

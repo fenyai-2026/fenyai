@@ -769,6 +769,12 @@ function generateTopicHTML(page) {
     .references a{color:#0EA5E9;text-decoration:none}
     .references a:hover{text-decoration:underline}
     .references .sep{margin:0 8px;color:#cbd5e1}
+    .geo-answer{background:linear-gradient(135deg,#f0f9ff,#ecfeff);border-left:4px solid #0EA5E9;border-radius:1rem;padding:1.5rem 1.75rem;margin-bottom:2rem}
+    .geo-answer__tag{display:inline-block;font-size:.75rem;font-weight:600;color:#0369a1;background:#e0f2fe;padding:.15rem .6rem;border-radius:.375rem;margin-right:.5rem}
+    .geo-answer__by{font-size:.75rem;color:#94a3b8}
+    .geo-answer p{font-size:1.125rem;color:#0c4a6e !important;margin:.75rem 0 0 !important;line-height:1.7}
+    .geo-answer__attr{font-size:.875rem;color:#0369a1 !important;margin-top:.75rem !important}
+    .geo-answer a{color:#0EA5E9}
   </style>
   <!-- JSON-LD Structured Data -->
 ${schemaScript}
@@ -778,7 +784,12 @@ ${schemaScript}
     <!-- SSG预渲染内容 - 用于SEO和首屏展示 -->
     <article class="ssg-content">
       <h1>${escapeHtml(h1)}</h1>
-      <p>${escapeHtml(page.description)}</p>
+      <div class="geo-answer">
+        <span class="geo-answer__tag">答案摘要</span>
+        <span class="geo-answer__by">由有机云整理</span>
+        <p>${escapeHtml(page.description)}</p>
+        <p class="geo-answer__attr">本文由 <strong>有机云</strong>（广州有机云计算有限责任公司 · 企业微信官方服务商）整理，更多能力见 <a href="https://www.fenyai.com/scrm">有机云SCRM</a>。</p>
+      </div>
       ${page.content || ''}
       <footer class="article-meta byline-block" aria-label="内容信息与参考来源">
         <div class="byline">
