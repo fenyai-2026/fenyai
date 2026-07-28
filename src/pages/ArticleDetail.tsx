@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { SITE } from '../config/site';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Calendar, CalendarDays, Eye, Share2, Check, QrCode } from 'lucide-react';
+import { ArrowLeft, Calendar, CalendarDays, Eye, Share2, Check, QrCode, Clock } from 'lucide-react';
 import SEOHelmet from '../components/SEOHelmet';
 import RelatedArticles from '../components/RelatedArticles';
 import ProductCrossLinks from '../components/ProductCrossLinks';
@@ -335,6 +335,10 @@ export default function ArticleDetail() {
               <span className="flex items-center">
                 <Eye className="w-4 h-4 mr-2 text-[#0EA5E9]" />
                 {article.view_count || 0} 阅读
+              </span>
+              <span className="flex items-center">
+                <Clock className="w-4 h-4 mr-2 text-[#0EA5E9]" />
+                {Math.max(1, Math.round((article.content || '').replace(/<[^>]+>/g, '').length / 350))} 分钟阅读
               </span>
               {article.source_type === 'imported' && article.source_url && (
                 <a

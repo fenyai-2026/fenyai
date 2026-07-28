@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Calendar, Eye, ArrowRight, TrendingUp, Search, Filter, QrCode, Mail, BookOpen, Flame, Tag } from 'lucide-react';
+import { Calendar, Eye, ArrowRight, TrendingUp, Search, Filter, QrCode, Mail, BookOpen, Flame, Tag, Clock } from 'lucide-react';
 import SEOHelmet from '../components/SEOHelmet';
 import { SITE } from '../config/site';
 import KeywordCrossLinks from '../components/KeywordCrossLinks';
@@ -17,7 +17,17 @@ interface Article {
   status: string | null;
   view_count: number | null;
   created_at: string | null;
+  updated_at: string | null;
   published_at: string | null;
+  slug?: string | null;
+  category?: string | null;
+  tags?: string[] | null;
+}
+
+// 根据正文长度估算阅读时长（中文约 350 字/分钟）
+function estimateReadingMinutes(content: string): number {
+  const text = content ? content.replace(/<[^>]+>/g, '') : '';
+  return Math.max(1, Math.round(text.length / 350));
 }
 
 // 标签云
@@ -198,47 +208,67 @@ export default function Articles() {
             ) : (
               <section className="grid md:grid-cols-2 gap-6" itemScope itemType="https://schema.org/ItemList">
                 {filteredArticles.map((article, index) => (
-                  <motion.article
-                    key={article.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    className="group bg-white rounded-2xl shadow-sm border border-[#0EA5E9]/10 overflow-hidden hover:shadow-xl hover:shadow-[#0EA5E9]/10 transition-all duration-300 cursor-pointer"
-                    itemProp="itemListElement"
-                    itemScope
-                    itemType="https://schema.org/Article"
-                  >
-                    <div className="p-6">
-                      <h2 className="text-xl font-bold text-[#0C4A6E] mb-3 line-clamp-2 group-hover:text-[#0EA5E9] transition-colors" itemProp="headline">
-                        {article.title}
-                      </h2>
-                      {article.summary && (
-                        <p className="text-[#0C4A6E]/70 mb-4 line-clamp-3" itemProp="description">
-                          {article.summary}
-                        </p>
-                      )}
-                      <div className="flex items-center justify-between text-sm text-[#0C4A6E]/60">
-                        <div className="flex items-center space-x-4">
-                          <time className="flex items-center" itemProp="datePublished" dateTime={article.published_at || ''}>
-                            <Calendar className="w-4 h-4 mr-1" />
-                            {article.published_at?.split('T')[0]}
-                          </time>
-                          <span className="flex items-center">
-                            <Eye className="w-4 h-4 mr-1" />
-                            <span itemProp="interactionStatistic">{article.view_count || 0}</span>
-                          </span>
-                        </div>
-          <Link
-            to={`/article/${article.slug || article.id}`}
-            className="flex items-center text-[#0EA5E9] hover:text-[#F97316] font-medium transition-colors group/btn"
-            itemProp="url"
-          >
-                          阅读
-                          <ArrowRight className="w-4 h-4 ml-1 group-hover/btn:translate-x-1 transition-transform" />
-                        </Link>
-                      </div>
-                    </div>
-                  </motion.article>
+      <motion.article
+        key={article.id}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: index * 0.1 }}
+        className="group bg-white rounded-2xl shadow-sm border border-[#0EA5E9]/10 overflow-hidden hover:shadow-xl hover:shadow-[#0EA5E9]/10 transition-all duration-300 cursor-pointer flex flex-col"
+        itemProp="itemListElement"
+        itemScope
+        itemType="https://schema.org/Article"
+      >
+        <div className="p-6 flex-1 flex flex-col">
+          <div className="flex items-center gap-2 mb-3 flex-wrap">
+            {article.category && (
+              <span className="inline-flex items-center text-xs font-semibold text-[#0C4A6E] bg-[#0EA5E9]/10 px-2.5 py-1 rounded-full" itemProp="articleSection">
+                {article.category}
+              </span>
+            )}
+            <span className="inline-flex items-center text-xs text-[#0C4A6E]/50">
+              <Clock className="w-3.5 h-3.5 mr-1" />
+              {estimateReadingMinutes(article.content)} 分钟阅读
+            </span>
+          </div>
+          <h2 className="text-xl font-bold text-[#0C4A6E] mb-3 line-clamp-2 group-hover:text-[#0EA5E9] transition-colors" itemProp="headline">
+            {article.title}
+          </h2>
+          {article.summary && (
+            <p className="text-[#0C4A6E]/70 mb-4 line-clamp-3" itemProp="description">
+              {article.summary}
+            </p>
+          )}
+          {article.tags && article.tags.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 mb-4">
+              {article.tags.slice(0, 3).map((t, i) => (
+                <span key={i} className="text-xs text-[#0C4A6E]/55 bg-slate-100 px-2 py-0.5 rounded">
+                  #{t}
+                </span>
+              ))}
+            </div>
+          )}
+          <div className="flex items-center justify-between text-sm text-[#0C4A6E]/60 mt-auto pt-2">
+            <div className="flex items-center space-x-4">
+              <time className="flex items-center" itemProp="datePublished" dateTime={article.published_at || ''}>
+                <Calendar className="w-4 h-4 mr-1" />
+                {article.published_at?.split('T')[0]}
+              </time>
+              <span className="flex items-center">
+                <Eye className="w-4 h-4 mr-1" />
+                <span itemProp="interactionStatistic">{article.view_count || 0}</span>
+              </span>
+            </div>
+            <Link
+              to={`/article/${article.slug || article.id}`}
+              className="flex items-center text-[#0EA5E9] hover:text-[#F97316] font-medium transition-colors group/btn"
+              itemProp="url"
+            >
+              阅读
+              <ArrowRight className="w-4 h-4 ml-1 group-hover/btn:translate-x-1 transition-transform" />
+            </Link>
+          </div>
+        </div>
+      </motion.article>
                 ))}
               </section>
             )}
