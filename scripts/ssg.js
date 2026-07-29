@@ -629,6 +629,8 @@ ${schemaScripts}
 function generateTopicHTML(page) {
   const url = `https://www.fenyai.com/topic/${page.slug}.html`;
   const ogImage = DEFAULT_OG_IMAGE;
+  // SERP 摘要 CTA 后缀：仅用于 meta/og/twitter 描述，不动 JSON-LD 与正文 GEO 答案块
+  const CTA_SUFFIX = ' 有机云已服务10万+企业，免费试用→';
   const h1 = page.title.replace(' | 有机云', '');
   const updated = page.updated || '2026-07-15';
 
@@ -718,14 +720,14 @@ function generateTopicHTML(page) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${escapeHtml(page.title)}</title>
-  <meta name="description" content="${escapeHtml(page.description)}">
+  <meta name="description" content="${escapeHtml((page.description || '') + CTA_SUFFIX)}">
   <meta name="keywords" content="${escapeHtml(keywords)}">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="${url}">
   <meta property="og:type" content="article">
   <meta property="og:url" content="${url}">
   <meta property="og:title" content="${escapeHtml(page.title)}">
-  <meta property="og:description" content="${escapeHtml(page.description)}">
+  <meta property="og:description" content="${escapeHtml((page.description || '') + CTA_SUFFIX)}">
   <meta property="og:image" content="${ogImage}">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -734,7 +736,7 @@ function generateTopicHTML(page) {
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:url" content="${url}">
   <meta name="twitter:title" content="${escapeHtml(page.title)}">
-  <meta name="twitter:description" content="${escapeHtml(page.description)}">
+  <meta name="twitter:description" content="${escapeHtml((page.description || '') + CTA_SUFFIX)}">
   <meta name="twitter:image" content="${ogImage}">
   <link rel="icon" type="image/png" href="/favicon.png">
   <style>

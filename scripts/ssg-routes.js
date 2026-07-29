@@ -577,7 +577,7 @@ module.exports = [
   { 
     path: '/message-channel', 
     title: '有机云消息通道API_企微消息发送底层_3行代码接入AI Agent', 
-    description: '有机云消息通道API——企业微信消息发送底层基础设施。3行代码为AI Agent接入企微消息能力，万级并发，99.9%送达率，支持Dify/Coze/百度千帆/阿里百炼集成。',
+    description: '有机云消息通道API——企业微信消息发送底层基础设施。3行代码为AI Agent接入企微消息能力，万级并发，99.9%送达率，支持Dify/Coze/百度千帆/阿里百炼集成。 免费试用·私有化方案1对1咨询→',
     content: `
       <h2>消息通道API</h2>
       <p>企业微信消息发送底层基础设施，3行代码接入AI Agent。</p>

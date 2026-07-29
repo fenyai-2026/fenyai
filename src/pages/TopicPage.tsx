@@ -1,11 +1,17 @@
 import React from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, Navigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { topicPages } from '../data/topicPages';
 
 const BY_SLUG = new Map<string, any>(
   topicPages.map((p: any) => [p.slug, p] as [string, any])
 );
+
+// 历史旧词页 slug → 现有词页 slug（SPA 兜底跳转，与 scripts/gen-legacy-redirects.js 静态软 301 保持一致）
+const LEGACY_TOPIC_SLUG: Record<string, string> = {
+  'wecom-ai-agent': 'wecom-ai-agent-access',
+  'wecom-unlimited-mass-send': 'wecom-anti-block-mass-send',
+};
 
 // 与 scripts/ssg.js 中 generateTopicHTML 的 SPA_LABEL 保持一致
 const SPA_LABEL: Record<string, string> = {
@@ -46,6 +52,10 @@ export default function TopicPage() {
   const page = BY_SLUG.get(key);
 
   if (!page) {
+    const legacy = LEGACY_TOPIC_SLUG[key];
+    if (legacy) {
+      return <Navigate to={`/topic/${legacy}`} replace />;
+    }
     return (
       <div className="max-w-3xl mx-auto px-5 py-20 text-center">
         <h1 className="text-3xl font-bold text-[#0C4A6E] mb-4">页面不存在</h1>
@@ -65,7 +75,7 @@ export default function TopicPage() {
     <div className="px-5 py-10">
       <Helmet>
         <title>{page.title}</title>
-        <meta name="description" content={page.description} />
+        <meta name="description" content={`${page.description} 有机云已服务10万+企业，免费试用→`} />
         <link rel="canonical" href={`https://www.fenyai.com/topic/${page.slug}.html`} />
       </Helmet>
 

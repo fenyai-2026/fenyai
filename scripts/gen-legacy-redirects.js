@@ -47,8 +47,22 @@ const RESERVED_ROUTES = new Set([
   'about', 'contact', 'products', 'solutions', 'pricing', 'articles', 'faq', 'trial',
   'ai-agent', 'ai-call', 'demo-showcase', 'scrm', 'live-code', 'mass-send', 'juhe-chat',
   'session-archive', 'weimo', 'sop', 'robot', 'cloud-phone', 'growth', 'whitepaper',
-  'compare', 'open-platform', 'message-channel', 'resources',
+  'compare', 'open-platform', 'message-channel',   'resources',
 ]);
+
+// 词页数据源：为 /topic/ 目标的软跳转页提供真实标题/描述/正文（路由表里无 /topic/ 路由）
+let TOPIC_MAP = null;
+function getTopicMap() {
+  if (TOPIC_MAP) return TOPIC_MAP;
+  try {
+    const pages = require('./topic-pages');
+    const extra = require('./topic-pages-extra');
+    TOPIC_MAP = new Map([].concat(pages || [], extra || []).map((p) => [p.slug, p]));
+  } catch (e) {
+    TOPIC_MAP = new Map();
+  }
+  return TOPIC_MAP;
+}
 
 // 老页面 slug -> 新路由（仅含“确为老命名 / .html 后缀”的键，避免覆盖现有有效路由）
 const PAGE_REDIRECTS = {
@@ -109,6 +123,9 @@ const PAGE_REDIRECTS = {
   'showcase': '/demo-showcase',
   'drainage': '/growth',
   'joinus': '/about',
+  // 历史旧词页 slug → 现有词页（软 301，把旧排名权重导给健康页，避免薄页/重复页；与 TopicPage LEGACY_TOPIC_SLUG 保持一致）
+  'topic/wecom-ai-agent.html': '/topic/wecom-ai-agent-access',
+  'topic/wecom-unlimited-mass-send.html': '/topic/wecom-anti-block-mass-send',
 };
 
 // 全站校验 meta（与 ssg.js generateHTML 保持一致，避免验证标签丢失）
@@ -293,10 +310,20 @@ function generateLegacyRedirects(articles, routes) {
 
     const target = `${BASE}${newRoute}`;
     const route = routeMap.get(newRoute) || {};
-    const title = route.title || '有机云';
-    const description = route.description || '';
-    const h1 = route.h1 || (route.title || '').split('_')[0];
-    const content = route.content || '';
+    let title = route.title || '有机云';
+    let description = route.description || '';
+    let h1 = route.h1 || (route.title || '').split('_')[0];
+    let content = route.content || '';
+    // /topic/ 目标词页：路由表里没有，需从词页数据源取真实标题/描述/正文，让百度直接抓到正确内容
+    if (newRoute.startsWith('/topic/')) {
+      const tp = getTopicMap().get(newRoute.slice('/topic/'.length));
+      if (tp) {
+        title = tp.title || title;
+        description = tp.description || description;
+        h1 = tp.title || h1;
+        content = tp.content || content;
+      }
+    }
 
     if (oldKey.endsWith('.html')) {
       const slugWithoutExt = oldKey.slice(0, -5);
