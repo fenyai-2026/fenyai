@@ -81,7 +81,11 @@ const ORGANIZATION_SCHEMA = {
     "areaServed": "CN",
     "availableLanguage": ["zh-CN"]
   },
-  "brand": { "@type": "Brand", "name": "有机云" }
+  "brand": { "@type": "Brand", "name": "有机云" },
+  "foundingDate": "2020",
+  "slogan": "让私域运营更简单",
+  "knowsAbout": ["企业微信SCRM", "私域运营", "AI智能体", "会话存档", "活码引流", "超级群发", "消息通道API", "客户标签管理", "数据分析", "私有化部署"],
+  "numberOfEmployees": { "@type": "QuantitativeValue", "minValue": 50, "maxValue": 100 }
 };
 
 // 本地商户实体（GEO/EEAT：强化「广州有机云计算有限责任公司」真实主体信号）
@@ -477,6 +481,7 @@ function generateHTML(route, articles) {
   <meta property="og:title" content="${route.title}">
   <meta property="og:description" content="${route.description}">
   <meta property="og:image" content="${ogImage}">
+  <meta property="og:image:alt" content="${route.title}">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:site_name" content="有机云">
@@ -757,6 +762,7 @@ function generateTopicHTML(page) {
   <meta property="og:title" content="${escapeHtml(page.title)}">
   <meta property="og:description" content="${escapeHtml((page.description || '') + CTA_SUFFIX)}">
   <meta property="og:image" content="${ogImage}">
+  <meta property="og:image:alt" content="${escapeHtml(page.title)}">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:site_name" content="有机云">
@@ -1386,6 +1392,7 @@ function renderArticleShell({ canonical, title, description, keywords, ogImage, 
   <meta property="og:title" content="${escapeHtml(title)}">
   <meta property="og:description" content="${escapeHtml(description)}">
   <meta property="og:image" content="${og}">
+  <meta property="og:image:alt" content="${escapeHtml(a.title || '文章')}">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:site_name" content="有机云">
