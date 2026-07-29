@@ -11,6 +11,8 @@
 /og-image.png /og-image.png 200
 /wechat-qr.png /wechat-qr.png 200
 /llms.txt /llms.txt 200
+/indexnow-key.txt /fenyai2026indexnow.txt 200
+/fenyai2026indexnow.txt /fenyai2026indexnow.txt 200
 
 # SSG 生成的静态页面
 /articles /articles/index.html 200

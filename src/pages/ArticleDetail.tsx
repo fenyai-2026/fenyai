@@ -180,7 +180,7 @@ export default function ArticleDetail() {
       articleSection: data.category || '私域运营',
       inLanguage: 'zh-CN',
       datePublished: data.published_at || data.created_at,
-      dateModified: data.created_at,
+      dateModified: data.updated_at || data.published_at || data.created_at,
       author: {
         '@type': 'Organization',
         name: '有机云',

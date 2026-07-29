@@ -578,6 +578,7 @@ function generateHTML(route, articles) {
     .ssg-home-nav a { color: #0EA5E9; text-decoration: none; font-size: 1rem; }
     .ssg-home-nav a:hover { text-decoration: underline; }
   </style>
+  <link rel="preload" as="script" href="/bundle.js" fetchpriority="high">
   <!-- JSON-LD Structured Data -->
 ${schemaScripts}
 </head>
@@ -812,6 +813,7 @@ function generateTopicHTML(page) {
     .geo-answer__attr{font-size:.875rem;color:#0369a1 !important;margin-top:.75rem !important}
     .geo-answer a{color:#0EA5E9}
   </style>
+  <link rel="preload" as="script" href="/bundle.js" fetchpriority="high">
   <!-- JSON-LD Structured Data -->
 ${schemaScript}
 </head>
@@ -1405,6 +1407,7 @@ function renderArticleShell({ canonical, title, description, keywords, ogImage, 
   <link rel="icon" type="image/png" href="/favicon.png">
   <style>${ARTICLE_BASE_STYLE}
   </style>
+  <link rel="preload" as="script" href="/bundle.js" fetchpriority="high">
   <!-- JSON-LD Structured Data -->
 ${schemaScripts}
 </head>
