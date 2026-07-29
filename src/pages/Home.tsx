@@ -61,7 +61,7 @@ function HeroCarousel() {
             className={i === current ? 'relative' : 'absolute inset-0'}
             style={{ display: i === current ? 'block' : 'none' }}
           >
-            <img src={slide.src} alt={slide.alt} className="w-full" />
+            <img src={slide.src} alt={slide.alt} className="w-full" fetchPriority="high" />
           </motion.div>
         ))}
 
@@ -788,7 +788,7 @@ export default function Home() {
                 className="flex flex-col items-center justify-center p-4 rounded-xl hover:bg-sky-50 transition-colors group"
               >
                 {logo.image ? (
-                  <img src={logo.image} alt={logo.name} className="w-12 h-12 object-contain" />
+                  <img src={logo.image} alt={logo.name} className="w-12 h-12 object-contain" loading="lazy" decoding="async" />
                 ) : (
                   <logo.icon className="w-8 h-8 text-sky-300 group-hover:text-sky-500 transition-colors" />
                 )}

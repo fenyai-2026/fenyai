@@ -115,7 +115,7 @@ export default function SolutionsCrack() {
               </motion.div>
               <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 0.2 }} className="relative">
                 <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-sky-500/10 border border-sky-200/50">
-                  <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80" alt="裂变任务私域运营" className="w-full" />
+                  <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80" alt="裂变任务私域运营" className="w-full" fetchPriority="high" />
                 </div>
               </motion.div>
             </div>
@@ -184,7 +184,7 @@ export default function SolutionsCrack() {
             <div className="grid md:grid-cols-3 gap-8">
               {cases.map((caseItem, index) => (
                 <motion.div key={index} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }} className="bg-sky-50 rounded-2xl overflow-hidden">
-                  <img src={caseItem.image} alt={caseItem.company} className="w-full h-48 object-cover" />
+                  <img src={caseItem.image} alt={caseItem.company} className="w-full h-48 object-cover" loading="lazy" decoding="async" />
                   <div className="p-6">
                     <h3 className="text-lg font-bold text-sky-900 mb-2">{caseItem.company}</h3>
                     <p className="text-sky-700/70 text-sm">{caseItem.result}</p>

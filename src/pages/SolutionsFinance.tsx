@@ -321,7 +321,7 @@ export default function SolutionsFinance() {
                   transition={{ delay: index * 0.1 }}
                   className="bg-sky-50 rounded-2xl overflow-hidden"
                 >
-                  <img src={caseItem.image} alt={caseItem.company} className="w-full h-48 object-cover" />
+                  <img src={caseItem.image} alt={caseItem.company} className="w-full h-48 object-cover" loading="lazy" decoding="async" />
                   <div className="p-6">
                     <h3 className="text-lg font-bold text-sky-900 mb-2">{caseItem.company}</h3>
                     <p className="text-sky-700/70 text-sm">{caseItem.result}</p>

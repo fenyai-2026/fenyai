@@ -44,6 +44,9 @@ Allow: /
 User-agent: Bytespider
 Allow: /
 
+# LLMs 站点摘要（GEO：生成式引擎优先读取，快速理解站点结构）
+LLMs: https://www.fenyai.com/llms.txt
+
 # 站点地图
 Sitemap: https://www.fenyai.com/sitemap.xml
 Host: https://www.fenyai.com

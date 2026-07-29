@@ -623,8 +623,23 @@ ${schemaScripts}
 </html>`;
 }
 
+// 从词页正文中提取「问：... 答：...」FAQ 文本，生成 FAQPage 结构化数据
+// 命中百度 Featured Snippet 与 AI 引擎引用（GEO 强信号）
+function extractTopicFAQ(content) {
+  if (!content) return [];
+  const faqs = [];
+  const re = /问：([^<]+?)<\/h3>\s*<p>\s*答：([\s\S]*?)<\/p>/g;
+  let m;
+  while ((m = re.exec(content)) !== null) {
+    const q = m[1].replace(/<[^>]+>/g, '').trim();
+    const a = m[2].replace(/<[^>]+>/g, '').trim();
+    if (q && a) faqs.push({ q, a });
+  }
+  return faqs;
+}
+
 // 通用词静态词页 HTML 模板（平行静态内容层）
-// 每页 = 独立静态 HTML，自带 canonical 自指、OG article、BreadcrumbList+Article+WebPage @graph，
+// 每页 = 独立静态 HTML，自带 canonical 自指、OG article、BreadcrumbList+Article+WebPage+FAQPage @graph，
 // 以及「首页 + SPA 功能页 + 同簇词页」三类内链。仅 @id 引用既有 Organization/WebSite，不重复定义。
 function generateTopicHTML(page) {
   const url = `https://www.fenyai.com/topic/${page.slug}.html`;
@@ -705,6 +720,19 @@ function generateTopicHTML(page) {
       }
     ]
   };
+  // 词页 FAQ：从正文抽取「问/答」生成 FAQPage，争夺 Featured Snippet 与 AI 引用
+  const topicFAQs = extractTopicFAQ(page.content);
+  if (topicFAQs.length) {
+    schema["@graph"].push({
+      "@type": "FAQPage",
+      "@id": url + "#faqpage",
+      "mainEntity": topicFAQs.map(f => ({
+        "@type": "Question",
+        "name": f.q,
+        "acceptedAnswer": { "@type": "Answer", "text": f.a }
+      }))
+    });
+  }
   const schemaScript = '  <script type="application/ld+json">\n  ' + JSON.stringify(schema) + '\n  </script>';
 
   const keywords = [page.keyword, '企业微信', '私域运营', '有机云'].join(',');

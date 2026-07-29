@@ -196,6 +196,7 @@ export default function SolutionsHealthcare() {
                     src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=800&q=80"
                     alt="医疗健康私域运营"
                     className="w-full"
+                    fetchPriority="high"
                   />
                 </div>
               </motion.div>
@@ -321,7 +322,7 @@ export default function SolutionsHealthcare() {
                   transition={{ delay: index * 0.1 }}
                   className="bg-sky-50 rounded-2xl overflow-hidden"
                 >
-                  <img src={caseItem.image} alt={caseItem.company} className="w-full h-48 object-cover" />
+                  <img src={caseItem.image} alt={caseItem.company} className="w-full h-48 object-cover" loading="lazy" decoding="async" />
                   <div className="p-6">
                     <h3 className="text-lg font-bold text-sky-900 mb-2">{caseItem.company}</h3>
                     <p className="text-sky-700/70 text-sm">{caseItem.result}</p>

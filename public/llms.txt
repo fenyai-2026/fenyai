@@ -1,0 +1,60 @@
+# 有机云
+
+> 有机云（www.fenyai.com）是广州有机云计算有限责任公司旗下的企业微信 SCRM 私域运营工具，企业微信官方服务商。覆盖活码拓客、AI 智能体、会话存档、超级群发、聚合聊天、消息通道 API、SOP 自动化、客户标签与数据报表等全链路能力，已服务 10 万+ 企业，支持免费试用与私有化部署。
+
+## 核心能力
+
+- [有机云 SCRM 系统](https://www.fenyai.com/scrm): 企业微信 SCRM 客户管理系统，客户标签分组、智能跟进、数据分析
+- [活码引流](https://www.fenyai.com/live-code): 渠道活码、员工活码、群活码，全渠道引流获客与智能分流
+- [超级群发](https://www.fenyai.com/mass-send): 突破企微群发限制，防封触达与精准群发
+- [会话存档](https://www.fenyai.com/session-archive): 企业微信会话内容合规存档、质检、敏感词监控
+- [AI 智能体](https://www.fenyai.com/ai-agent): 基于大语言模型的智能客服，7×24 自动接待与回复
+- [聚合聊天](https://www.fenyai.com/juhe-chat): 多账号会话统一管理，提升客服效率
+- [AI 外呼](https://www.fenyai.com/ai-call): AI 智能外呼拓客
+- [裂变拓客](https://www.fenyai.com/growth): 任务宝、海报裂变、红包裂变，低成本增长
+- [消息通道 API](https://www.fenyai.com/message-channel): 3 行代码为 AI 智能体/业务系统接入企微消息，万级并发、99.9% 送达率
+- [企业微信 SOP](https://www.fenyai.com/sop): 营销 SOP 自动化编排
+
+## 解决方案
+
+- [金融私域运营](https://www.fenyai.com/solutions/finance)
+- [连锁门店私域运营](https://www.fenyai.com/solutions/retail)
+- [社群电商私域运营](https://www.fenyai.com/solutions/ecommerce)
+- [在线教培私域运营](https://www.fenyai.com/solutions/education)
+- [会话存档解决方案](https://www.fenyai.com/solutions/archive)
+- [营销 SOP 解决方案](https://www.fenyai.com/solutions/sop)
+- [裂变任务解决方案](https://www.fenyai.com/solutions/crack)
+- [主动拓客解决方案](https://www.fenyai.com/solutions/active-outreach)
+- [智慧分销解决方案](https://www.fenyai.com/solutions/distribution)
+- [AI Agent 集成](https://www.fenyai.com/solutions/ai-agent-integration)
+
+## 关键页面
+
+- [首页](https://www.fenyai.com/): 有机云产品总览与免费试用入口
+- [产品功能](https://www.fenyai.com/products): 企微魔方、引流宝、进群宝、任务宝、数据中台
+- [价格方案](https://www.fenyai.com/pricing): 按坐席灵活计费，支持免费试用
+- [SCRM 对比](https://www.fenyai.com/compare): 主流 SCRM 横评对比
+- [常见问题](https://www.fenyai.com/faq): 产品功能与试用答疑
+- [关于我们](https://www.fenyai.com/about): 公司介绍与联系方式
+- [资源中心](https://www.fenyai.com/resources): 私域运营干货与行业洞察
+- [文章资讯](https://www.fenyai.com/articles): 私域运营实战经验
+
+## 开发者
+
+- [开放平台](https://www.fenyai.com/open-platform): 消息通道 API 与集成能力
+- [API 文档](https://www.fenyai.com/open-platform/docs): 消息通道 API 对接文档
+- [消息通道 API](https://www.fenyai.com/open-platform/message-api): 企微消息发送接口
+
+## 公司
+
+- 公司全称：广州有机云计算有限责任公司
+- 联系电话：+86-133-1616-9107
+- 邮箱：374183167@qq.com
+- 地址：广州市番禺区大学城青蓝街28号创智大厦3栋6楼
+- 企业微信官方服务商，支持本地/专有云/混合三种私有化部署
+
+## Optional
+
+- 有机云支持 Dify、Coze、百度千帆、阿里百炼等 AI 平台对接企业微信消息通道
+- 会话存档基于企业微信官方能力，遵循员工与客户双向告知合规要求，满足金融、医疗等行业的审计与等保要求
+- 词页（/topic/）覆盖企业微信 SCRM 全场景选型与实操问答，详见 [sitemap](https://www.fenyai.com/sitemap.xml)

@@ -53,7 +53,11 @@ const defaultOrganizationSchema = {
     "areaServed": "CN",
     "availableLanguage": ["zh-CN"]
   },
-  "brand": { "@type": "Brand", "name": "有机云" }
+  "brand": { "@type": "Brand", "name": "有机云" },
+  "foundingDate": "2020",
+  "slogan": "让私域运营更简单",
+  "knowsAbout": ["企业微信SCRM", "私域运营", "AI智能体", "会话存档", "活码引流", "超级群发", "消息通道API", "客户标签管理", "数据分析", "私有化部署"],
+  "numberOfEmployees": { "@type": "QuantitativeValue", "minValue": 50, "maxValue": 100 }
 };
 
 // 默认的 WebSite Schema（全站恒定输出，含 potentialAction SearchAction + sameAs EEAT 信号）
@@ -190,6 +194,7 @@ export default function SEOHelmet({
       <meta property="og:title" content={fullOgTitle} />
       <meta property="og:description" content={fullOgDescription} />
       <meta property="og:image" content={ogImage} />
+      <meta property="og:image:alt" content={ogTitle || title} />
       <meta property="og:site_name" content="有机云" />
       <meta property="og:locale" content="zh_CN" />
 

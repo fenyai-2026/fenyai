@@ -277,7 +277,7 @@ export default function Growth() {
                   transition={{ delay: index * 0.1 }}
                   className="bg-sky-50 rounded-2xl overflow-hidden"
                 >
-                  <img src={caseItem.image} alt={caseItem.company} className="w-full h-48 object-cover" />
+                  <img src={caseItem.image} alt={caseItem.company} className="w-full h-48 object-cover" loading="lazy" decoding="async" />
                   <div className="p-6">
                     <div className="text-sm text-sky-500 font-medium mb-1">{caseItem.industry}</div>
                     <h3 className="text-lg font-bold text-sky-900 mb-2">{caseItem.company}</h3>
