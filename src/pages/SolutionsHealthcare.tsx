@@ -193,7 +193,7 @@ export default function SolutionsHealthcare() {
               >
                 <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-sky-500/10 border border-sky-200/50">
                   <img
-                    src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=800&q=80"
+                    src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=800&q=80&fm=webp"
                     alt="医疗健康私域运营"
                     className="w-full"
                     fetchPriority="high"

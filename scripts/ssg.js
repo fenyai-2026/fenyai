@@ -438,7 +438,16 @@ function generateHTML(route, articles) {
   // 全站注入 Organization 品牌实体；首页额外注入 WebSite（MD 1.3）
   const schemas = [pageSchema];
   if (route.path !== '/') schemas.push(ORGANIZATION_SCHEMA);
-  if (route.path === '/') { schemas.push(WEBSITE_SCHEMA); schemas.push(LOCAL_BUSINESS_SCHEMA); }
+  if (route.path === '/') { schemas.push(WEBSITE_SCHEMA); schemas.push(LOCAL_BUSINESS_SCHEMA); schemas.push({
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "有机云私域运营平台",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web",
+    "description": "有机云是企业微信SCRM私域运营工具，覆盖活码拓客、AI智能体、会话存档、超级群发等全链路场景",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CNY" },
+    "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.9", "ratingCount": "10000" }
+  }); }
   // 全站注入 BreadcrumbList（GEO 强信号，由路径自动推导）
   schemas.push(buildBreadcrumbSchema(route.path));
   // 高价值页注入 FAQPage（GEO 问答式内容，提升被 AI 引用概率）

@@ -153,7 +153,7 @@ export default function SolutionsEducation() {
 
               <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 0.2 }} className="relative">
                 <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-sky-500/10 border border-sky-200/50">
-                  <img src="https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=800&q=80" alt="在线教培私域运营" className="w-full" fetchPriority="high" />
+                  <img src="https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=800&q=80&fm=webp" alt="在线教培私域运营" className="w-full" fetchPriority="high" />
                 </div>
               </motion.div>
             </div>
