@@ -7,22 +7,23 @@ BAIDU_API_URL="http://data.zz.baidu.com/urls?site=https://www.fenyai.com&token=x
 # URL列表（按优先级排序，仅提交前10个高优先级页面）
 # 每日配额：10条
 # 注意：必须与API配置的站点域名一致 (www.fenyai.com)
-# 2026-07-29 更新：把刚完成 301 收口、最需百度重新抓取的两个新词页排到最前
-# （wecom-ai-agent-access / wecom-anti-block-mass-send 刚接过旧高排 slug 的权重），
-# 并优先提交刚补 CTR 钩子的 /message-channel；其余保留核心落地页
+# 2026-07-30 更新：避免与 07-29 已推批次重复（昨日已推 ai-agent-access/anti-block-mass-send/
+# / /message-channel/compare/faq/scrm/live-code/growth/ai-call）。今日改推：
+#   - baidu-topic-queue.txt 中 5 个尚未推送的词页静态页（已做 SEO/GEO 优化）
+#   - 昨日未覆盖的 5 个 solutions 行业落地页
 URLS=(
-  # P0 - 本轮 301 收口目标页（旧高排 slug 权重已导给它们，最需重新抓取）
-  "https://www.fenyai.com/topic/wecom-ai-agent-access"
-  "https://www.fenyai.com/topic/wecom-anti-block-mass-send"
-  # P1 - 核心落地页（title 已统一「有机云」前缀）
-  "https://www.fenyai.com/"
-  "https://www.fenyai.com/message-channel"
-  "https://www.fenyai.com/compare"
-  "https://www.fenyai.com/faq"
-  "https://www.fenyai.com/scrm"
-  "https://www.fenyai.com/live-code"
-  "https://www.fenyai.com/growth"
-  "https://www.fenyai.com/ai-call"
+  # P0 - queue 中待推词页静态页（.html，已含 FAQPage/GEO 答案块/EEAT）
+  "https://www.fenyai.com/topic/wecom-session-qc.html"
+  "https://www.fenyai.com/topic/wecom-session-qc-system.html"
+  "https://www.fenyai.com/topic/wecom-sop-build.html"
+  "https://www.fenyai.com/topic/wecom-tag-precision.html"
+  "https://www.fenyai.com/topic/wecom-thirdparty-app-dev.html"
+  # P1 - 昨日未覆盖的 solutions 行业落地页（title 已统一「有机云」前缀）
+  "https://www.fenyai.com/solutions/finance"
+  "https://www.fenyai.com/solutions/retail"
+  "https://www.fenyai.com/solutions/healthcare"
+  "https://www.fenyai.com/solutions/education"
+  "https://www.fenyai.com/solutions/crack"
 )
 
 echo "=========================================="
