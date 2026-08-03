@@ -7,23 +7,24 @@ BAIDU_API_URL="http://data.zz.baidu.com/urls?site=https://www.fenyai.com&token=x
 # URL列表（按优先级排序，仅提交前10个高优先级页面）
 # 每日配额：10条
 # 注意：必须与API配置的站点域名一致 (www.fenyai.com)
-# 2026-08-01 更新：避免与 07-29、07-30 已推批次重复。
+# 2026-08-03 更新：避免与 07-29/07-30/08-01 已推批次重复。
 #   07-29 已推: ai-agent-access/anti-block-mass-send//message-channel/compare/faq/scrm/live-code/growth/ai-call
 #   07-30 已推: 5个queue词页(static)+solutions(finance/retail/healthcare/education/crack)
-# 今日改推：剩余未覆盖的 solutions 行业总览/行业页 + 核心产品/功能页（全新SEO内容，最需抓取）
+#   08-01 已推: solutions总览+行业页(ecommerce/active-outreach/sop/archive/distribution/ai-agent-integration)+mass-send/juhe-chat/ai-agent
+# 今日改推：核心产品系列页 + 开放平台/定价/白皮书等高价值未推送页
 URLS=(
-  # P0 - 剩余 solutions 行业页（07-29/07-30 均未覆盖）
-  "https://www.fenyai.com/solutions"
-  "https://www.fenyai.com/solutions/ecommerce"
-  "https://www.fenyai.com/solutions/active-outreach"
-  "https://www.fenyai.com/solutions/sop"
-  "https://www.fenyai.com/solutions/archive"
-  "https://www.fenyai.com/solutions/distribution"
-  "https://www.fenyai.com/solutions/ai-agent-integration"
-  # P1 - 核心产品/功能落地页（全新 SEO 内容，尚未提交过）
-  "https://www.fenyai.com/mass-send"
-  "https://www.fenyai.com/juhe-chat"
-  "https://www.fenyai.com/ai-agent"
+  # P0 - 核心产品系列页（全新 SEO 内容，尚未提交过）
+  "https://www.fenyai.com/products"
+  "https://www.fenyai.com/products/qimo"
+  "https://www.fenyai.com/products/yinliu"
+  "https://www.fenyai.com/products/jinqun"
+  "https://www.fenyai.com/products/task"
+  "https://www.fenyai.com/products/data"
+  # P1 - 高价值功能/内容页（未推送过）
+  "https://www.fenyai.com/open-platform"
+  "https://www.fenyai.com/pricing"
+  "https://www.fenyai.com/whitepaper"
+  "https://www.fenyai.com/session-archive"
 )
 
 echo "=========================================="
