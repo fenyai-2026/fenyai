@@ -7,24 +7,25 @@ BAIDU_API_URL="http://data.zz.baidu.com/urls?site=https://www.fenyai.com&token=x
 # URL列表（按优先级排序，仅提交前10个高优先级页面）
 # 每日配额：10条
 # 注意：必须与API配置的站点域名一致 (www.fenyai.com)
-# 2026-08-03 更新：避免与 07-29/07-30/08-01 已推批次重复。
+# 2026-08-04 更新：避免与 07-29/07-30/08-01/08-03 已推批次重复。
 #   07-29 已推: ai-agent-access/anti-block-mass-send//message-channel/compare/faq/scrm/live-code/growth/ai-call
 #   07-30 已推: 5个queue词页(static)+solutions(finance/retail/healthcare/education/crack)
 #   08-01 已推: solutions总览+行业页(ecommerce/active-outreach/sop/archive/distribution/ai-agent-integration)+mass-send/juhe-chat/ai-agent
-# 今日改推：核心产品系列页 + 开放平台/定价/白皮书等高价值未推送页
+#   08-03 已推: products系列(qimo/yinliu/jinqun/task/data)+open-platform/pricing/whitepaper/session-archive
+# 今日改推：开放平台子页 + 资源/内容/企业页等高价值未推送页
 URLS=(
-  # P0 - 核心产品系列页（全新 SEO 内容，尚未提交过）
-  "https://www.fenyai.com/products"
-  "https://www.fenyai.com/products/qimo"
-  "https://www.fenyai.com/products/yinliu"
-  "https://www.fenyai.com/products/jinqun"
-  "https://www.fenyai.com/products/task"
-  "https://www.fenyai.com/products/data"
-  # P1 - 高价值功能/内容页（未推送过）
-  "https://www.fenyai.com/open-platform"
-  "https://www.fenyai.com/pricing"
-  "https://www.fenyai.com/whitepaper"
-  "https://www.fenyai.com/session-archive"
+  # P0 - 开放平台子页（全新 SEO 内容，尚未提交过）
+  "https://www.fenyai.com/open-platform/docs"
+  "https://www.fenyai.com/open-platform/message-api"
+  # P1 - 高价值资源/内容/企业页（未推送过）
+  "https://www.fenyai.com/resources"
+  "https://www.fenyai.com/articles"
+  "https://www.fenyai.com/demo-showcase"
+  "https://www.fenyai.com/trial"
+  "https://www.fenyai.com/weimo"
+  "https://www.fenyai.com/sop"
+  "https://www.fenyai.com/robot"
+  "https://www.fenyai.com/cloud-phone"
 )
 
 echo "=========================================="
