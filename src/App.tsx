@@ -56,6 +56,7 @@ import Resources from './pages/Resources';
 import MessageAPI from './pages/MessageAPI';
 import SolutionsAIAgent from './pages/SolutionsAIAgent';
 import OpenPlatformDocs from './pages/OpenPlatformDocs';
+import CaseStudy from './pages/CaseStudy';
 import MessageChannel from './pages/MessageChannel';
 import About from './pages/About';
 import NotFound from './pages/NotFound';
@@ -116,6 +117,12 @@ function App() {
           <Route path="resources" element={<Resources />} />
           {/* AI Agent 解决方案 */}
           <Route path="solutions/ai-agent-integration" element={<SolutionsAIAgent />} />
+          {/* 行业客户案例页（shinegood TOP50 截胡簇，2026-08-05 新增） */}
+          <Route path="case-study/home-decoration" element={<CaseStudy />} />
+          <Route path="case-study/retail" element={<CaseStudy />} />
+          <Route path="case-study/dental" element={<CaseStudy />} />
+          <Route path="case-study/education" element={<CaseStudy />} />
+          <Route path="case-study/fission" element={<CaseStudy />} />
           <Route path="about" element={<About />} />
           {/* 兜底：历史死链跳转 + 404，避免 SPA 未匹配路由渲染空白（白屏根因修复） */}
           <Route path="*" element={<NotFound />} />

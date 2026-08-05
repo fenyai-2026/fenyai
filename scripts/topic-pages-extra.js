@@ -28,6 +28,8 @@ module.exports = [
       <p>裂变天然高频，极易触发风控。建议用<a href="https://www.fenyai.com/topic/wecom-anti-block-mass-send.html">防封群发</a>底层能力打散触达节奏，配合<a href="https://www.fenyai.com/topic/wecom-channel-code-guide.html">渠道活码</a>做来源归因，把「被封风险」压到最低。</p>
       <h2>有机云裂变能力</h2>
       <p>有机云提供任务宝、群裂变、渠道活码与自动打标一体化能力，并打通 SOP 与防封群发，让裂变从「拉新」自然过渡到「留存转化」。前往功能页申请试用，体验完整裂变链路。</p>
+      <h2>想直接落地裂变？用有机云活码 + 裂变</h2>
+      <p>不想从零搭活动系统？直接用<a href="https://www.fenyai.com/live-code">有机云渠道活码 / 群活码</a>承接裂变流量——扫码自动分流、满员换号、自动打标，配合任务宝与红包裂变一键发起活动，比「自己拼接口 + 手写承接逻辑」更稳更快。前往<a href="https://www.fenyai.com/live-code">活码功能页</a>查看能力。</p>
     `
   },
   {
@@ -385,6 +387,8 @@ module.exports = [
       <p>限流只解决「发不出」，防封解决「发了被封」。两者叠加才是完整方案：参考<a href="https://www.fenyai.com/topic/wecom-anti-block-mass-send.html">防封群发</a>与<a href="https://www.fenyai.com/topic/wecom-mass-send-api.html">群发 API</a>的联动设计。</p>
       <h2>有机云限流规避能力</h2>
       <p>有机云在群发底层内置令牌桶、退避重试与频控隔离，开发者无需手写限流逻辑。前往功能页申请试用，体验稳定群发。</p>
+      <h2>想直接跳过限流？用有机云超级群发</h2>
+      <p>如果你不想自己处理令牌桶、退避和错峰的工程细节，直接用<a href="https://www.fenyai.com/mass-send">有机云超级群发</a>——底层已内置频控隔离与多通道打散，单任务可稳定触达全量客户，比「自己调接口 + 手动规避限流」更省心、更稳。前往<a href="https://www.fenyai.com/mass-send">超级群发功能页</a>查看能力与试用。</p>
     `
   },
   {
@@ -478,6 +482,8 @@ module.exports = [
       <p>机器人处理高频、人工聚焦高价值，<a href="https://www.fenyai.com/topic/wecom-ai-auto-reply.html">AI 自动回复</a>兜底首响，形成高效人机协同。</p>
       <h2>有机云客服系统集成</h2>
       <p>有机云提供企微客服系统集成能力，聚合聊天、AI 机器人、质检一体化。前往功能页申请试用，体验全渠道智能接待。</p>
+      <h2>想直接上手？用有机云聚合聊天</h2>
+      <p>不想自己打通多系统对接？直接用<a href="https://www.fenyai.com/juhe-chat">有机云聚合聊天</a>——企微、公众号、网页客服统一一个工作台，AI 机器人前置首响、会话自动归档质检，比「自研集成 + 多端切换」更高效。前往<a href="https://www.fenyai.com/juhe-chat">聚合聊天功能页</a>查看能力。</p>
     `
   },
   {
@@ -693,6 +699,122 @@ module.exports = [
       <h2>怎么选</h2>
       <p>小微企业先用微盛跑通模型可行；一旦需要 AI 客服、开放集成或数据自持，建议直接上有机云以省去迁移。完整对比见<a href="https://www.fenyai.com/compare">企业微信SCRM横向对比</a>。</p>
       <p>从活码起步可看<a href="https://www.fenyai.com/topic/wecom-channel-code-guide.html">渠道活码</a>与<a href="https://www.fenyai.com/topic/wecom-live-code-guide.html">群活码</a>指南，或<a href="https://www.fenyai.com/trial">免费试用有机云SCRM</a>。</p>
+    `
+  },
+  // ===== 加好友簇（shinegood TOP50 截胡缺口，2026-08-05 新增）=====
+  {
+    slug: 'wecom-add-friend',
+    title: '企业微信加好友：从扫码到通过的全流程 | 有机云',
+    description: '企业微信怎么加好友？扫码、搜索、批量添加的区别，活码自动分流与通过率提升技巧，有机云给出可复制的加好友全流程。',
+    category: '获客引流',
+    keyword: '企业微信加好友',
+    spaPage: '/#/live-code',
+    cluster: ['wecom-add-friend-by-qr', 'wecom-active-add-friend', 'wecom-batch-add-friend', 'wecom-add-friend-pass-rate'],
+    content: `
+      <h2>企业微信加好友的三种主路径</h2>
+      <p>企微加好友本质是「把散落在各渠道的人沉淀到企业资产里」。主流路径有三类：<strong>扫码添加</strong>（活码/员工码，最稳）、<strong>搜索添加</strong>（手机号/微信号，适合存量导入）、<strong>批量添加</strong>（名单导入，适合电销转私域）。路径选型取决于流量来源——公域引流走活码，存量客户走搜索，名单线索走批量。</p>
+      <h2>扫码添加：活码自动分流防满频</h2>
+      <p>用<a href="https://www.fenyai.com/topic/wecom-channel-code-guide.html">渠道活码</a>把不同投放来源的客户自动分给不同员工，满员自动切换备用号，永不掉链。结合<a href="https://www.fenyai.com/topic/wecom-add-friend-by-qr.html">扫码加好友话术</a>提升首触通过率。</p>
+      <h2>搜索 / 批量添加：存量与名单转化</h2>
+      <p>已有手机号名单时，用<a href="https://www.fenyai.com/topic/wecom-batch-add-friend.html">批量加好友</a>按节奏导入；主动拓客场景参考<a href="https://www.fenyai.com/topic/wecom-active-add-friend.html">主动加好友</a>的合规频次。两种路径都需控制单日上限，避免触发风控。</p>
+      <h2>通过率：加好友成败的分水岭</h2>
+      <p>发出申请只是开始，<a href="https://www.fenyai.com/topic/wecom-add-friend-pass-rate.html">通过率</a>才是关键指标。头像、昵称、验证语、首句欢迎语共同决定客户点不点「接受」。有机云把活码、SOP 欢迎语与标签打通，扫码即打标、通过即培育。</p>
+      <h2>有机云加好友能力</h2>
+      <p>有机云提供渠道活码、员工活码、自动分流与 SOP 欢迎语一体化能力，并打通会话存档与防封群发，让加好友从「一次性动作」变成「可度量、可培育」的获客链路。前往功能页申请试用，体验完整加好友流程。</p>
+    `
+  },
+  {
+    slug: 'wecom-add-friend-by-qr',
+    title: '企微扫码加好友：活码配置与话术 | 有机云',
+    description: '企微扫码加好友怎么配置？渠道活码自动分流、满员换号、验证语与欢迎语话术，有机云给出扫码加好友落地清单。',
+    category: '获客引流',
+    keyword: '企微扫码加好友',
+    spaPage: '/#/live-code',
+    cluster: ['wecom-add-friend', 'wecom-channel-code-guide', 'wecom-live-code-guide'],
+    content: `
+      <h2>扫码加好友的配置三步</h2>
+      <ul>
+        <li><strong>建活码</strong>：在有机云后台创建渠道活码或员工活码，绑定承接员工。</li>
+        <li><strong>设分流</strong>：按地域、来源、时段把扫码客户分给不同员工，均衡负载。</li>
+        <li><strong>配话术</strong>：预设验证语与通过后的欢迎语，第一时间建立信任。</li>
+      </ul>
+      <h2>满员自动换号，永不掉链</h2>
+      <p>单个员工好友上限约 2 万，大流量活动易满员。<a href="https://www.fenyai.com/topic/wecom-live-code-guide.html">群活码</a>与渠道活码支持满员自动切换到备用号，客户扫码永远有效，避免海报作废。</p>
+      <h2>验证语与欢迎语话术</h2>
+      <p>验证语要说清「你是谁、加我干嘛、有什么好处」；通过后立即用 SOP 发欢迎语+福利钩子。话术模板可参考<a href="https://www.fenyai.com/sop">企微SOP</a>的标准动作。</p>
+      <h2>有机云扫码加好友能力</h2>
+      <p>有机云把活码、分流、话术与标签打通：扫码即按来源打标，通过即进入 SOP 培育，全程数据回流看板。前往功能页申请试用，体验自动化加好友。</p>
+    `
+  },
+  {
+    slug: 'wecom-active-add-friend',
+    title: '企微主动加好友：频次与合规边界 | 有机云',
+    description: '企微主动加好友怎么不被封？单日上限、验证语技巧、加人频次与养号节奏，有机云给出主动加好友的合规操作手册。',
+    category: '获客引流',
+    keyword: '企微主动加好友',
+    spaPage: '/#/live-code',
+    cluster: ['wecom-add-friend', 'wecom-batch-add-friend', 'wecom-anti-block-mass-send'],
+    content: `
+      <h2>主动加好友的合规边界</h2>
+      <p>主动加人比等客户扫码风险更高，核心约束是<strong>频次</strong>与<strong>来源质量</strong>。新号每日主动添加建议控制在个位数，养号 1-2 周后再提量；验证语避免营销味过重，降低被投诉概率。</p>
+      <h2>单日上限与养号节奏</h2>
+      <ul>
+        <li><strong>新号期</strong>：每日主动添加 ≤ 5-8 人，先养活跃度。</li>
+        <li><strong>成长期</strong>：逐步提到 15-20 人/日，配合真实聊天。</li>
+        <li><strong>稳定期</strong>：老号可到 30-50 人/日，仍建议打散时段。</li>
+      </ul>
+      <h2>与防封群发共用底层逻辑</h2>
+      <p>主动加好友和群发共用同一套风控模型，都靠「低频、分散、真实」规避。<a href="https://www.fenyai.com/topic/wecom-anti-block-mass-send.html">防封群发</a>的频控与通道隔离机制，同样适用于主动添加场景。</p>
+      <h2>有机云主动加好友建议</h2>
+      <p>有机云建议把主动添加与<a href="https://www.fenyai.com/topic/wecom-add-friend-pass-rate.html">通过率优化</a>、SOP 培育结合，先小范围测试验证语，跑通模型再放量。前往功能页咨询行业落地节奏。</p>
+    `
+  },
+  {
+    slug: 'wecom-batch-add-friend',
+    title: '企微批量加好友：名单导入与节奏控制 | 有机云',
+    description: '企微批量加好友怎么操作？手机号名单导入、批量发送申请、频次控制与去重，有机云给出批量加好友的安全操作法。',
+    category: '获客引流',
+    keyword: '企微批量加好友',
+    spaPage: '/#/live-code',
+    cluster: ['wecom-add-friend', 'wecom-active-add-friend', 'wecom-add-friend-pass-rate'],
+    content: `
+      <h2>批量加好友的典型场景</h2>
+      <p>当你手里有手机号名单（展会留资、电销线索、老客户回流），<strong>批量加好友</strong>是把存量线索转私域最高效的方式。难点不在「发申请」，而在「不触发风控 + 通过后进 SOP」。</p>
+      <h2>安全批量操作清单</h2>
+      <ul>
+        <li><strong>去重</strong>：先剔除已添加、已离职、重复号码。</li>
+        <li><strong>分批</strong>：每批 ≤ 20-30 人，间隔数小时再下一批。</li>
+        <li><strong>验证语</strong>：统一且真实，避免「系统默认」话术被识别为营销。</li>
+        <li><strong>承接</strong>：通过后立即打标签并进入 SOP 培育。</li>
+      </ul>
+      <h2>与主动添加共用节奏控制</h2>
+      <p>批量加好友本质是高密度的主动添加，节奏控制逻辑与<a href="https://www.fenyai.com/topic/wecom-active-add-friend.html">主动加好友</a>一致：低频、分散、真实。配合<a href="https://www.fenyai.com/topic/wecom-add-friend-pass-rate.html">通过率</a>监控，及时停掉低质名单。</p>
+      <h2>有机云批量加好友能力</h2>
+      <p>有机云支持名单导入、自动去重与分批准发，通过后自动打标并进 SOP，让批量加好友可度量、可复盘。前往功能页申请试用。</p>
+    `
+  },
+  {
+    slug: 'wecom-add-friend-pass-rate',
+    title: '企微加好友通过率：提升验证语与首触 | 有机云',
+    description: '企微加好友通过率怎么提升？头像昵称、验证语、首句欢迎语与福利钩子，有机云拆解通过率的关键因子。',
+    category: '获客引流',
+    keyword: '企微加好友通过率',
+    spaPage: '/#/live-code',
+    cluster: ['wecom-add-friend', 'wecom-add-friend-by-qr', 'wecom-active-add-friend'],
+    content: `
+      <h2>通过率由四个因子决定</h2>
+      <ul>
+        <li><strong>头像</strong>：真人职业照或品牌 IP，比 logo 更易被接受。</li>
+        <li><strong>昵称</strong>：带真实姓名 + 企业身份，降低「陌生人」戒备。</li>
+        <li><strong>验证语</strong>：说清「谁、为啥加、有啥好处」，别只发「我是 XX」。</li>
+        <li><strong>首触</strong>：通过后立即发欢迎语 + 福利钩子，趁热打铁。</li>
+      </ul>
+      <h2>验证语 vs 首句欢迎语</h2>
+      <p>验证语决定「点不点接受」，首句欢迎语决定「留不留」。两者都需预设在 SOP 里。<a href="https://www.fenyai.com/sop">企微SOP</a>可在通过好友后自动触发欢迎语，配合<a href="https://www.fenyai.com/topic/wecom-add-friend-by-qr.html">扫码加好友话术</a>提升整体转化。</p>
+      <h2>用数据迭代通过率</h2>
+      <p>不同来源名单通过率差异大，需用<a href="https://www.fenyai.com/topic/wecom-channel-code-guide.html">渠道活码</a>做来源归因，跑出高通过率话术模板再放量。</p>
+      <h2>有机云通过率优化能力</h2>
+      <p>有机云把活码来源、验证语 A/B 与 SOP 欢迎语打通，扫码即通过、通过即培育，让加好友通过率可度量、可迭代。前往功能页申请试用。</p>
     `
   },
 ];
