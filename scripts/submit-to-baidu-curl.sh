@@ -7,28 +7,29 @@ BAIDU_API_URL="http://data.zz.baidu.com/urls?site=https://www.fenyai.com&token=x
 # URL列表（按优先级排序，仅提交前10个高优先级页面）
 # 每日配额：10条
 # 注意：必须与API配置的站点域名一致 (www.fenyai.com)
-# 2026-08-07 更新：避免与 07-29/07-30/08-01/08-03/08-04/08-05/08-06 已推批次重复。
+# 2026-08-09 更新：避免与 07-29/07-30/08-01/08-03/08-04/08-05/08-06/08-07 已推批次重复。
 #   07-29 已推: ai-agent-access/anti-block-mass-send//message-channel/compare/faq/scrm/live-code/growth/ai-call
-#   07-30 已推: 5个queue词页(static)+solutions(finance/retail/healthcare/education/crack)
+#   07-30 已推: 5个queue词页+solutions(finance/retail/healthcare/education/crack)
 #   08-01 已推: solutions总览+行业页+mass-send/juhe-chat/ai-agent
 #   08-03 已推: products系列+open-platform/pricing/whitepaper/session-archive
 #   08-04 已推: open-platform子页+resources/articles/demo/trial/weimo/sop/robot/cloud-phone
 #   08-05 已推: 加好友簇5词页+5行业案例页
 #   08-06 已推: session-archive专项6词页+wecom-session-qc+scrm-message-integration+scrm-private-deploy+about/contact
-# 今日改推：群发/活码/裂变/聚合/标签/SCRM选型 等高需求长尾词页（均未推过）
+#   08-07 已推: mass-send-api/no-churn/live-code-guide/channel-code-guide/friend-fission-howto/fission-tool/aggregate-chat/customer-profile-tags/scrm-howto-choose/scrm-price-compare
+# 今日改推：SOP/社群/标签精度/AI客服/竞品对比 等剩余高需求长尾词页（均未推过）
 URLS=(
-  # P0 - 群发/活码/裂变 核心需求词页（从未推过）
-  "https://www.fenyai.com/topic/wecom-mass-send-api.html"
-  "https://www.fenyai.com/topic/wecom-mass-send-no-churn.html"
-  "https://www.fenyai.com/topic/wecom-live-code-guide.html"
-  "https://www.fenyai.com/topic/wecom-channel-code-guide.html"
-  "https://www.fenyai.com/topic/wecom-friend-fission-howto.html"
-  "https://www.fenyai.com/topic/wecom-fission-tool.html"
-  # P1 - 标签/聚合/SCRM选型 高需求词页（从未推过）
-  "https://www.fenyai.com/topic/wecom-aggregate-chat.html"
-  "https://www.fenyai.com/topic/wecom-customer-profile-tags.html"
-  "https://www.fenyai.com/topic/wecom-scrm-howto-choose.html"
-  "https://www.fenyai.com/topic/wecom-scrm-price-compare.html"
+  # P0 - SOP/社群/标签 高需求词页（从未推过）
+  "https://www.fenyai.com/topic/wecom-sop-automation.html"
+  "https://www.fenyai.com/topic/wecom-auto-group-guide.html"
+  "https://www.fenyai.com/topic/wecom-community-tool.html"
+  "https://www.fenyai.com/topic/wecom-tag-precision.html"
+  "https://www.fenyai.com/topic/wecom-customer-tags-manage.html"
+  "https://www.fenyai.com/topic/community-sop-template.html"
+  # P1 - AI客服/竞品对比 高需求词页（从未推过）
+  "https://www.fenyai.com/topic/ai-customer-service-bot-wecom.html"
+  "https://www.fenyai.com/topic/wecom-ai-auto-reply.html"
+  "https://www.fenyai.com/topic/scrm-system-which-good.html"
+  "https://www.fenyai.com/topic/wecom-private-domain-flow.html"
 )
 
 echo "=========================================="
