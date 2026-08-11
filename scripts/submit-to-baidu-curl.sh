@@ -7,7 +7,7 @@ BAIDU_API_URL="http://data.zz.baidu.com/urls?site=https://www.fenyai.com&token=x
 # URL列表（按优先级排序，仅提交前10个高优先级页面）
 # 每日配额：10条
 # 注意：必须与API配置的站点域名一致 (www.fenyai.com)
-# 2026-08-09 更新：避免与 07-29/07-30/08-01/08-03/08-04/08-05/08-06/08-07 已推批次重复。
+# 2026-08-11 更新：避免与 07-29/07-30/08-01/08-03/08-04/08-05/08-06/08-07/08-09 已推批次重复。
 #   07-29 已推: ai-agent-access/anti-block-mass-send//message-channel/compare/faq/scrm/live-code/growth/ai-call
 #   07-30 已推: 5个queue词页+solutions(finance/retail/healthcare/education/crack)
 #   08-01 已推: solutions总览+行业页+mass-send/juhe-chat/ai-agent
@@ -16,20 +16,21 @@ BAIDU_API_URL="http://data.zz.baidu.com/urls?site=https://www.fenyai.com&token=x
 #   08-05 已推: 加好友簇5词页+5行业案例页
 #   08-06 已推: session-archive专项6词页+wecom-session-qc+scrm-message-integration+scrm-private-deploy+about/contact
 #   08-07 已推: mass-send-api/no-churn/live-code-guide/channel-code-guide/friend-fission-howto/fission-tool/aggregate-chat/customer-profile-tags/scrm-howto-choose/scrm-price-compare
-# 今日改推：SOP/社群/标签精度/AI客服/竞品对比 等剩余高需求长尾词页（均未推过）
+#   08-09 已推: sop-automation/auto-group-guide/community-tool/tag-precision/customer-tags-manage/community-sop-template/private-domain-flow/ai-customer-service-bot/ai-auto-reply/scrm-system-which-good
+# 今日改推：API开发/竞品对比/转化工具/私域自动化 等最后剩余长尾词页（均未推过）
+# 注: wecom-message-push-api 已于本日直连测试时意外提交1条成功(remain 10→9)，本批移除它，仅提交剩余9条
 URLS=(
-  # P0 - SOP/社群/标签 高需求词页（从未推过）
-  "https://www.fenyai.com/topic/wecom-sop-automation.html"
-  "https://www.fenyai.com/topic/wecom-auto-group-guide.html"
-  "https://www.fenyai.com/topic/wecom-community-tool.html"
-  "https://www.fenyai.com/topic/wecom-tag-precision.html"
-  "https://www.fenyai.com/topic/wecom-customer-tags-manage.html"
-  "https://www.fenyai.com/topic/community-sop-template.html"
-  # P1 - AI客服/竞品对比 高需求词页（从未推过）
-  "https://www.fenyai.com/topic/ai-customer-service-bot-wecom.html"
-  "https://www.fenyai.com/topic/wecom-ai-auto-reply.html"
-  "https://www.fenyai.com/topic/scrm-system-which-good.html"
-  "https://www.fenyai.com/topic/wecom-private-domain-flow.html"
+  # P0 - API开发/消息接口 高需求词页（从未推过，除已提交的 push-api）
+  "https://www.fenyai.com/topic/wecom-message-api-dev.html"
+  "https://www.fenyai.com/topic/wecom-api-send-message.html"
+  "https://www.fenyai.com/topic/wecom-thirdparty-app-dev.html"
+  # P1 - 竞品对比/转化工具/私域 高需求词页（从未推过）
+  "https://www.fenyai.com/topic/weiban-scrm.html"
+  "https://www.fenyai.com/topic/tanma-scrm.html"
+  "https://www.fenyai.com/topic/weisheng-scrm.html"
+  "https://www.fenyai.com/topic/private-domain-conversion-tool.html"
+  "https://www.fenyai.com/topic/wecom-automation-marketing-tool.html"
+  "https://www.fenyai.com/topic/private-domain-automation.html"
 )
 
 echo "=========================================="
