@@ -287,18 +287,34 @@ export default function Home() {
             "@context": "https://schema.org",
             "@type": "Organization",
             "name": "有机云",
-            "alternateName": "纷洋AI",
+            "legalName": "广州有机云计算有限责任公司",
+            "alternateName": "有机云SCRM",
             "url": "https://www.fenyai.com",
             "logo": "https://www.fenyai.com/logo.png",
+            "image": "https://www.fenyai.com/og-image.png",
             "description": "企业微信SCRM私域流量自动化运营专家，提供企微活码、裂变拓客、AI智能体、超级群发等全链路私域解决方案",
-            "foundingDate": "2016",
+            "foundingDate": "2020",
+            "slogan": "让私域运营更简单",
+            "brand": { "@type": "Brand", "name": "有机云" },
+            "knowsAbout": ["企业微信SCRM", "私域运营", "AI智能体", "会话存档", "活码引流", "超级群发", "消息通道API", "客户标签管理", "数据分析", "私有化部署"],
+            "numberOfEmployees": { "@type": "QuantitativeValue", "minValue": 50, "maxValue": 100 },
             "contactPoint": {
               "@type": "ContactPoint",
               "telephone": "+86-133-1616-9107",
               "contactType": "sales",
+              "email": "374183167@qq.com",
+              "areaServed": "CN",
               "availableLanguage": "Chinese"
             },
-            "sameAs": ["https://www.yjiyun.com", "https://www.zhihu.com/people/youjiyun", "https://www.xiaohongshu.com/user/profile/6901911c000000003700bbdf"]
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "番禺区大学城青蓝街28号创智大厦3栋6楼",
+              "addressLocality": "广州市",
+              "addressRegion": "广东省",
+              "postalCode": "511400",
+              "addressCountry": "CN"
+            },
+            "sameAs": ["https://aiqicha.baidu.com/company_basic_18714988634245", "https://www.qcc.com/firm/5a6e2c8eb6edbb8466d997a9e1c3bfaf.html", "https://pitchhub.36kr.com/project/1894981971746048", "https://www.yjiyun.com", "https://www.zhihu.com/people/youjiyun", "https://www.xiaohongshu.com/user/profile/6901911c000000003700bbdf"]
           })}
         </script>
         <script type="application/ld+json">

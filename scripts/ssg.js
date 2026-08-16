@@ -587,7 +587,9 @@ function generateHTML(route, articles) {
     .ssg-home-nav a { color: #0EA5E9; text-decoration: none; font-size: 1rem; }
     .ssg-home-nav a:hover { text-decoration: underline; }
   </style>
-  <link rel="preload" as="script" href="/bundle.js" fetchpriority="high">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  <link rel="preconnect" href="https://conversation.cdn.meoo.host" crossorigin>
+  <link rel="preload" as="script" href="/bundle.js" fetchpriority="high" crossorigin>
   <!-- JSON-LD Structured Data -->
 ${schemaScripts}
 </head>
@@ -822,7 +824,9 @@ function generateTopicHTML(page) {
     .geo-answer__attr{font-size:.875rem;color:#0369a1 !important;margin-top:.75rem !important}
     .geo-answer a{color:#0EA5E9}
   </style>
-  <link rel="preload" as="script" href="/bundle.js" fetchpriority="high">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  <link rel="preconnect" href="https://conversation.cdn.meoo.host" crossorigin>
+  <link rel="preload" as="script" href="/bundle.js" fetchpriority="high" crossorigin>
   <!-- JSON-LD Structured Data -->
 ${schemaScript}
 </head>
@@ -946,14 +950,27 @@ const SITEMAP_META = {
 };
 
 // 由 routes 自动生成 sitemap.xml，并追加已发布文章 URL，写 dist 并同步 public
+// 路由页 lastmod 使用真实内容里程碑（非构建日），避免每次构建刷新导致爬虫降信
+const ROUTE_LASTMOD = {
+  '/': '2026-08-16',
+  '/products': '2026-08-16',
+  '/ai-agent': '2026-08-16',
+  '/scrm': '2026-08-16',
+  '/live-code': '2026-08-16',
+  '/mass-send': '2026-08-16',
+  '/solutions': '2026-08-16',
+  '/about': '2026-08-16',
+};
+const TOPIC_BASE_DATE = '2026-08-05'; // 词页内容建立里程碑日
 function generateSitemap(articles = []) {
   const distDir = path.join(__dirname, '..', 'dist');
   if (!fs.existsSync(distDir)) {
     fs.mkdirSync(distDir, { recursive: true });
   }
-  const lastmod = new Date().toISOString().slice(0, 10);
+  const buildDate = new Date().toISOString().slice(0, 10);
   const routesUrls = routes.map(route => {
     const meta = SITEMAP_META[route.path] || { priority: '0.7', changefreq: 'weekly' };
+    const lastmod = ROUTE_LASTMOD[route.path] || '2026-07-29';
     return `  <url>
     <loc>https://www.fenyai.com${route.path}</loc>
     <lastmod>${lastmod}</lastmod>
@@ -963,7 +980,7 @@ function generateSitemap(articles = []) {
   }).join('\n');
 
   const articleUrls = articles.map(a => {
-    const am = (a.published_at || a.created_at || lastmod).slice(0, 10);
+    const am = (a.published_at || a.created_at || buildDate).slice(0, 10);
     return `  <url>
     <loc>https://www.fenyai.com/${articleUrl(a)}</loc>
     <lastmod>${am}</lastmod>
@@ -976,7 +993,7 @@ function generateSitemap(articles = []) {
 
   const topicUrls = topicPages.map(p => `  <url>
     <loc>https://www.fenyai.com/topic/${p.slug}.html</loc>
-    <lastmod>${lastmod}</lastmod>
+    <lastmod>${p.updated || TOPIC_BASE_DATE}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>`).join('\n');
@@ -1416,7 +1433,9 @@ function renderArticleShell({ canonical, title, description, keywords, ogImage, 
   <link rel="icon" type="image/png" href="/favicon.png">
   <style>${ARTICLE_BASE_STYLE}
   </style>
-  <link rel="preload" as="script" href="/bundle.js" fetchpriority="high">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  <link rel="preconnect" href="https://conversation.cdn.meoo.host" crossorigin>
+  <link rel="preload" as="script" href="/bundle.js" fetchpriority="high" crossorigin>
   <!-- JSON-LD Structured Data -->
 ${schemaScripts}
 </head>
