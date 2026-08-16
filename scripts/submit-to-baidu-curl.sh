@@ -7,27 +7,16 @@ BAIDU_API_URL="http://data.zz.baidu.com/urls?site=https://www.fenyai.com&token=x
 # URL列表（按优先级排序，仅提交前10个高优先级页面）
 # 每日配额：10条
 # 注意：必须与API配置的站点域名一致 (www.fenyai.com)
-# 2026-08-16 更新：避开前九批已推 100 条（07-29~08-11）。
-#   07-29已推: ai-agent-access/anti-block-mass-send//message-channel/compare/faq/scrm/live-code/growth/ai-call
-#   07-30已推: 5个queue词页+solutions(finance/retail/healthcare/education/crack)
-#   08-01已推: solutions总览+行业页+mass-send/juhe-chat/ai-agent
-#   08-03已推: products系列+open-platform/pricing/whitepaper/session-archive
-#   08-04已推: open-platform子页+resources/articles/demo/trial/weimo/sop/robot/cloud-phone
-#   08-05已推: 加好友簇5词页+5行业案例页
-#   08-06已推: session-archive专项6词页+wecom-session-qc+scrm-message-integration+scrm-private-deploy+about/contact
-#   08-07已推: mass-send-api/no-churn/live-code-guide/channel-code-guide/friend-fission-howto/fission-tool/aggregate-chat/customer-profile-tags/scrm-howto-choose/scrm-price-compare
-#   08-09已推: sop-automation/auto-group-guide/community-tool/tag-precision/customer-tags-manage/community-sop-template/private-domain-flow/ai-customer-service-bot/ai-auto-reply/scrm-system-which-good
-#   08-11已推: message-api-dev/api-send-message/thirdparty-app-dev/weiban-scrm/tanma-scrm/weisheng-scrm/private-domain-conversion-tool/automation-marketing-tool/private-domain-automation + 测试1条message-push-api
-# 今日改推：SEO/GEO升级后新发布的权威长文 + 仅剩未推的5个词页（均从未推过，不凑满10条以免重复）
+# 2026-08-16-b 批次（用今日剩余4条配额）：全站已基本100%覆盖(106条)，本批补唯一未推核心页 + 重推3个最高权重页加速SEO升级重抓
+#   前序已推: 07-29~08-11 共100条 + 08-16首批6条(长文+5词页)
+#   本批: /articles(唯一未推核心页) + /(首页)/solutions/products(重推触发重抓本次升级)
 URLS=(
-  # P0 - 今日新发布权威长文（GEO核心页，最高优先）
-  "https://www.fenyai.com/article/scrm-selection-guide-2026"
-  # P1 - 仅剩未推过的5个词页
-  "https://www.fenyai.com/topic/wecom-session-qc-system.html"
-  "https://www.fenyai.com/topic/wecom-newcustomer-acquisition.html"
-  "https://www.fenyai.com/topic/wecom-sop-build.html"
-  "https://www.fenyai.com/topic/wecom-mass-send-rate-limit.html"
-  "https://www.fenyai.com/topic/wecom-customer-service-system.html"
+  # P0 - 唯一未推的核心列表页（文章收录入口）
+  "https://www.fenyai.com/articles"
+  # P1 - 最高权重页重推，加速本次SEO/GEO大升级(品牌schema/真实lastmod/长文内链)被百度重抓生效
+  "https://www.fenyai.com/"
+  "https://www.fenyai.com/solutions"
+  "https://www.fenyai.com/products"
 )
 
 echo "=========================================="
